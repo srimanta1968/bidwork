@@ -23,8 +23,7 @@ export default function RegisterPage() {
       const result = await registerUser({ first_name: firstName, last_name: lastName, email, password, role });
       if (result.success && result.data) {
         login(result.data.user, result.data.token);
-        if (role === 'homeowner') navigate('/dashboard');
-        else navigate('/onboarding');
+        navigate('/verify-email');
       } else { setError(result.error || 'Registration failed'); }
     } catch { setError('An unexpected error occurred'); }
     finally { setLoading(false); }

@@ -4,6 +4,7 @@ import { I18nProvider } from './context/I18nProvider';
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 import OnboardingPage from './pages/OnboardingPage';
 import HomeownerDashboard from './pages/dashboards/HomeownerDashboard';
 import ContractorDashboard from './pages/dashboards/ContractorDashboard';
@@ -41,6 +42,7 @@ function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />} />
       <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
+      <Route path="/verify-email" element={<ProtectedRoute><VerifyEmailPage /></ProtectedRoute>} />
       <Route path="/onboarding" element={<ProtectedRoute><OnboardingGuard /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardRouter /></ProtectedRoute>} />
     </Routes>

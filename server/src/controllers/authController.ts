@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { authService } from '../services/authService';
+import { emailService } from '../services/emailService';
 import { validatePassword } from '../validators/passwordValidator';
 import { validateEmail } from '../validators/emailValidator';
 import { isRateLimited, recordFailedAttempt, clearRateLimit } from '../middleware/rateLimiter';
@@ -41,6 +42,12 @@ export async function register(req: Request, res: Response): Promise<void> {
     }
 
     const user = await authService.createUser(first_name, last_name, email, password, role);
+
+    // Generate and send verification code
+    const code = emailService.generateVerificationCode();
+    await authService.storeVerificationCode(user.id, code);
+    await emailService.sendVerificationEmail(email, code, first_name);
+
     const token = authService.generateToken({
       userId: user.id,
       email: user.email,
@@ -57,8 +64,10 @@ export async function register(req: Request, res: Response): Promise<void> {
           email: user.email,
           role: user.role,
           is_onboarded: user.is_onboarded,
+          is_email_verified: false,
         },
         token,
+        requiresVerification: true,
       },
     });
   } catch (error) {
@@ -104,6 +113,61 @@ export async function login(req: Request, res: Response): Promise<void> {
     });
   } catch (error) {
     console.error('Login error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+}
+
+/**
+ * POST /api/auth/verify-email
+ */
+export async function verifyEmail(req: Request, res: Response): Promise<void> {
+  try {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      res.status(400).json({ success: false, error: 'Email and verification code are required' });
+      return;
+    }
+
+    const verified = await authService.verifyEmailCode(email, code);
+
+    if (!verified) {
+      res.status(400).json({ success: false, error: 'Invalid or expired verification code' });
+      return;
+    }
+
+    res.status(200).json({ success: true, data: { verified: true } });
+  } catch (error) {
+    console.error('Verify email error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+}
+
+/**
+ * POST /api/auth/resend-code
+ */
+export async function resendCode(req: Request, res: Response): Promise<void> {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      res.status(400).json({ success: false, error: 'Email is required' });
+      return;
+    }
+
+    const user = await authService.getUnverifiedUser(email);
+    if (!user) {
+      res.status(400).json({ success: false, error: 'No pending verification for this email' });
+      return;
+    }
+
+    const code = emailService.generateVerificationCode();
+    await authService.storeVerificationCode(user.id, code);
+    await emailService.sendVerificationEmail(email, code, user.first_name);
+
+    res.status(200).json({ success: true, data: { sent: true } });
+  } catch (error) {
+    console.error('Resend code error:', error);
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
 }

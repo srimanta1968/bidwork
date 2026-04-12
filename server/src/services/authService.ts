@@ -158,6 +158,60 @@ export async function markOnboarded(userId: string): Promise<void> {
   }
 }
 
+/**
+ * Store verification code for a user
+ */
+export async function storeVerificationCode(userId: string, code: string): Promise<void> {
+  try {
+    const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    await dataService.query(
+      'UPDATE users SET verification_code = $2, verification_code_expires = $3, updated_at = NOW() WHERE id = $1',
+      [userId, code, expires]
+    );
+  } catch (error) {
+    console.error('Store verification code error:', error);
+    throw new Error('Failed to store verification code');
+  }
+}
+
+/**
+ * Verify email with code
+ */
+export async function verifyEmailCode(email: string, code: string): Promise<boolean> {
+  try {
+    const user = await dataService.queryOne<{ id: string; verification_code: string; verification_code_expires: Date }>(
+      'SELECT id, verification_code, verification_code_expires FROM users WHERE email = $1',
+      [email]
+    );
+    if (!user || user.verification_code !== code) return false;
+    if (new Date() > new Date(user.verification_code_expires)) return false;
+
+    await dataService.query(
+      'UPDATE users SET is_email_verified = true, verification_code = NULL, verification_code_expires = NULL, updated_at = NOW() WHERE id = $1',
+      [user.id]
+    );
+    return true;
+  } catch (error) {
+    console.error('Verify email code error:', error);
+    throw new Error('Failed to verify email');
+  }
+}
+
+/**
+ * Resend verification code
+ */
+export async function getUnverifiedUser(email: string): Promise<{ id: string; first_name: string } | null> {
+  try {
+    return await dataService.queryOne<{ id: string; first_name: string }>(
+      'SELECT id, first_name FROM users WHERE email = $1 AND is_email_verified = false',
+      [email]
+    );
+  } catch (error) {
+    console.error('Get unverified user error:', error);
+    throw new Error('Failed to get unverified user');
+  }
+}
+
 export const authService = {
   hashPassword,
   comparePassword,
@@ -168,4 +222,7 @@ export const authService = {
   createUser,
   authenticateUser,
   markOnboarded,
+  storeVerificationCode,
+  verifyEmailCode,
+  getUnverifiedUser,
 };
