@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env';
 import { dataService } from './dataService';
-import { User, UserResponse, JwtPayload } from '../types';
+import { User, UserResponse, JwtPayload, VALID_ROLES } from '../types';
 
 /**
  * Hash a plain-text password using bcrypt
@@ -50,7 +50,7 @@ export function verifyToken(token: string): JwtPayload {
 export async function findUserByEmail(email: string): Promise<User | null> {
   try {
     return await dataService.queryOne<User>(
-      'SELECT id, email, password_hash, role, created_at, updated_at FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, first_name, last_name, phone, role, is_onboarded, created_at, updated_at FROM users WHERE email = $1',
       [email]
     );
   } catch (error) {
@@ -65,7 +65,7 @@ export async function findUserByEmail(email: string): Promise<User | null> {
 export async function findUserById(id: string): Promise<User | null> {
   try {
     return await dataService.queryOne<User>(
-      'SELECT id, email, password_hash, role, created_at, updated_at FROM users WHERE id = $1',
+      'SELECT id, email, password_hash, first_name, last_name, phone, role, is_onboarded, created_at, updated_at FROM users WHERE id = $1',
       [id]
     );
   } catch (error) {
@@ -77,15 +77,16 @@ export async function findUserById(id: string): Promise<User | null> {
 /**
  * Create a new user and return user data (excluding password)
  */
-export async function createUser(email: string, password: string, role: string): Promise<UserResponse> {
+export async function createUser(first_name: string, last_name: string, email: string, password: string, role: string): Promise<UserResponse> {
   try {
     const password_hash = await hashPassword(password);
+    const needsOnboarding = role === 'homeowner';
 
     const user = await dataService.queryOne<User>(
-      `INSERT INTO users (email, password_hash, role)
-       VALUES ($1, $2, $3)
-       RETURNING id, email, role, created_at`,
-      [email, password_hash, role]
+      `INSERT INTO users (first_name, last_name, email, password_hash, role, is_onboarded)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id, first_name, last_name, email, role, is_onboarded, created_at`,
+      [first_name, last_name, email, password_hash, role, needsOnboarding]
     );
 
     if (!user) {
@@ -94,8 +95,11 @@ export async function createUser(email: string, password: string, role: string):
 
     return {
       id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
       email: user.email,
       role: user.role,
+      is_onboarded: user.is_onboarded,
       created_at: user.created_at,
     };
   } catch (error) {
@@ -128,14 +132,29 @@ export async function authenticateUser(email: string, password: string): Promise
     return {
       user: {
         id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
         email: user.email,
         role: user.role,
+        is_onboarded: user.is_onboarded,
       },
       token,
     };
   } catch (error) {
     console.error('Authentication error:', error);
     throw new Error('Failed to authenticate user');
+  }
+}
+
+/**
+ * Mark user as onboarded
+ */
+export async function markOnboarded(userId: string): Promise<void> {
+  try {
+    await dataService.query('UPDATE users SET is_onboarded = true, updated_at = NOW() WHERE id = $1', [userId]);
+  } catch (error) {
+    console.error('Mark onboarded error:', error);
+    throw new Error('Failed to mark user as onboarded');
   }
 }
 
@@ -148,4 +167,5 @@ export const authService = {
   findUserById,
   createUser,
   authenticateUser,
+  markOnboarded,
 };

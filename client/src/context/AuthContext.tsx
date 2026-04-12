@@ -1,11 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getToken, getUser, setToken, setUser, clearAuth } from '../services/authService';
-
-interface UserData {
-  id: string;
-  email: string;
-  role: string;
-}
+import { UserData, getToken, getUser, setToken, setUser, clearAuth } from '../services/authService';
 
 interface AuthContextType {
   user: UserData | null;
@@ -13,15 +7,12 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (user: UserData, token: string) => void;
   logout: () => void;
+  updateUser: (user: UserData) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUserState] = useState<UserData | null>(null);
   const [token, setTokenState] = useState<string | null>(null);
 
@@ -47,21 +38,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUserState(null);
   };
 
-  const value: AuthContextType = {
-    user,
-    token,
-    isAuthenticated: !!token && !!user,
-    login,
-    logout,
+  const updateUser = (userData: UserData): void => {
+    setUser(userData);
+    setUserState(userData);
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!token && !!user, login, logout, updateUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 }

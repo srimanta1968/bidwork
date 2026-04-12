@@ -1,115 +1,81 @@
 /**
- * Auth API Service - Client-side API calls for authentication
- * Uses existing backend endpoints:
- *   - POST /api/auth/register
- *   - POST /api/auth/login
+ * Auth & Profile API Service
  */
+
+export interface UserData {
+  id: string;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  role: string;
+  is_onboarded: boolean;
+}
 
 interface AuthResponse {
   success: boolean;
-  data?: {
-    user: {
-      id: string;
-      email: string;
-      role: string;
-    };
-    token: string;
-  };
+  data?: { user: UserData; token: string };
   error?: string;
 }
 
-interface RegisterPayload {
-  email: string;
-  password: string;
-  role: string;
+interface ProfileResponse {
+  success: boolean;
+  data?: { profile: any };
+  error?: string;
 }
 
-interface LoginPayload {
-  email: string;
-  password: string;
-}
+const API_BASE = '/api';
 
-const API_BASE = '/api/auth';
-
-/**
- * Register a new user
- */
-export async function registerUser(payload: RegisterPayload): Promise<AuthResponse> {
+export async function registerUser(payload: { first_name: string; last_name: string; email: string; password: string; role: string }): Promise<AuthResponse> {
   try {
-    const response = await fetch(`${API_BASE}/register`, {
+    const response = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    const data: AuthResponse = await response.json();
-    return data;
-  } catch (error) {
-    return { success: false, error: 'Network error. Please try again.' };
-  }
+    return await response.json();
+  } catch { return { success: false, error: 'Network error. Please try again.' }; }
 }
 
-/**
- * Login an existing user
- */
-export async function loginUser(payload: LoginPayload): Promise<AuthResponse> {
+export async function loginUser(payload: { email: string; password: string }): Promise<AuthResponse> {
   try {
-    const response = await fetch(`${API_BASE}/login`, {
+    const response = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    const data: AuthResponse = await response.json();
-    return data;
-  } catch (error) {
-    return { success: false, error: 'Network error. Please try again.' };
-  }
+    return await response.json();
+  } catch { return { success: false, error: 'Network error. Please try again.' }; }
 }
 
-/**
- * Store auth token in localStorage
- */
-export function setToken(token: string): void {
-  localStorage.setItem('bidwork_token', token);
+export async function onboardProfile(token: string, payload: any): Promise<ProfileResponse> {
+  try {
+    const response = await fetch(`${API_BASE}/profile/onboard`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(payload),
+    });
+    return await response.json();
+  } catch { return { success: false, error: 'Network error. Please try again.' }; }
 }
 
-/**
- * Get auth token from localStorage
- */
-export function getToken(): string | null {
-  return localStorage.getItem('bidwork_token');
+export async function getMyProfile(token: string): Promise<ProfileResponse> {
+  try {
+    const response = await fetch(`${API_BASE}/profile/me`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    return await response.json();
+  } catch { return { success: false, error: 'Network error.' }; }
 }
 
-/**
- * Remove auth token from localStorage
- */
-export function removeToken(): void {
-  localStorage.removeItem('bidwork_token');
-}
+export function setToken(token: string): void { localStorage.setItem('bidwork_token', token); }
+export function getToken(): string | null { return localStorage.getItem('bidwork_token'); }
+export function removeToken(): void { localStorage.removeItem('bidwork_token'); }
 
-/**
- * Store user data in localStorage
- */
-export function setUser(user: { id: string; email: string; role: string }): void {
-  localStorage.setItem('bidwork_user', JSON.stringify(user));
-}
-
-/**
- * Get user data from localStorage
- */
-export function getUser(): { id: string; email: string; role: string } | null {
+export function setUser(user: UserData): void { localStorage.setItem('bidwork_user', JSON.stringify(user)); }
+export function getUser(): UserData | null {
   const data = localStorage.getItem('bidwork_user');
   if (!data) return null;
-  try {
-    return JSON.parse(data);
-  } catch {
-    return null;
-  }
+  try { return JSON.parse(data); } catch { return null; }
 }
 
-/**
- * Clear all auth data
- */
-export function clearAuth(): void {
-  removeToken();
-  localStorage.removeItem('bidwork_user');
-}
+export function clearAuth(): void { removeToken(); localStorage.removeItem('bidwork_user'); }

@@ -3,17 +3,17 @@ import { authService } from '../services/authService';
 import { validatePassword } from '../validators/passwordValidator';
 import { validateEmail } from '../validators/emailValidator';
 import { isRateLimited, recordFailedAttempt, clearRateLimit } from '../middleware/rateLimiter';
+import { VALID_ROLES } from '../types';
 
 /**
  * POST /api/auth/register
- * Register a new user with email, password, and role
  */
 export async function register(req: Request, res: Response): Promise<void> {
   try {
-    const { email, password, role } = req.body;
+    const { first_name, last_name, email, password, role } = req.body;
 
-    if (!email || !password || !role) {
-      res.status(400).json({ success: false, error: 'Email, password, and role are required' });
+    if (!first_name || !last_name || !email || !password || !role) {
+      res.status(400).json({ success: false, error: 'First name, last name, email, password, and role are required' });
       return;
     }
 
@@ -23,9 +23,8 @@ export async function register(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const validRoles = ['homeowner', 'contractor'];
-    if (!validRoles.includes(role)) {
-      res.status(400).json({ success: false, error: 'Role must be homeowner or contractor' });
+    if (!VALID_ROLES.includes(role)) {
+      res.status(400).json({ success: false, error: 'Role must be homeowner, contractor, or skilled_labor' });
       return;
     }
 
@@ -41,7 +40,7 @@ export async function register(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const user = await authService.createUser(email, password, role);
+    const user = await authService.createUser(first_name, last_name, email, password, role);
     const token = authService.generateToken({
       userId: user.id,
       email: user.email,
@@ -53,8 +52,11 @@ export async function register(req: Request, res: Response): Promise<void> {
       data: {
         user: {
           id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
           email: user.email,
           role: user.role,
+          is_onboarded: user.is_onboarded,
         },
         token,
       },
@@ -67,7 +69,6 @@ export async function register(req: Request, res: Response): Promise<void> {
 
 /**
  * POST /api/auth/login
- * Authenticate a user with email and password
  */
 export async function login(req: Request, res: Response): Promise<void> {
   try {
@@ -97,11 +98,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     res.status(200).json({
       success: true,
       data: {
-        user: {
-          id: result.user.id,
-          email: result.user.email,
-          role: result.user.role,
-        },
+        user: result.user,
         token: result.token,
       },
     });

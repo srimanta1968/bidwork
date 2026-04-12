@@ -1,0 +1,72 @@
+import { Response } from 'express';
+import { profileService } from '../services/profileService';
+import { AuthenticatedRequest, CONTRACTOR_CATEGORIES, SKILLED_LABOR_CATEGORIES } from '../types';
+
+/**
+ * GET /api/profile/me
+ */
+export async function getMyProfile(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ success: false, error: 'Authentication required' });
+      return;
+    }
+
+    const profile = await profileService.getProfileByUserId(req.user.userId);
+    res.status(200).json({ success: true, data: { profile } });
+  } catch (error) {
+    console.error('Get profile error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+}
+
+/**
+ * POST /api/profile/onboard
+ */
+export async function onboard(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({ success: false, error: 'Authentication required' });
+      return;
+    }
+
+    const { business_name, office_address, phone, license_number, license_type, category, skills, years_experience, bio } = req.body;
+
+    if (!phone || !category) {
+      res.status(400).json({ success: false, error: 'Phone and category are required' });
+      return;
+    }
+
+    if (req.user.role === 'contractor' && !license_number) {
+      res.status(400).json({ success: false, error: 'License number is required for contractors' });
+      return;
+    }
+
+    const profile = await profileService.onboardProfile(req.user.userId, {
+      business_name, office_address, phone, license_number, license_type,
+      category, skills, years_experience, bio,
+    });
+
+    res.status(200).json({ success: true, data: { profile } });
+  } catch (error) {
+    console.error('Onboard error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+}
+
+/**
+ * GET /api/profile/categories
+ */
+export async function getCategories(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    res.status(200).json({
+      success: true,
+      data: {
+        contractor: [...CONTRACTOR_CATEGORIES],
+        skilled_labor: [...SKILLED_LABOR_CATEGORIES],
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+}

@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { config } from './config/env';
 import authRoutes from './routes/authRoutes';
+import profileRoutes from './routes/profileRoutes';
 
 interface ServerConfig {
   port: number;
@@ -43,6 +44,7 @@ app.get('/health', (req: Request, res: Response): void => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {

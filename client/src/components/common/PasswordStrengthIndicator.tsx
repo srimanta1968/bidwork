@@ -4,13 +4,8 @@ interface PasswordStrengthProps {
   password: string;
 }
 
-interface StrengthCheck {
-  label: string;
-  met: boolean;
-}
-
 export default function PasswordStrengthIndicator({ password }: PasswordStrengthProps) {
-  const checks: StrengthCheck[] = useMemo(() => [
+  const checks = useMemo(() => [
     { label: 'At least 8 characters', met: password.length >= 8 },
     { label: 'Uppercase letter', met: /[A-Z]/.test(password) },
     { label: 'Lowercase letter', met: /[a-z]/.test(password) },
@@ -18,39 +13,26 @@ export default function PasswordStrengthIndicator({ password }: PasswordStrength
     { label: 'Special character', met: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) },
   ], [password]);
 
-  const metCount: number = checks.filter((c: StrengthCheck) => c.met).length;
-
-  const strengthLabel = (): string => {
-    if (metCount === 0) return '';
-    if (metCount <= 2) return 'Weak';
-    if (metCount <= 4) return 'Medium';
-    return 'Strong';
-  };
-
-  const strengthColor = (): string => {
-    if (metCount <= 2) return 'bg-red-500';
-    if (metCount <= 4) return 'bg-amber-500';
-    return 'bg-emerald-500';
-  };
+  const metCount = checks.filter((c) => c.met).length;
 
   if (!password) return null;
 
+  const barColor = metCount <= 2 ? '#ef4444' : metCount <= 4 ? '#f59e0b' : '#22c55e';
+  const label = metCount <= 2 ? 'Weak' : metCount <= 4 ? 'Medium' : 'Strong';
+
   return (
-    <div className="mt-2">
-      <div className="flex gap-1 mb-2">
-        {[1, 2, 3, 4, 5].map((i: number) => (
-          <div
-            key={i}
-            className={`h-1 flex-1 rounded ${i <= metCount ? strengthColor() : 'bg-slate-600'}`}
-          />
+    <div style={{ marginTop: 10 }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 6 }}>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} style={{ height: 4, flex: 1, borderRadius: 2, background: i <= metCount ? barColor : '#e2e8f0', transition: 'background 0.3s' }} />
         ))}
       </div>
-      <p className={`text-xs ${metCount <= 2 ? 'text-red-400' : metCount <= 4 ? 'text-amber-400' : 'text-emerald-400'}`}>
-        {strengthLabel()}
-      </p>
-      <ul className="mt-1 space-y-0.5">
-        {checks.map((check: StrengthCheck) => (
-          <li key={check.label} className={`text-xs ${check.met ? 'text-emerald-400' : 'text-slate-500'}`}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+        <span style={{ fontSize: 12, fontWeight: 600, color: barColor }}>{label}</span>
+      </div>
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {checks.map((check) => (
+          <li key={check.label} style={{ fontSize: 12, color: check.met ? '#22c55e' : '#94a3b8', marginBottom: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
             {check.met ? '\u2713' : '\u2717'} {check.label}
           </li>
         ))}
