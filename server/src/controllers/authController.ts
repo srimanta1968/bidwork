@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { authService } from '../services/authService';
 import { validatePassword } from '../validators/passwordValidator';
 import { validateEmail } from '../validators/emailValidator';
+import { isRateLimited, recordFailedAttempt, clearRateLimit } from '../middleware/rateLimiter';
 
 /**
  * POST /api/auth/register
@@ -77,12 +78,21 @@ export async function login(req: Request, res: Response): Promise<void> {
       return;
     }
 
+    const clientIp: string = req.ip || req.socket.remoteAddress || 'unknown';
+    if (isRateLimited(clientIp)) {
+      res.status(429).json({ success: false, error: 'Too many login attempts. Please try again later.' });
+      return;
+    }
+
     const result = await authService.authenticateUser(email, password);
 
     if (!result) {
+      recordFailedAttempt(clientIp);
       res.status(401).json({ success: false, error: 'Invalid email or password' });
       return;
     }
+
+    clearRateLimit(clientIp);
 
     res.status(200).json({
       success: true,
