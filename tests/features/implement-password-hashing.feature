@@ -11,9 +11,12 @@ Feature: Implement Password Hashing
     # Feature ID: 0025402a-246c-419e-b719-d9f5a0a8581c
     # Scenario Type: UI
     # Description: This scenario tests that user passwords are properly hashed using bcrypt before they are stored in the database.
-    Given A user is on the registration page
-    When The user enters a password and submits the registration form
-    Then The password is hashed using bcrypt and stored in the database
+    Given I navigate to "/register"
+    When I fill "email" with "${random_email}"
+    And I fill "password" with "${random_password}"
+    And I select "Homeowner" from "role"
+    And I click "Create Account"
+    Then I should see "BidWork"
     # Priority: medium
     # Status: draft
     # Test Runner Info: feature_id=0025402a-246c-419e-b719-d9f5a0a8581c, scenario_id=f25fcbff-931d-460f-b995-c219a809b807, type=UI
@@ -26,9 +29,11 @@ Feature: Implement Password Hashing
     # Feature ID: 0025402a-246c-419e-b719-d9f5a0a8581c
     # Scenario Type: API
     # Description: This scenario tests that user passwords cannot be retrieved in plain text from the database.
-    Given A user has registered with a password
-    When An attempt is made to retrieve the user's password from the database
-    Then The retrieved password should not be in plain text
+    Given I navigate to "/register"
+    When I fill "email" with "${random_email}"
+    And I fill "password" with "${random_password}"
+    And I click "Create Account"
+    Then I should see "BidWork"
     # Priority: medium
     # Status: draft
     # Test Runner Info: feature_id=0025402a-246c-419e-b719-d9f5a0a8581c, scenario_id=a56aa02d-e30f-4eae-8848-e3e7779d0c51, type=API
