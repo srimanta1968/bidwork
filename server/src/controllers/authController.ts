@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { authService } from '../services/authService';
+import { validatePassword } from '../validators/passwordValidator';
 
 /**
  * POST /api/auth/register
@@ -17,6 +18,12 @@ export async function register(req: Request, res: Response): Promise<void> {
     const validRoles = ['homeowner', 'contractor'];
     if (!validRoles.includes(role)) {
       res.status(400).json({ success: false, error: 'Role must be homeowner or contractor' });
+      return;
+    }
+
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      res.status(400).json({ success: false, error: passwordValidation.errors[0] });
       return;
     }
 
