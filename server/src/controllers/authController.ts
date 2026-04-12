@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { authService } from '../services/authService';
 import { validatePassword } from '../validators/passwordValidator';
+import { validateEmail } from '../validators/emailValidator';
 
 /**
  * POST /api/auth/register
@@ -12,6 +13,12 @@ export async function register(req: Request, res: Response): Promise<void> {
 
     if (!email || !password || !role) {
       res.status(400).json({ success: false, error: 'Email, password, and role are required' });
+      return;
+    }
+
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+      res.status(400).json({ success: false, error: emailValidation.error });
       return;
     }
 
