@@ -1,0 +1,64 @@
+{
+  "sprintId": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+  "sprintName": "Quick Prototype Sprint",
+  "totalTasks": 8,
+  "tasks": [
+    {
+      "taskId": "428bd3bc-b764-4f07-a29a-f6bc6cdf7e59",
+      "taskNumber": 1,
+      "title": "Implement User Registration and Authentication backend logic",
+      "status": "not_started",
+      "taskType": "backend"
+    },
+    {
+      "taskId": "617a8969-61aa-465a-b166-ec1638d9958a",
+      "taskNumber": 2,
+      "title": "Implement Implement Password Hashing backend logic",
+      "status": "not_started",
+      "taskType": "backend"
+    },
+    {
+      "taskId": "4028de7d-0da2-419f-8ad9-de1ca26037b8",
+      "taskNumber": 3,
+      "title": "Implement Create User Registration Endpoint backend logic",
+      "status": "not_started",
+      "taskType": "backend"
+    },
+    {
+      "taskId": "5d82d5c0-51a9-4748-99b8-e0aed199f5d2",
+      "taskNumber": 4,
+      "title": "Implement Create User Login Endpoint backend logic",
+      "status": "not_started",
+      "taskType": "backend"
+    },
+    {
+      "taskId": "5c2fc9b9-7dad-4ee9-a08e-cdb21fefdc1f",
+      "taskNumber": 5,
+      "title": "Create User Registration and Authentication UI components",
+      "status": "not_started",
+      "taskType": "frontend"
+    },
+    {
+      "taskId": "a3b37bab-056b-4d38-8419-31a0c6c83e29",
+      "taskNumber": 6,
+      "title": "Create Implement Password Hashing UI components",
+      "status": "not_started",
+      "taskType": "frontend"
+    },
+    {
+      "taskId": "1cddc09e-c86c-408e-a43b-f2166f3fddb5",
+      "taskNumber": 7,
+      "title": "Create Create User Registration Endpoint UI components",
+      "status": "not_started",
+      "taskType": "frontend"
+    },
+    {
+      "taskId": "47d94d97-6eae-4383-b9ec-bcdce1bcefb0",
+      "taskNumber": 8,
+      "title": "Create Create User Login Endpoint UI components",
+      "status": "not_started",
+      "taskType": "frontend"
+    }
+  ],
+  "note": "Detailed instructions are delivered via MCP API. Call projexlight_get_instruction with taskId."
+}

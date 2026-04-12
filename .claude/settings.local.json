@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.mistral.ai)",
+      "WebFetch(domain:aws.amazon.com)",
+      "WebFetch(domain:tokencost.app)",
+      "WebSearch",
+      "Bash(curl:*)",
+      "mcp__projexlight__projexlight_get_rules",
+      "mcp__projexlight__projexlight_init_session",
+      "mcp__projexlight__projexlight_self_check",
+      "Bash(npm install:*)",
+      "mcp__projexlight__projexlight_validate"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "projexlight"
+  ]
+}

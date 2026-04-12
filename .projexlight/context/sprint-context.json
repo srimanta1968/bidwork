@@ -1,0 +1,214 @@
+{
+  "sprint": {
+    "id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+    "name": "Quick Prototype Sprint",
+    "description": "Quick prototype sprint for generated project structure",
+    "startDate": "2026-04-12T00:00:00.000Z",
+    "endDate": "2026-04-26T00:00:00.000Z",
+    "sprint_type": "quick_prototype"
+  },
+  "project": {
+    "id": "e6977b8c-5931-4182-8fec-db277e187f8e",
+    "name": "Bidwork",
+    "description": "BidWork is an AI-powered two-sided marketplace where homeowners upload videos and photos of their home projects and receive an AI-generated scope of work with photo evidence per task, an editable task list, and a calculated bid range (floor to ceiling) — all before any contractor is involved.\n\nContractors receive pre-scoped, photo-documented, homeowner-approved jobs with a defined bid range. They bid within that range, compete on quality and speed rather than price alone, and close jobs faster with less rework.\n\n**The core innovation:** AI understands the job first. Humans refine. Pricing is bounded. Contractors bid informed.\n\nThis is not a lead marketplace. This is a **job-definition engine + controlled bidding marketplace** — the operating system for home services execution."
+  },
+  "exportConfig": {
+    "cliTool": "claude",
+    "exportMode": "new_repository",
+    "exportScope": "full_sprint",
+    "selectedPurposes": [
+      "api_development",
+      "ui_development",
+      "unit_tests",
+      "db_schema_design"
+    ]
+  },
+  "statistics": {
+    "totalEpics": 1,
+    "totalFeatures": 4,
+    "totalScenarios": 0,
+    "totalTasks": 8
+  },
+  "entities": {
+    "epics": [
+      {
+        "id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "title": "Homeowner and Contractor Features",
+        "description": "This epic combines critical features for both homeowners and contractors, focusing on user registration, media uploads, job bidding, and approvals."
+      }
+    ],
+    "features": [
+      {
+        "id": "ddeab141-7dd6-4f38-beef-7a1ddf695eff",
+        "title": "User Registration and Authentication",
+        "description": "Allow users to register and authenticate using email and password.",
+        "acceptance_criteria": null
+      },
+      {
+        "id": "0025402a-246c-419e-b719-d9f5a0a8581c",
+        "title": "Implement Password Hashing",
+        "description": "Use bcrypt to hash user passwords before storing them in the database.",
+        "acceptance_criteria": "[\"Passwords are hashed using bcrypt before storage.\",\"User passwords cannot be retrieved in plain text.\"]"
+      },
+      {
+        "id": "27bb0059-309e-421f-8e87-f5ffd88a673c",
+        "title": "Create User Registration Endpoint",
+        "description": "Develop an API endpoint for user registration.",
+        "acceptance_criteria": "[\"API endpoint returns 201 status on successful registration.\",\"API responds with user data excluding password.\"]"
+      },
+      {
+        "id": "c51fc5fa-1534-4937-a0b5-1a0460195593",
+        "title": "Create User Login Endpoint",
+        "description": "Develop an API endpoint for user login.",
+        "acceptance_criteria": "[\"API endpoint returns 200 status on successful login.\",\"API responds with a JWT token on successful login.\"]"
+      }
+    ],
+    "scenarios": [],
+    "tasks": [
+      {
+        "id": "428bd3bc-b764-4f07-a29a-f6bc6cdf7e59",
+        "title": "Implement User Registration and Authentication backend logic",
+        "description": "Develop the core backend functionality for User Registration and Authentication",
+        "acceptance_criteria": [],
+        "task_type": "backend",
+        "task_role": "developer",
+        "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "feature_id": "ddeab141-7dd6-4f38-beef-7a1ddf695eff",
+        "scenario_id": null,
+        "assigned_to": null,
+        "status": "pending",
+        "cli_generation_status": "not_started",
+        "created_at": "2026-04-12T19:18:25.659Z",
+        "updated_at": "2026-04-12T19:18:46.840Z",
+        "order_index": null,
+        "feature_vote_score": "0"
+      },
+      {
+        "id": "617a8969-61aa-465a-b166-ec1638d9958a",
+        "title": "Implement Implement Password Hashing backend logic",
+        "description": "Develop the core backend functionality for Implement Password Hashing",
+        "acceptance_criteria": [],
+        "task_type": "backend",
+        "task_role": "developer",
+        "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "feature_id": "0025402a-246c-419e-b719-d9f5a0a8581c",
+        "scenario_id": null,
+        "assigned_to": null,
+        "status": "pending",
+        "cli_generation_status": "not_started",
+        "created_at": "2026-04-12T19:18:35.477Z",
+        "updated_at": "2026-04-12T19:18:46.840Z",
+        "order_index": null,
+        "feature_vote_score": "0"
+      },
+      {
+        "id": "4028de7d-0da2-419f-8ad9-de1ca26037b8",
+        "title": "Implement Create User Registration Endpoint backend logic",
+        "description": "Develop the core backend functionality for Create User Registration Endpoint",
+        "acceptance_criteria": [],
+        "task_type": "backend",
+        "task_role": "developer",
+        "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "feature_id": "27bb0059-309e-421f-8e87-f5ffd88a673c",
+        "scenario_id": null,
+        "assigned_to": null,
+        "status": "pending",
+        "cli_generation_status": "not_started",
+        "created_at": "2026-04-12T19:18:39.500Z",
+        "updated_at": "2026-04-12T19:18:46.840Z",
+        "order_index": null,
+        "feature_vote_score": "0"
+      },
+      {
+        "id": "5d82d5c0-51a9-4748-99b8-e0aed199f5d2",
+        "title": "Implement Create User Login Endpoint backend logic",
+        "description": "Develop the core backend functionality for Create User Login Endpoint",
+        "acceptance_criteria": [],
+        "task_type": "backend",
+        "task_role": "developer",
+        "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "feature_id": "c51fc5fa-1534-4937-a0b5-1a0460195593",
+        "scenario_id": null,
+        "assigned_to": null,
+        "status": "pending",
+        "cli_generation_status": "not_started",
+        "created_at": "2026-04-12T19:18:42.981Z",
+        "updated_at": "2026-04-12T19:18:46.840Z",
+        "order_index": null,
+        "feature_vote_score": "0"
+      },
+      {
+        "id": "5c2fc9b9-7dad-4ee9-a08e-cdb21fefdc1f",
+        "title": "Create User Registration and Authentication UI components",
+        "description": "Build the user interface components for User Registration and Authentication",
+        "acceptance_criteria": [],
+        "task_type": "frontend",
+        "task_role": "developer",
+        "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "feature_id": "ddeab141-7dd6-4f38-beef-7a1ddf695eff",
+        "scenario_id": null,
+        "assigned_to": null,
+        "status": "pending",
+        "cli_generation_status": "not_started",
+        "created_at": "2026-04-12T19:18:25.667Z",
+        "updated_at": "2026-04-12T19:18:46.840Z",
+        "order_index": null,
+        "feature_vote_score": "0"
+      },
+      {
+        "id": "a3b37bab-056b-4d38-8419-31a0c6c83e29",
+        "title": "Create Implement Password Hashing UI components",
+        "description": "Build the user interface components for Implement Password Hashing",
+        "acceptance_criteria": [],
+        "task_type": "frontend",
+        "task_role": "developer",
+        "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "feature_id": "0025402a-246c-419e-b719-d9f5a0a8581c",
+        "scenario_id": null,
+        "assigned_to": null,
+        "status": "pending",
+        "cli_generation_status": "not_started",
+        "created_at": "2026-04-12T19:18:35.482Z",
+        "updated_at": "2026-04-12T19:18:46.840Z",
+        "order_index": null,
+        "feature_vote_score": "0"
+      },
+      {
+        "id": "1cddc09e-c86c-408e-a43b-f2166f3fddb5",
+        "title": "Create Create User Registration Endpoint UI components",
+        "description": "Build the user interface components for Create User Registration Endpoint",
+        "acceptance_criteria": [],
+        "task_type": "frontend",
+        "task_role": "developer",
+        "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "feature_id": "27bb0059-309e-421f-8e87-f5ffd88a673c",
+        "scenario_id": null,
+        "assigned_to": null,
+        "status": "pending",
+        "cli_generation_status": "not_started",
+        "created_at": "2026-04-12T19:18:39.506Z",
+        "updated_at": "2026-04-12T19:18:46.840Z",
+        "order_index": null,
+        "feature_vote_score": "0"
+      },
+      {
+        "id": "47d94d97-6eae-4383-b9ec-bcdce1bcefb0",
+        "title": "Create Create User Login Endpoint UI components",
+        "description": "Build the user interface components for Create User Login Endpoint",
+        "acceptance_criteria": [],
+        "task_type": "frontend",
+        "task_role": "developer",
+        "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+        "feature_id": "c51fc5fa-1534-4937-a0b5-1a0460195593",
+        "scenario_id": null,
+        "assigned_to": null,
+        "status": "pending",
+        "cli_generation_status": "not_started",
+        "created_at": "2026-04-12T19:18:42.986Z",
+        "updated_at": "2026-04-12T19:18:46.840Z",
+        "order_index": null,
+        "feature_vote_score": "0"
+      }
+    ]
+  }
+}

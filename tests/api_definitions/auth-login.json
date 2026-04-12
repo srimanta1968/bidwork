@@ -1,0 +1,35 @@
+{
+  "name": "POST /api/auth/login - Login an existing user",
+  "endpoint": "/api/auth/login",
+  "method": "POST",
+  "taskId": "428bd3bc-b764-4f07-a29a-f6bc6cdf7e59",
+  "sprintId": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+  "requiresAuth": false,
+  "priority": 2,
+  "dependsOn": ["POST /api/auth/register"],
+  "captureResponse": {
+    "auth.login.response.data.token": "data.token",
+    "auth.login.response.data.user.id": "data.user.id"
+  },
+  "testCases": [
+    {
+      "name": "Login with registered user credentials",
+      "payload": {
+        "email": "{{cache:auth.register.response.data.user.email}}",
+        "password": "{{static:TestPassword123!}}"
+      },
+      "expectedStatus": 200,
+      "expectedResponse": {
+        "success": true,
+        "data": {
+          "token": "string",
+          "user": {
+            "id": "string",
+            "email": "string",
+            "role": "string"
+          }
+        }
+      }
+    }
+  ]
+}

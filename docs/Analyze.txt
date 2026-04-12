@@ -1,0 +1,347 @@
+                                                                                          
+  Revised Flow: AI-First Scope → Human Refinement → Bid Range → Listing
+                                                                                                                                                                                                 
+  ┌─────────────────────────────────────────────────────────────────┐
+  │                    HOMEOWNER UPLOADS                            │                                                                                                                            
+  │              Video + Photos + Brief Description                 │
+  └──────────────────────┬──────────────────────────────────────────┘
+                         ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │                   AI ANALYSIS ENGINE                            │
+  │                                                                 │
+  │  Video → Frame extraction → Key frames selected                 │
+  │  Photos → Object/damage/area detection                          │
+  │  Description → Intent + context extraction                      │
+  │                                                                 │
+  │  OUTPUT:                                                        │
+  │  ┌────────────────────────────────────────────────────────┐     │
+  │  │  Scope of Work (Task List)                             │     │
+  │  │  ├─ Task 1: "Remove old bathroom tiles"                │     │
+  │  │  │   ├─ Extracted photo (from video frame)             │     │
+  │  │  │   ├─ Estimated area: ~45 sq ft                      │     │
+  │  │  │   └─ Materials: disposal bags, tools                │     │
+  │  │  ├─ Task 2: "Install new floor tiles"                  │     │
+  │  │  │   ├─ Extracted photo                                │     │
+  │  │  │   ├─ Estimated area: ~45 sq ft                      │     │
+  │  │  │   └─ Materials: tiles, mortar, grout                │     │
+  │  │  └─ Task N: ...                                        │     │
+  │  └────────────────────────────────────────────────────────┘     │
+  └──────────────────────┬──────────────────────────────────────────┘
+                         ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │               HUMAN REVIEW & REFINEMENT                         │
+  │                                                                 │
+  │  Two paths (can be sequential):                                 │
+  │                                                                 │
+  │  Path A: Internal Reviewer (your team)                          │
+  │  ├─ Reviews AI-generated tasks                                  │
+  │  ├─ Corrects misidentifications                                 │
+  │  ├─ Adds missed tasks                                           │
+  │  └─ Adjusts quantities/materials                                │
+  │                                                                 │
+  │  Path B: Homeowner                                              │
+  │  ├─ Sees each task with photo evidence                          │
+  │  ├─ Can EDIT any task (description, qty, notes)                 │
+  │  ├─ Can ADD tasks AI missed ("also fix the faucet")             │
+  │  ├─ Can REMOVE tasks ("skip the painting")                      │
+  │  └─ Can add notes/context per task                              │
+  │                                                                 │
+  └──────────────────────┬──────────────────────────────────────────┘
+                         ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │              AI BID RANGE GENERATION                            │
+  │                                                                 │
+  │  Inputs:                                                        │
+  │  ├─ Final approved task list                                    │
+  │  ├─ Location + local labor rates                                │
+  │  ├─ Material costs (by quality tier)                            │
+  │  └─ Historical job data (over time)                             │
+  │                                                                 │
+  │  OUTPUT:                                                        │
+  │  ┌────────────────────────────────────────────────────────┐     │
+  │  │  Starting Bid (Floor):  $3,200                         │     │
+  │  │  Max Bid (Ceiling):     $4,800                         │     │
+  │  │  Breakdown per task with cost range                    │     │
+  │  │  Estimated timeline: 3-5 days                          │     │
+  │  └────────────────────────────────────────────────────────┘     │
+  │                                                                 │
+  │  Contractors MUST bid within this range                          │
+  └──────────────────────┬──────────────────────────────────────────┘
+                         ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │            HOMEOWNER APPROVAL GATE                              │
+  │                                                                 │
+  │  Homeowner sees:                                                │
+  │  ├─ Final scope (all tasks with photos)                         │
+  │  ├─ Bid range (starting bid ↔ max bid)                          │
+  │  ├─ Estimated timeline                                          │
+  │  └─ Expected contractor quality tier                            │
+  │                                                                 │
+  │  Actions:                                                       │
+  │  ├─ ✅ APPROVE → Job listed for bidding                         │
+  │  ├─ ✏️   EDIT → Goes back to refinement step                     │
+  │  └─ ❌ CANCEL → Job discarded                                   │
+  └──────────────────────┬──────────────────────────────────────────┘
+                         ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │              LISTED FOR CONTRACTOR BIDDING                       │
+  │                                                                 │
+  │  Matched contractors see:                                       │
+  │  ├─ Full scope of work + photos                                 │
+  │  ├─ Bid range they must stay within                             │
+  │  ├─ AI-suggested bid (personalized to their profile)            │
+  │  └─ They accept/adjust within the range                         │
+  └─────────────────────────────────────────────────────────────────┘
+
+  What This Changes Architecturally
+
+  Three key differences from the original PRDs:
+
+  1. AI does the heavy lifting from Day 1 — no "Wizard of Oz" manual scoping phase. The AI generates the scope, humans only refine. This means the AI pipeline is a Week 1 priority, not Week 5.
+  2. Bid range instead of single estimate — the AI sets a floor and ceiling. Contractors compete within that band. This protects homeowners from overpaying AND protects contractors from a
+  race-to-bottom. Much smarter than a single price point.
+  3. Homeowner has real agency — they're not just accepting/rejecting. They can edit tasks, add context, and must explicitly approve before listing. This builds trust and improves scope
+  accuracy with zero extra cost to you.
+
+  Why This Beats Every Competitor
+
+  - Thumbtack/Angi: Homeowner describes job in text → gets random bids with no scope alignment. You give them a visual, editable scope before any contractor is involved.
+  - LawnStarter/GreenPal: Fixed SKU pricing, no customization. You let the job define the price, not a menu.
+  - Everyone: Contractors bid blind. Your contractors bid on a reviewed, photo-documented, homeowner-approved scope with a price band. Higher close rate, less rework.
+
+  ---
+  Want me to start building this? I'd begin with the project scaffolding (Next.js + Supabase) and the AI scope generation pipeline as the core first feature.
+
+✻ Brewed for 45s                    
+                                                                                          
+❯ This model of design for all types of homeowner work like Lawn, Patio, and also remodelling                                                                                                    
+                                                                                                                                                                                                 
+● Yes, the flow works universally across all categories. The key is that the AI analysis layer adapts per category while the pipeline stays the same. Here's how it breaks down:                 
+                                                                                                                                                                                                 
+  Universal Flow, Category-Specific AI
+                                                                                                                                                                                                 
+  Same Pipeline For Everything:
+  Upload → AI Scope → Human Refine → Bid Range → Approve → List                                                                                                                                  
+                  
+  What changes per category: WHAT the AI detects and HOW it prices
+
+  Category Breakdown
+
+  Lawn & Landscaping
+
+  AI Detects From Video/Photos:
+  ├─ Yard size (sq ft estimation from aerial/ground shots)
+  ├─ Grass condition (overgrown, patchy, dead spots, weeds)
+  ├─ Obstacles (trees, flower beds, fences, slopes)
+  ├─ Hardscape present (walkways, driveways bordering lawn)
+  └─ Additional elements (leaf buildup, debris, irrigation visible)
+
+  Generated Tasks (examples):
+  ├─ Mowing & edging — 2,400 sq ft, moderate overgrowth
+  ├─ Weed treatment — ~15% coverage detected
+  ├─ Leaf cleanup — heavy buildup in north corner (photo attached)
+  ├─ Hedge trimming — 3 hedges, ~6ft each (photo attached)
+  └─ Debris removal — branch pile near fence (photo attached)
+
+  Bid Range Factors:
+  ├─ Local mowing rates per sq ft
+  ├─ Seasonal adjustments (spring cleanup vs maintenance)
+  ├─ One-time vs recurring pricing
+  └─ Equipment requirements
+
+  Patio & Outdoor Living
+
+  AI Detects From Video/Photos:
+  ├─ Existing patio condition (cracked, settled, stained, none)
+  ├─ Surface type (concrete, pavers, wood deck, flagstone)
+  ├─ Area dimensions (estimated sq ft)
+  ├─ Grade/slope issues
+  ├─ Adjacent structures (house wall, fence, pool, garden)
+  ├─ Drainage visible or problematic
+  └─ Desired elements mentioned in description (pergola, fire pit, seating wall)
+
+  Generated Tasks (examples):
+  ├─ Demo existing cracked concrete patio — ~200 sq ft (photo)
+  ├─ Grade and compact base — same area
+  ├─ Install paver patio — 200 sq ft, herringbone pattern
+  ├─ Build seating wall — 12 linear ft (per homeowner description)
+  ├─ Install landscape lighting — 6 fixtures along border
+  └─ Cleanup and haul away debris
+
+  Bid Range Factors:
+  ├─ Material costs (concrete vs pavers vs flagstone per sq ft)
+  ├─ Quality tiers (budget / standard / premium pavers)
+  ├─ Complexity (straight slab vs curved design with features)
+  ├─ Equipment needs (excavation, compactor rental)
+  └─ Local labor rates for hardscape work
+
+  Kitchen Remodel
+
+  AI Detects From Video/Photos:
+  ├─ Kitchen layout (galley, L-shape, U-shape, island)
+  ├─ Cabinet condition & count (doors, drawers, style)
+  ├─ Countertop material & condition (laminate, granite, butcher block)
+  ├─ Appliance positions and ages (visible wear/model)
+  ├─ Flooring type & condition
+  ├─ Backsplash presence & condition
+  ├─ Lighting fixtures
+  ├─ Plumbing fixtures (sink, faucet condition)
+  └─ Visible damage (water stains, peeling, warped cabinets)
+
+  Generated Tasks (examples):
+  ├─ Demo existing countertops — ~35 linear ft (photo)
+  ├─ Demo backsplash — ~25 sq ft (photo)
+  ├─ Refinish cabinets — 18 doors, 12 drawers (photos per section)
+  ├─ Install quartz countertops — 35 linear ft + island
+  ├─ Install subway tile backsplash — 25 sq ft
+  ├─ Replace sink & faucet — undermount style
+  ├─ Install under-cabinet lighting — 4 sections
+  └─ Paint walls — ~150 sq ft
+
+  Bid Range Factors:
+  ├─ Material tier (laminate vs granite vs quartz counters)
+  ├─ Cabinet approach (reface vs refinish vs replace)
+  ├─ Plumbing complexity (moving pipes vs same location)
+  ├─ Electrical work needed
+  └─ Permit requirements by location
+
+  Bathroom Remodel
+
+  AI Detects From Video/Photos:
+  ├─ Bathroom type (full, half, master, guest)
+  ├─ Size estimation
+  ├─ Fixture condition (toilet, vanity, tub/shower, faucets)
+  ├─ Tile condition (floor, walls, shower surround)
+  ├─ Visible damage (mold, water damage, cracked grout, leaks)
+  ├─ Ventilation (fan present or not)
+  ├─ Lighting type & condition
+  └─ Storage/cabinetry condition
+
+  Generated Tasks (examples):
+  ├─ Demo shower surround tile — ~60 sq ft (photo showing damage)
+  ├─ Repair water-damaged subfloor — ~8 sq ft behind toilet (photo)
+  ├─ Install new floor tile — 45 sq ft
+  ├─ Install shower wall tile — 60 sq ft
+  ├─ Replace vanity + sink — 36" single vanity
+  ├─ Replace toilet — standard height
+  ├─ Install new exhaust fan — vented to exterior
+  ├─ Replace lighting — vanity bar + recessed
+  └─ Paint ceiling & trim
+
+  Bid Range Factors:
+  ├─ Fixture quality tier (builder / mid / luxury)
+  ├─ Tile complexity (simple subway vs mosaic patterns)
+  ├─ Plumbing scope (same layout vs reconfigured)
+  ├─ Structural repairs needed (water damage extent)
+  └─ Permit requirements
+
+  General Repairs & Handyman
+
+  AI Detects From Video/Photos:
+  ├─ Damage type (hole in wall, broken fixture, peeling paint)
+  ├─ Affected area size
+  ├─ Material involved (drywall, wood, metal, glass)
+  ├─ Severity assessment
+  ├─ Related issues (water stain near damage = possible leak)
+  └─ Access complexity (height, tight space)
+
+  Generated Tasks (examples):
+  ├─ Patch drywall — 2 holes, ~6" and ~12" (photos)
+  ├─ Sand and paint repaired area — ~4 sq ft per patch
+  ├─ Fix running toilet — flapper/fill valve replacement
+  ├─ Replace broken window pane — 24"x36" single pane
+  └─ Tighten loose deck railing — 8 ft section (photo)
+
+  How The AI Adapts Per Category
+
+  ┌──────────────────────────────────────────────────────────────┐
+  │                   UNIVERSAL AI ENGINE                         │
+  │                                                              │
+  │  Step 1: CLASSIFY                                            │
+  │  ├─ AI watches video / scans photos                          │
+  │  ├─ Detects: "This is a PATIO job"                          │
+  │  └─ Loads category-specific detection model/prompts          │
+  │                                                              │
+  │  Step 2: DETECT (category-specific)                          │
+  │  ├─ Lawn → grass condition, yard size, obstacles             │
+  │  ├─ Patio → surface type, area, grade, existing condition    │
+  │  ├─ Kitchen → cabinets, counters, appliances, layout         │
+  │  ├─ Bathroom → fixtures, tile, damage, plumbing              │
+  │  └─ Repair → damage type, material, severity                 │
+  │                                                              │
+  │  Step 3: SCOPE (universal structure)                         │
+  │  ├─ Generate task list (same format for all categories)      │
+  │  ├─ Attach relevant photo per task                           │
+  │  ├─ Estimate quantities                                      │
+  │  └─ List materials per task                                  │
+  │                                                              │
+  │  Step 4: PRICE (category-specific data)                      │
+  │  ├─ Pull local rates for this category                       │
+  │  ├─ Apply material tier pricing                              │
+  │  ├─ Calculate starting bid (floor)                           │
+  │  └─ Calculate max bid (ceiling)                              │
+  └──────────────────────────────────────────────────────────────┘
+
+  Data Model — Universal Task Structure
+
+  Every category produces the same task format:
+
+  Task {
+    id
+    job_id
+    category          → "lawn" | "patio" | "kitchen" | "bathroom" | "repair"
+    title             → "Install paver patio"
+    description       → "Remove existing concrete, install sand base..."
+    photos[]          → extracted frames / uploaded photos for THIS task
+    estimated_qty     → 200
+    qty_unit          → "sq_ft" | "linear_ft" | "each" | "hours"
+    materials[]       → [{ name, qty, unit_cost, quality_tier }]
+    labor_hours_est   → 16
+    cost_range        → { min: 1200, max: 1800 }
+    sort_order        → 3
+    homeowner_notes   → "I want a curved edge, not straight"
+    ai_confidence     → 0.85
+  }
+
+  Job {
+    id
+    homeowner_id
+    category
+    subcategory       → "paver_install" | "mowing" | "full_remodel"
+    media[]           → original uploads
+    tasks[]           → AI-generated, human-refined
+    starting_bid      → sum of all task minimums + margin
+    max_bid           → sum of all task maximums + margin
+    timeline_est      → { min_days: 3, max_days: 5 }
+    status            → "ai_scoping" | "review" | "homeowner_approval" |
+                         "listed" | "bidding" | "assigned" | "in_progress" |
+                         "completed"
+    location
+    quality_tier      → "budget" | "standard" | "premium"
+  }
+
+  Why One Universal Flow Works
+
+  The beauty is that from the contractor's side and homeowner's side, the experience is identical regardless of category:
+
+  1. Upload media → see AI-generated tasks with photos
+  2. Edit/approve tasks
+  3. See bid range
+  4. Approve to list
+  5. Contractors bid within range
+  6. Pick a contractor
+  7. Track progress per task
+  8. Pay on completion
+
+  The only thing that changes is what the AI looks for and what pricing data it references. The UI, the flow, the bidding mechanics, the payment system — all the same.
+
+  This means you build the platform once and add new categories by:
+  - Adding category-specific AI prompts/detection rules
+  - Adding local pricing data for that category
+  - Recruiting contractors in that category
+
+  ---
+  Want me to start building? I'll set up the project structure and begin with the core: the universal job/task data model and the AI scope generation pipeline that works across all categories.
+
+✻ Crunched for 58s                    
+                                            
