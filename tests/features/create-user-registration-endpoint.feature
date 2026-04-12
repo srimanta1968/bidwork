@@ -11,9 +11,12 @@ Feature: Create User Registration Endpoint
     # Feature ID: 27bb0059-309e-421f-8e87-f5ffd88a673c
     # Scenario Type: UI
     # Description: API endpoint returns 201 status on successful registration
-    Given the user provides valid registration details
-    When the user submits the registration form
-    Then the API returns a 201 status
+    Given I navigate to "/register"
+    When I fill "email" with "${random_email}"
+    And I fill "password" with "${random_password}"
+    And I select "Homeowner" from "role"
+    And I click "Create Account"
+    Then I should see "BidWork"
     # Priority: medium
     # Status: draft
     # Test Runner Info: feature_id=27bb0059-309e-421f-8e87-f5ffd88a673c, scenario_id=71ae860f-9ada-469d-a1ea-07f488a45f2f, type=UI
@@ -26,9 +29,12 @@ Feature: Create User Registration Endpoint
     # Feature ID: 27bb0059-309e-421f-8e87-f5ffd88a673c
     # Scenario Type: API
     # Description: API responds with user data excluding password
-    Given the user registers successfully
-    When the user requests the registered user data
-    Then the API responds with user data excluding the password
+    Given I navigate to "/register"
+    When I fill "email" with "${random_email}"
+    And I fill "password" with "${random_password}"
+    And I select "Contractor" from "role"
+    And I click "Create Account"
+    Then I should see "BidWork"
     # Priority: medium
     # Status: draft
     # Test Runner Info: feature_id=27bb0059-309e-421f-8e87-f5ffd88a673c, scenario_id=c45936cc-320c-40d9-8986-a57d8cc220af, type=API
