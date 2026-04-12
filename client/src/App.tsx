@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { I18nProvider } from './context/I18nProvider';
 import HomePage from './pages/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
@@ -17,12 +18,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function DashboardRouter() {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
-
-  // Redirect unonboarded contractors/skilled labor to onboarding
-  if ((user.role === 'contractor' || user.role === 'skilled_labor') && !user.is_onboarded) {
-    return <Navigate to="/onboarding" replace />;
-  }
-
+  if ((user.role === 'contractor' || user.role === 'skilled_labor') && !user.is_onboarded) return <Navigate to="/onboarding" replace />;
   switch (user.role) {
     case 'contractor': return <ContractorDashboard />;
     case 'skilled_labor': return <SkilledLaborDashboard />;
@@ -40,7 +36,6 @@ function OnboardingGuard() {
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
-
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
@@ -55,9 +50,11 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
+      <I18nProvider>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </I18nProvider>
     </BrowserRouter>
   );
 }

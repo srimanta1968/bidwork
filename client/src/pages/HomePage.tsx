@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useI18n } from '../i18n';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 /* ═══════════════════════ NAVBAR ═══════════════════════ */
 function Navbar() {
@@ -23,6 +25,7 @@ function Navbar() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <LanguageSwitcher />
           {isAuthenticated ? (
             <>
               <span style={{ fontSize: 14, color: '#64748b', marginRight: 8 }}>Hi, {user?.email?.split('@')[0]}</span>
