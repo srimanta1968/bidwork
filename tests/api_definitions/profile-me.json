@@ -1,0 +1,26 @@
+{
+  "name": "GET /api/profile/me - Get my contractor/skilled labor profile",
+  "endpoint": "/api/profile/me",
+  "method": "GET",
+  "taskId": "36d88fea-53bf-4a52-ac15-a2f05f57f290",
+  "sprintId": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+  "requiresAuth": true,
+  "priority": 11,
+  "dependsOn": ["POST /api/auth/register", "POST /api/profile/onboard"],
+  "testCases": [
+    {
+      "name": "Get my profile after onboarding",
+      "headers": { "Authorization": "Bearer {{cache:auth.register.response.data.token}}" },
+      "expectedStatus": 200,
+      "expectedResponse": {
+        "success": true,
+        "data": {
+          "profile": {
+            "id": "string",
+            "category": "string"
+          }
+        }
+      }
+    }
+  ]
+}

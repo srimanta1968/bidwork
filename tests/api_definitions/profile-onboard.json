@@ -1,0 +1,40 @@
+{
+  "name": "POST /api/profile/onboard - Complete contractor/skilled labor onboarding",
+  "endpoint": "/api/profile/onboard",
+  "method": "POST",
+  "taskId": "36d88fea-53bf-4a52-ac15-a2f05f57f290",
+  "sprintId": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+  "requiresAuth": true,
+  "priority": 10,
+  "dependsOn": ["POST /api/auth/register"],
+  "captureResponse": {
+    "profile.onboard.response.data.profile.id": "data.profile.id"
+  },
+  "testCases": [
+    {
+      "name": "Complete contractor onboarding",
+      "headers": { "Authorization": "Bearer {{cache:auth.register.response.data.token}}" },
+      "payload": {
+        "phone": "{{dynamic:phone}}",
+        "business_name": "{{dynamic:name}}",
+        "office_address": "{{static:123 Main St, Austin TX 78701}}",
+        "license_number": "{{static:CSLB-123456}}",
+        "license_type": "{{static:General B}}",
+        "category": "{{static:General Contractor}}",
+        "years_experience": 5,
+        "bio": "{{static:Experienced general contractor}}"
+      },
+      "expectedStatus": 200,
+      "expectedResponse": {
+        "success": true,
+        "data": {
+          "profile": {
+            "id": "string",
+            "user_id": "string",
+            "category": "string"
+          }
+        }
+      }
+    }
+  ]
+}
