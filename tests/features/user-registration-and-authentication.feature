@@ -11,12 +11,12 @@ Feature: User Registration and Authentication
     # Feature ID: ddeab141-7dd6-4f38-beef-7a1ddf695eff
     # Scenario Type: UI
     # Description: Test the user registration process with valid email and password.
-    Given The user is on the registration page
-    When The user enters a valid email address
-    And The user enters a valid password
-    And The user clicks the 'Register' button
-    Then The user should see a registration success message
-    And The user should be redirected to the login page
+    Given I navigate to "/register"
+    When I fill "email" with "${random_email}"
+    And I fill "password" with "${random_password}"
+    And I select "Homeowner" from "role"
+    And I click "Create Account"
+    Then I should see "BidWork"
     # Priority: medium
     # Status: draft
     # Test Runner Info: feature_id=ddeab141-7dd6-4f38-beef-7a1ddf695eff, scenario_id=5313c425-dc8c-4352-b350-b161fffa0ee0, type=UI
@@ -29,11 +29,12 @@ Feature: User Registration and Authentication
     # Feature ID: ddeab141-7dd6-4f38-beef-7a1ddf695eff
     # Scenario Type: UI
     # Description: Test the user registration process with an email that is already registered.
-    Given The user is on the registration page
-    When The user enters an already registered email address
-    And The user enters a valid password
-    And The user clicks the 'Register' button
-    Then The user should see an error message indicating the email is already in use
+    Given I navigate to "/register"
+    When I fill "email" with "${login:email}"
+    And I fill "password" with "${random_password}"
+    And I select "Homeowner" from "role"
+    And I click "Create Account"
+    Then I should see "Email already registered"
     # Priority: medium
     # Status: draft
     # Test Runner Info: feature_id=ddeab141-7dd6-4f38-beef-7a1ddf695eff, scenario_id=405c4db3-406a-47e6-a368-1f8496984d10, type=UI
@@ -46,12 +47,11 @@ Feature: User Registration and Authentication
     # Feature ID: ddeab141-7dd6-4f38-beef-7a1ddf695eff
     # Scenario Type: UI
     # Description: Test the user login process with valid credentials.
-    Given The user is on the login page
-    When The user enters a valid email address
-    And The user enters the correct password
-    And The user clicks the 'Login' button
-    Then The user should be logged in successfully
-    And The user should be redirected to the dashboard
+    Given I navigate to "/login"
+    When I fill "email" with "${login:email}"
+    And I fill "password" with "${login:password}"
+    And I click "Sign In"
+    Then I should see "BidWork"
     # Priority: medium
     # Status: draft
     # Test Runner Info: feature_id=ddeab141-7dd6-4f38-beef-7a1ddf695eff, scenario_id=2e3f2938-4096-4af8-a9b7-e87eaf531fd4, type=UI
@@ -64,11 +64,11 @@ Feature: User Registration and Authentication
     # Feature ID: ddeab141-7dd6-4f38-beef-7a1ddf695eff
     # Scenario Type: UI
     # Description: Test the user login process with invalid credentials.
-    Given The user is on the login page
-    When The user enters a valid email address
-    And The user enters an incorrect password
-    And The user clicks the 'Login' button
-    Then The user should see an error message indicating invalid credentials
+    Given I navigate to "/login"
+    When I fill "email" with "${login:email}"
+    And I fill "password" with "WrongPassword123!"
+    And I click "Sign In"
+    Then I should see "Invalid email or password"
     # Priority: medium
     # Status: draft
     # Test Runner Info: feature_id=ddeab141-7dd6-4f38-beef-7a1ddf695eff, scenario_id=7b6b41af-367e-4a70-aa0c-f2f18e499d52, type=UI
