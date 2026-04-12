@@ -6,6 +6,7 @@ import LanguageSwitcher from '../components/common/LanguageSwitcher';
 /* ═══════════════════════ NAVBAR ═══════════════════════ */
 function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
+  const { t } = useI18n();
   return (
     <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #f1f5f9' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -15,26 +16,21 @@ function Navbar() {
         </Link>
 
         <div style={{ display: 'none', gap: 32, alignItems: 'center' }} className="md:!flex">
-          {['Features', 'How It Works', 'Pricing'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase().replace(/ /g, '-')}`} style={{ fontSize: 14, fontWeight: 500, color: '#64748b', textDecoration: 'none', transition: 'color 0.2s' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#0f172a')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#64748b')}>
-              {item}
-            </a>
-          ))}
+          <a href="#features" style={{ fontSize: 14, fontWeight: 500, color: '#64748b', textDecoration: 'none' }}>{t.features.label}</a>
+          <a href="#how-it-works" style={{ fontSize: 14, fontWeight: 500, color: '#64748b', textDecoration: 'none' }}>{t.howItWorks.label}</a>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <LanguageSwitcher />
           {isAuthenticated ? (
             <>
-              <span style={{ fontSize: 14, color: '#64748b', marginRight: 8 }}>Hi, {user?.email?.split('@')[0]}</span>
-              <button onClick={logout} style={{ fontSize: 14, fontWeight: 500, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', padding: '8px 16px' }}>Logout</button>
+              <span style={{ fontSize: 14, color: '#64748b', marginRight: 8 }}>Hi, {user?.first_name || user?.email?.split('@')[0]}</span>
+              <button onClick={logout} style={{ fontSize: 14, fontWeight: 500, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', padding: '8px 16px' }}>{t.nav.logout}</button>
             </>
           ) : (
             <>
-              <Link to="/login" style={{ fontSize: 14, fontWeight: 500, color: '#475569', padding: '9px 20px', textDecoration: 'none', borderRadius: 8 }}>Sign In</Link>
-              <Link to="/register" style={{ fontSize: 14, fontWeight: 600, color: 'white', padding: '9px 22px', textDecoration: 'none', borderRadius: 8, background: 'linear-gradient(135deg, #2563eb, #4f46e5)', boxShadow: '0 1px 3px rgba(37,99,235,0.3)' }}>Get Started</Link>
+              <Link to="/login" style={{ fontSize: 14, fontWeight: 500, color: '#475569', padding: '9px 20px', textDecoration: 'none', borderRadius: 8 }}>{t.nav.signIn}</Link>
+              <Link to="/register" style={{ fontSize: 14, fontWeight: 600, color: 'white', padding: '9px 22px', textDecoration: 'none', borderRadius: 8, background: 'linear-gradient(135deg, #2563eb, #4f46e5)', boxShadow: '0 1px 3px rgba(37,99,235,0.3)' }}>{t.nav.getStarted}</Link>
             </>
           )}
         </div>
@@ -45,44 +41,35 @@ function Navbar() {
 
 /* ═══════════════════════ HERO ═══════════════════════ */
 function Hero() {
+  const { t } = useI18n();
   return (
     <section style={{ paddingTop: 140, paddingBottom: 80, background: '#ffffff', position: 'relative', overflow: 'hidden' }}>
-      {/* Subtle background gradient */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '100%', background: 'radial-gradient(ellipse at 50% 0%, rgba(37,99,235,0.04) 0%, transparent 60%)' }} />
-
       <div style={{ position: 'relative', maxWidth: 880, margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
         <h1 className="animate-fade-up" style={{ fontSize: 'clamp(36px, 5.5vw, 62px)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.03em', color: '#0f172a', marginBottom: 24 }}>
-          Turn Home Project Photos into{' '}
-          <span className="gradient-text">Qualified Bids</span>
+          {t.hero.headline1}{' '}
+          <span className="gradient-text">{t.hero.headline2}</span>
         </h1>
-
         <p className="animate-fade-up-delay" style={{ fontSize: 'clamp(16px, 2vw, 19px)', lineHeight: 1.7, color: '#64748b', maxWidth: 640, margin: '0 auto 40px', fontWeight: 400 }}>
-          AI scopes your project, documents every task with photo evidence, and sets a fair bid range — so you can focus on choosing the right contractor instead of explaining the job.
+          {t.hero.subtitle}
         </p>
-
         <div className="animate-fade-up-delay2" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center', marginBottom: 64 }}>
-          <Link to="/register" style={{ fontSize: 16, fontWeight: 600, color: 'white', padding: '14px 32px', textDecoration: 'none', borderRadius: 10, background: 'linear-gradient(135deg, #2563eb, #4f46e5)', boxShadow: '0 4px 14px rgba(37,99,235,0.3)', display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'transform 0.2s, box-shadow 0.2s' }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(37,99,235,0.4)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(37,99,235,0.3)'; }}>
-            Start Free Today
+          <Link to="/register" style={{ fontSize: 16, fontWeight: 600, color: 'white', padding: '14px 32px', textDecoration: 'none', borderRadius: 10, background: 'linear-gradient(135deg, #2563eb, #4f46e5)', boxShadow: '0 4px 14px rgba(37,99,235,0.3)', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            {t.hero.ctaPrimary}
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
           </Link>
-          <Link to="#how-it-works" style={{ fontSize: 16, fontWeight: 600, color: '#475569', padding: '14px 32px', textDecoration: 'none', borderRadius: 10, border: '1px solid #e2e8f0', background: 'white', transition: 'all 0.2s' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.color = '#0f172a'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#475569'; }}>
-            See How It Works
+          <Link to="#how-it-works" style={{ fontSize: 16, fontWeight: 600, color: '#475569', padding: '14px 32px', textDecoration: 'none', borderRadius: 10, border: '1px solid #e2e8f0', background: 'white' }}>
+            {t.hero.ctaSecondary}
           </Link>
         </div>
-
-        {/* Stats row */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: 0, flexWrap: 'wrap' }}>
           {[
-            { value: '3x', label: 'Faster Kickoff' },
-            { value: '40%', label: 'Less Rework' },
-            { value: '$0', label: 'To Get Started' },
-            { value: '100%', label: 'Scope Clarity' },
+            { value: '3x', label: t.stats.faster },
+            { value: '40%', label: t.stats.rework },
+            { value: '$0', label: t.stats.started },
+            { value: '100%', label: t.stats.clarity },
           ].map((stat, i) => (
-            <div key={stat.label} style={{ padding: '16px 40px', textAlign: 'center', borderLeft: i > 0 ? '1px solid #e2e8f0' : 'none' }}>
+            <div key={stat.value} style={{ padding: '16px 40px', textAlign: 'center', borderLeft: i > 0 ? '1px solid #e2e8f0' : 'none' }}>
               <div style={{ fontSize: 28, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>{stat.value}</div>
               <div style={{ fontSize: 13, fontWeight: 500, color: '#94a3b8', marginTop: 2 }}>{stat.label}</div>
             </div>
@@ -93,26 +80,26 @@ function Hero() {
   );
 }
 
-/* ═══════════════════════ FEATURES GRID ═══════════════════════ */
+/* ═══════════════════════ FEATURES ═══════════════════════ */
 function FeaturesGrid() {
+  const { t } = useI18n();
   const features = [
-    { icon: '📸', title: 'Photo & Video Upload', desc: 'Upload project media from your phone. Our AI processes every angle to understand the full scope.' },
-    { icon: '🤖', title: 'AI Scope Generation', desc: 'Get a detailed task list with materials, labor estimates, and photo evidence per task — automatically.' },
-    { icon: '✏️', title: 'Editable Task List', desc: 'Review, edit, add, or remove tasks. You approve the final scope before any contractor sees it.' },
-    { icon: '💰', title: 'Fair Bid Range', desc: 'Every project gets a floor-to-ceiling price range based on market data. No surprises.' },
-    { icon: '👷', title: 'Vetted Contractors', desc: 'Only qualified contractors bid on your project. They compete on quality and speed, not just price.' },
-    { icon: '📋', title: 'Photo Documentation', desc: 'Every task includes photo evidence from your upload. Contractors see exactly what needs to be done.' },
+    { icon: '📸', title: t.features.photoUpload, desc: t.features.photoUploadDesc },
+    { icon: '🤖', title: t.features.aiScope, desc: t.features.aiScopeDesc },
+    { icon: '✏️', title: t.features.editableList, desc: t.features.editableListDesc },
+    { icon: '💰', title: t.features.bidRange, desc: t.features.bidRangeDesc },
+    { icon: '👷', title: t.features.vettedContractors, desc: t.features.vettedContractorsDesc },
+    { icon: '📋', title: t.features.photoDocs, desc: t.features.photoDocsDesc },
   ];
 
   return (
     <section id="features" style={{ padding: '96px 0', background: '#f8fafc' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Features</p>
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: 16 }}>Everything You Need to Scope & Bid</h2>
-          <p style={{ fontSize: 17, color: '#64748b', maxWidth: 560, margin: '0 auto' }}>From photo upload to accepted bid, BidWork gives you a complete toolkit for home project execution.</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>{t.features.label}</p>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: 16 }}>{t.features.title}</h2>
+          <p style={{ fontSize: 17, color: '#64748b', maxWidth: 560, margin: '0 auto' }}>{t.features.subtitle}</p>
         </div>
-
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
           {features.map((f) => (
             <div key={f.title} style={{ background: 'white', borderRadius: 14, padding: 32, border: '1px solid #f1f5f9', transition: 'all 0.3s ease', cursor: 'default' }}
@@ -131,22 +118,22 @@ function FeaturesGrid() {
 
 /* ═══════════════════════ HOW IT WORKS ═══════════════════════ */
 function HowItWorks() {
+  const { t } = useI18n();
   const steps = [
-    { num: '1', title: 'Upload Your Project', desc: 'Snap photos or record a walkthrough video of your home project. Any project — kitchens, bathrooms, decks, roofing.', color: '#2563eb' },
-    { num: '2', title: 'AI Scopes the Work', desc: 'Our AI analyzes every detail — identifying tasks, materials, and labor. You get a full scope with a bid range.', color: '#7c3aed' },
-    { num: '3', title: 'Review & Approve', desc: 'Edit the task list, adjust priorities, approve the scope. Nothing goes to contractors without your sign-off.', color: '#0891b2' },
-    { num: '4', title: 'Receive Fair Bids', desc: 'Vetted contractors see your pre-scoped job and bid within range. Choose based on quality, reviews, and timeline.', color: '#059669' },
+    { num: '1', title: t.howItWorks.step1, desc: t.howItWorks.step1Desc, color: '#2563eb' },
+    { num: '2', title: t.howItWorks.step2, desc: t.howItWorks.step2Desc, color: '#7c3aed' },
+    { num: '3', title: t.howItWorks.step3, desc: t.howItWorks.step3Desc, color: '#0891b2' },
+    { num: '4', title: t.howItWorks.step4, desc: t.howItWorks.step4Desc, color: '#059669' },
   ];
 
   return (
     <section id="how-it-works" style={{ padding: '96px 0', background: 'white' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>How It Works</p>
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: 16 }}>Four Steps to Your Perfect Project</h2>
-          <p style={{ fontSize: 17, color: '#64748b', maxWidth: 560, margin: '0 auto' }}>No more guesswork. No more surprise invoices. Total control from day one.</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>{t.howItWorks.label}</p>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: 16 }}>{t.howItWorks.title}</h2>
+          <p style={{ fontSize: 17, color: '#64748b', maxWidth: 560, margin: '0 auto' }}>{t.howItWorks.subtitle}</p>
         </div>
-
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 32 }}>
           {steps.map((s) => (
             <div key={s.num} style={{ textAlign: 'center' }}>
@@ -161,8 +148,9 @@ function HowItWorks() {
   );
 }
 
-/* ═══════════════════════ SPLIT SECTIONS ═══════════════════════ */
+/* ═══════════════════════ FOR WHO ═══════════════════════ */
 function ForWho() {
+  const { t } = useI18n();
   const CheckItem = ({ text, color }: { text: string; color: string }) => (
     <li style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
       <div style={{ width: 20, height: 20, borderRadius: '50%', background: `${color}12`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
@@ -176,34 +164,30 @@ function ForWho() {
     <section style={{ padding: '96px 0', background: '#f8fafc' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: '#059669', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Built for Both Sides</p>
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>Whether You Own It or Build It</h2>
+          <p style={{ fontSize: 13, fontWeight: 700, color: '#059669', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>{t.forWho.label}</p>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>{t.forWho.title}</h2>
         </div>
-
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 28 }}>
-          {/* Homeowners */}
           <div style={{ background: 'white', borderRadius: 16, padding: 40, border: '1px solid #e2e8f0' }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 24 }}>🏠</div>
-            <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>For Homeowners</h3>
-            <p style={{ fontSize: 15, color: '#64748b', marginBottom: 24, lineHeight: 1.6 }}>Know exactly what your project involves and what it should cost — before talking to anyone.</p>
+            <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>{t.forWho.homeownerTitle}</h3>
+            <p style={{ fontSize: 15, color: '#64748b', marginBottom: 24, lineHeight: 1.6 }}>{t.forWho.homeownerDesc}</p>
             <ul style={{ listStyle: 'none', padding: 0 }}>
-              <CheckItem text="AI-generated scope from your photos" color="#2563eb" />
-              <CheckItem text="Editable task list you fully control" color="#2563eb" />
-              <CheckItem text="Fair bid range — floor to ceiling" color="#2563eb" />
-              <CheckItem text="Photo evidence attached to each task" color="#2563eb" />
+              <CheckItem text={t.forWho.h1} color="#2563eb" />
+              <CheckItem text={t.forWho.h2} color="#2563eb" />
+              <CheckItem text={t.forWho.h3} color="#2563eb" />
+              <CheckItem text={t.forWho.h4} color="#2563eb" />
             </ul>
           </div>
-
-          {/* Contractors */}
           <div style={{ background: 'white', borderRadius: 16, padding: 40, border: '1px solid #e2e8f0' }}>
             <div style={{ width: 48, height: 48, borderRadius: 12, background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, marginBottom: 24 }}>🔨</div>
-            <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>For Contractors</h3>
-            <p style={{ fontSize: 15, color: '#64748b', marginBottom: 24, lineHeight: 1.6 }}>Stop wasting time on vague leads. Every job comes pre-scoped with clear expectations.</p>
+            <h3 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>{t.forWho.contractorTitle}</h3>
+            <p style={{ fontSize: 15, color: '#64748b', marginBottom: 24, lineHeight: 1.6 }}>{t.forWho.contractorDesc}</p>
             <ul style={{ listStyle: 'none', padding: 0 }}>
-              <CheckItem text="Pre-scoped, photo-documented jobs" color="#059669" />
-              <CheckItem text="Defined bid range — no race to bottom" color="#059669" />
-              <CheckItem text="Compete on quality and speed" color="#059669" />
-              <CheckItem text="Less rework, faster project close" color="#059669" />
+              <CheckItem text={t.forWho.c1} color="#059669" />
+              <CheckItem text={t.forWho.c2} color="#059669" />
+              <CheckItem text={t.forWho.c3} color="#059669" />
+              <CheckItem text={t.forWho.c4} color="#059669" />
             </ul>
           </div>
         </div>
@@ -214,6 +198,7 @@ function ForWho() {
 
 /* ═══════════════════════ TESTIMONIALS ═══════════════════════ */
 function Testimonials() {
+  const { t } = useI18n();
   const reviews = [
     { text: "BidWork completely changed how I approach home projects. I knew exactly what I was paying for before the first contractor showed up.", name: 'Sarah M.', role: 'Homeowner, Austin TX', color: '#2563eb' },
     { text: "As a contractor, I love that jobs come pre-scoped. I see the photos, the task list, and the budget — and I bid with confidence.", name: 'Marcus J.', role: 'General Contractor', color: '#059669' },
@@ -224,10 +209,9 @@ function Testimonials() {
     <section style={{ padding: '96px 0', background: 'white' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Testimonials</p>
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>Loved by Homeowners & Contractors</h2>
+          <p style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>{t.testimonials.label}</p>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>{t.testimonials.title}</h2>
         </div>
-
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
           {reviews.map((r) => (
             <div key={r.name} style={{ background: '#f8fafc', borderRadius: 16, padding: 32, border: '1px solid #f1f5f9', transition: 'all 0.3s' }}
@@ -256,6 +240,7 @@ function Testimonials() {
 
 /* ═══════════════════════ CTA ═══════════════════════ */
 function CTA() {
+  const { t } = useI18n();
   return (
     <section style={{ padding: '96px 0', background: '#f8fafc' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
@@ -263,19 +248,17 @@ function CTA() {
           <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(ellipse at top right, white, transparent 60%)' }} />
           <div style={{ position: 'relative' }}>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, color: 'white', letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: 16 }}>
-              Ready to scope your next project?
+              {t.cta.title}
             </h2>
             <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.75)', maxWidth: 500, margin: '0 auto 36px', lineHeight: 1.6 }}>
-              Create a free account and let AI define your project in minutes.
+              {t.cta.subtitle}
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
-              <Link to="/register" style={{ fontSize: 16, fontWeight: 700, padding: '14px 36px', background: 'white', color: '#1e3a8a', borderRadius: 10, textDecoration: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', transition: 'transform 0.2s' }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-1px)')}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}>
-                Get Started Free
+              <Link to="/register" style={{ fontSize: 16, fontWeight: 700, padding: '14px 36px', background: 'white', color: '#1e3a8a', borderRadius: 10, textDecoration: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.15)' }}>
+                {t.cta.primary}
               </Link>
               <Link to="/register" style={{ fontSize: 16, fontWeight: 600, padding: '14px 36px', background: 'rgba(255,255,255,0.12)', color: 'white', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 10, textDecoration: 'none' }}>
-                I'm a Contractor
+                {t.cta.secondary}
               </Link>
             </div>
           </div>
@@ -287,6 +270,7 @@ function CTA() {
 
 /* ═══════════════════════ FOOTER ═══════════════════════ */
 function Footer() {
+  const { t } = useI18n();
   return (
     <footer style={{ borderTop: '1px solid #f1f5f9', padding: '32px 0', background: 'white' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
@@ -294,8 +278,8 @@ function Footer() {
           <div style={{ width: 26, height: 26, borderRadius: 7, background: 'linear-gradient(135deg, #2563eb, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: 11 }}>B</div>
           <span style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>BidWork</span>
         </div>
-        <p style={{ fontSize: 13, color: '#94a3b8' }}>The operating system for home services execution.</p>
-        <p style={{ fontSize: 13, color: '#cbd5e1' }}>&copy; {new Date().getFullYear()} BidWork. All rights reserved.</p>
+        <p style={{ fontSize: 13, color: '#94a3b8' }}>{t.footer.tagline}</p>
+        <p style={{ fontSize: 13, color: '#cbd5e1' }}>&copy; {new Date().getFullYear()} BidWork. {t.footer.rights}</p>
       </div>
     </footer>
   );
