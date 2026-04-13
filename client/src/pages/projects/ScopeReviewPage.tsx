@@ -1,6 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProject, getProjectStatus, approveProject, retryProject } from '../../services/projectApi';
+
+/**
+ * Lazy video player — zero S3 data until user clicks play.
+ * preload="none" prevents any download. Video only loads on play.
+ */
+function VideoPlayer({ url }: { url: string }) {
+  const [playing, setPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handlePlay = () => {
+    setPlaying(true);
+    setTimeout(() => videoRef.current?.play(), 50);
+  };
+
+  if (!playing) {
+    return (
+      <div onClick={handlePlay}
+        style={{ width: '100%', height: 180, background: '#0f172a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}>
+        <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)', border: '2px solid rgba(255,255,255,0.3)' }}>
+          <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, marginTop: 8 }}>Click to play video</p>
+      </div>
+    );
+  }
+
+  return (
+    <video ref={videoRef} src={url} controls preload="none"
+      style={{ width: '100%', maxHeight: 240, objectFit: 'contain', background: '#000' }} />
+  );
+}
 
 export default function ScopeReviewPage() {
   const { id } = useParams<{ id: string }>();
@@ -139,9 +170,9 @@ export default function ScopeReviewPage() {
                     return (
                       <div key={m.id} style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #e2e8f0', background: '#f8fafc' }}>
                         {isVideo ? (
-                          <video src={m.url} controls style={{ width: '100%', maxHeight: 240, objectFit: 'contain', background: '#000' }} />
+                          <VideoPlayer url={m.url} />
                         ) : (
-                          <img src={m.url} alt="" style={{ width: '100%', height: 180, objectFit: 'cover' }} />
+                          <img src={m.url} alt="" loading="lazy" style={{ width: '100%', height: 180, objectFit: 'cover' }} />
                         )}
                         <div style={{ padding: '8px 12px', fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}>
                           <span>{isVideo ? '🎥' : '📷'}</span>
