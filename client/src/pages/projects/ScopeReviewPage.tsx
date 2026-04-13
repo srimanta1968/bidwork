@@ -43,12 +43,25 @@ export default function ScopeReviewPage() {
   const [loading, setLoading] = useState(true);
   const [approving, setApproving] = useState(false);
   const [error, setError] = useState('');
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     loadProject();
-    const interval = setInterval(pollStatus, 4000);
-    return () => clearInterval(interval);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [id]);
+
+  // Only poll while processing — stop once complete or failed
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    const isProcessing = ['classifying', 'generating_scope', 'calculating_bids', 'uploading'].includes(status);
+    if (isProcessing && !dataLoaded) {
+      intervalRef.current = setInterval(pollStatus, 5000);
+    }
+
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [status, dataLoaded]);
 
   const loadProject = async () => {
     try {
@@ -58,6 +71,10 @@ export default function ScopeReviewPage() {
         setTasks(result.data.tasks || []);
         setMedia(result.data.media || []);
         setStatus(result.data.project.scope_status);
+        // If already complete/failed, mark as loaded so polling doesn't start
+        if (['complete', 'failed'].includes(result.data.project.scope_status)) {
+          setDataLoaded(true);
+        }
       }
     } catch { setError('Failed to load project'); }
     finally { setLoading(false); }
@@ -67,8 +84,21 @@ export default function ScopeReviewPage() {
     try {
       const result = await getProjectStatus(id!);
       if (result.success) {
-        setStatus(result.data.scope_status);
-        if (result.data.scope_status === 'complete') { loadProject(); }
+        const newStatus = result.data.scope_status;
+        setStatus(newStatus);
+        // Only fetch full project data ONCE when transitioning to complete
+        if (newStatus === 'complete' && !dataLoaded) {
+          setDataLoaded(true);
+          const fullResult = await getProject(id!);
+          if (fullResult.success) {
+            setProject(fullResult.data.project);
+            setTasks(fullResult.data.tasks || []);
+            setMedia(fullResult.data.media || []);
+          }
+        }
+        if (newStatus === 'failed') {
+          setDataLoaded(true);
+        }
       }
     } catch { /* silent poll failure */ }
   };
