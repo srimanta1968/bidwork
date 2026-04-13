@@ -133,20 +133,16 @@ export async function getAvailableProjects(req: AuthenticatedRequest, res: Respo
     const servingCities = (profile as any)?.serving_cities || [];
     const servingZipcodes = (profile as any)?.serving_zipcodes || [];
     const userRole = req.user.role;
-
-    // Fallback city from profile if no serving areas configured
-    let city = req.query.city as string | undefined;
-    if (!city && servingCities.length === 0 && servingZipcodes.length === 0 && profile?.office_address) {
-      const parts = profile.office_address.split(',');
-      city = parts[0]?.trim();
-    }
+    const city = req.query.city as string | undefined;
 
     const projects = await projectService.getAvailableProjects({
       category, city, page, limit, userRole,
       servingCities: servingCities.length > 0 ? servingCities : undefined,
       servingZipcodes: servingZipcodes.length > 0 ? servingZipcodes : undefined,
     });
-    res.status(200).json({ success: true, data: { projects, filters: { city, category, page, limit, servingCities, servingZipcodes } } });
+
+    const areaLabel = servingCities.length > 0 ? servingCities.join(', ') : 'All Areas';
+    res.status(200).json({ success: true, data: { projects, filters: { city: areaLabel, category, page, limit, servingCities, servingZipcodes } } });
   } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
 }
 

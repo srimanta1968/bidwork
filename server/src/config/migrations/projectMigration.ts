@@ -235,6 +235,15 @@ export async function runProjectMigration(pool: Pool): Promise<void> {
     END $$
   `);
 
+  // Backfill city/zip from location_address for existing projects
+  await pool.query(`
+    UPDATE projects.projects
+    SET city = TRIM(SPLIT_PART(location_address, ',', 1)),
+        zip_code = SUBSTRING(location_address FROM '(\d{5})')
+    WHERE location_address IS NOT NULL AND location_address != ''
+      AND (city IS NULL OR city = '')
+  `);
+
   // Index for job matching queries
   await pool.query(`
     CREATE INDEX IF NOT EXISTS idx_projects_job_matching

@@ -126,12 +126,12 @@ export async function getAvailableProjects(filters: { category?: string; city?: 
       conditions.push(`worker_type_preference IN ('skilled_labor', 'both')`);
     }
 
-    // Filter by service area (city OR zip match)
+    // Filter by service area (city OR zip match) - only if contractor has configured serving areas
     if (filters.servingCities?.length || filters.servingZipcodes?.length) {
       const areaConditions: string[] = [];
       if (filters.servingCities?.length) {
-        areaConditions.push(`city = ANY($${idx++})`);
-        values.push(filters.servingCities);
+        areaConditions.push(`city ILIKE ANY($${idx++})`);
+        values.push(filters.servingCities.map(c => `%${c}%`));
       }
       if (filters.servingZipcodes?.length) {
         areaConditions.push(`zip_code = ANY($${idx++})`);
@@ -139,11 +139,12 @@ export async function getAvailableProjects(filters: { category?: string; city?: 
       }
       if (areaConditions.length) conditions.push(`(${areaConditions.join(' OR ')})`);
     } else if (filters.city) {
-      // Fallback: ILIKE on city column
+      // Fallback: ILIKE on city or location_address
       conditions.push(`(city ILIKE $${idx} OR location_address ILIKE $${idx})`);
       values.push(`%${filters.city}%`);
       idx++;
     }
+    // If NO serving areas and NO city filter: show ALL jobs (no location filter)
 
     const page = filters.page || 1;
     const limit = filters.limit || 20;
