@@ -3,9 +3,12 @@ import cors, { CorsOptions } from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { config } from './config/env';
+import { runMigrations } from './config/migrate';
+import { startAiWorker } from './services/aiWorker';
 import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
-import { runMigrations } from './config/migrate';
+import projectRoutes from './routes/projectRoutes';
+import bidRoutes from './routes/bidRoutes';
 
 interface ServerConfig {
   port: number;
@@ -27,13 +30,8 @@ const app: Application = express();
 
 // Middleware
 app.use(helmet());
-
-const corsOptions: CorsOptions = {
-  origin: serverConfig.corsOrigins,
-  credentials: true,
-};
+const corsOptions: CorsOptions = { origin: serverConfig.corsOrigins, credentials: true };
 app.use(cors(corsOptions));
-
 app.use(morgan(config.logFormat));
 app.use(express.json({ limit: config.bodyLimit }));
 app.use(express.urlencoded({ extended: true }));
@@ -46,6 +44,8 @@ app.get('/health', (req: Request, res: Response): void => {
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/bids', bidRoutes);
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
@@ -53,17 +53,19 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-// Run migrations then start server
+// Run migrations then start server + AI worker
 runMigrations()
   .then(() => {
     app.listen(serverConfig.port, (): void => {
       console.log(`Server running on port ${serverConfig.port}`);
+      startAiWorker();
     });
   })
   .catch((err) => {
-    console.error('Failed to run migrations, starting server anyway:', err.message);
+    console.error('Migration failed, starting server anyway:', err.message);
     app.listen(serverConfig.port, (): void => {
       console.log(`Server running on port ${serverConfig.port} (migrations failed)`);
+      startAiWorker();
     });
   });
 

@@ -1,4 +1,4 @@
-import { dataService } from './dataService';
+import { authDb } from './domainDb';
 import { authService } from './authService';
 import { ContractorProfile, OnboardingPayload } from '../types';
 
@@ -7,7 +7,7 @@ import { ContractorProfile, OnboardingPayload } from '../types';
  */
 export async function getProfileByUserId(userId: string): Promise<ContractorProfile | null> {
   try {
-    return await dataService.queryOne<ContractorProfile>(
+    return await authDb.queryOne<ContractorProfile>(
       'SELECT * FROM contractor_profiles WHERE user_id = $1',
       [userId]
     );
@@ -25,7 +25,7 @@ export async function onboardProfile(userId: string, payload: OnboardingPayload)
     const existing = await getProfileByUserId(userId);
 
     if (existing) {
-      const profile = await dataService.queryOne<ContractorProfile>(
+      const profile = await authDb.queryOne<ContractorProfile>(
         `UPDATE contractor_profiles SET
           business_name = $2, office_address = $3, phone = $4,
           license_number = $5, license_type = $6, category = $7,
@@ -41,7 +41,7 @@ export async function onboardProfile(userId: string, payload: OnboardingPayload)
       return profile;
     }
 
-    const profile = await dataService.queryOne<ContractorProfile>(
+    const profile = await authDb.queryOne<ContractorProfile>(
       `INSERT INTO contractor_profiles (user_id, business_name, office_address, phone, license_number, license_type, category, skills, years_experience, bio)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING *`,

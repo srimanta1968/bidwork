@@ -1,12 +1,22 @@
 import { Pool } from 'pg';
 import { databaseConfig } from './database';
+import { runAuthMigration } from './migrations/authMigration';
+import { runProjectMigration } from './migrations/projectMigration';
+import { runBiddingMigration } from './migrations/biddingMigration';
 
 /**
- * Auto-migration: runs on every server startup.
- * Each statement is idempotent (IF NOT EXISTS / IF NOT EXISTS column checks).
- * New migrations are appended at the bottom — never edit existing ones.
+ * Master migration runner.
+ * Runs all domain migrations against the configured database(s).
+ * Each domain migration is idempotent and only touches its own schema.
+ *
+ * When deploying to separate DB servers, each service calls only its own
+ * domain migration (e.g., auth service only calls runAuthMigration).
  */
 export async function runMigrations(): Promise<void> {
+  console.log('[migrate] Starting domain migrations...');
+
+  // For now, all domains share one DB. Create one pool for migrations.
+  // In the future, each domain migration gets its own pool URL from env.
   const pool = new Pool({
     host: databaseConfig.host,
     port: databaseConfig.port,
@@ -17,80 +27,51 @@ export async function runMigrations(): Promise<void> {
   });
 
   try {
-    console.log('[migrate] Running auto-migrations...');
+    await runAuthMigration(pool);
+    await runProjectMigration(pool);
+    await runBiddingMigration(pool);
 
-    // ── v1: Core users table ──
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS _schema_version (
-        id SERIAL PRIMARY KEY,
-        schema_hash VARCHAR(64) NOT NULL,
-        version INTEGER DEFAULT 1,
-        applied_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        source VARCHAR(50) DEFAULT 'init'
-      );
+    // ── Legacy: migrate data from public schema if exists ──
+    // Check if old public.users exists and auth.users is empty
+    const oldUsers = await pool.query(`
+      SELECT COUNT(*) as cnt FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = 'users'
     `);
+    if (parseInt(oldUsers.rows[0].cnt) > 0) {
+      const authCount = await pool.query('SELECT COUNT(*) as cnt FROM auth.users');
+      const publicCount = await pool.query('SELECT COUNT(*) as cnt FROM public.users');
+      if (parseInt(authCount.rows[0].cnt) === 0 && parseInt(publicCount.rows[0].cnt) > 0) {
+        console.log('[migrate] Migrating existing users from public → auth schema...');
+        await pool.query(`
+          INSERT INTO auth.users (id, email, password_hash, first_name, last_name, phone, role, is_onboarded, is_email_verified, verification_code, verification_code_expires, created_at, updated_at)
+          SELECT id, email, password_hash, first_name, last_name, phone, role,
+                 COALESCE(is_onboarded, false), COALESCE(is_email_verified, false),
+                 verification_code, verification_code_expires, created_at, updated_at
+          FROM public.users
+          ON CONFLICT (id) DO NOTHING
+        `);
+        // Migrate contractor profiles if they exist
+        const oldProfiles = await pool.query(`
+          SELECT COUNT(*) as cnt FROM information_schema.tables
+          WHERE table_schema = 'public' AND table_name = 'contractor_profiles'
+        `);
+        if (parseInt(oldProfiles.rows[0].cnt) > 0) {
+          await pool.query(`
+            INSERT INTO auth.contractor_profiles (id, user_id, business_name, office_address, phone, license_number, license_type, category, skills, years_experience, bio, is_verified, created_at, updated_at)
+            SELECT id, user_id, business_name, office_address, phone, license_number, license_type, category, skills, years_experience, bio, is_verified, created_at, updated_at
+            FROM public.contractor_profiles
+            ON CONFLICT (user_id) DO NOTHING
+          `);
+        }
+        console.log('[migrate] Legacy data migrated to auth schema.');
+      }
+    }
 
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        email VARCHAR(255),
-        password_hash VARCHAR(255),
-        role VARCHAR(255),
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-
-    // ── v2: Enhanced user fields + contractor profiles ──
-    await addColumnIfNotExists(pool, 'users', 'first_name', 'VARCHAR(100)');
-    await addColumnIfNotExists(pool, 'users', 'last_name', 'VARCHAR(100)');
-    await addColumnIfNotExists(pool, 'users', 'phone', 'VARCHAR(20)');
-    await addColumnIfNotExists(pool, 'users', 'is_onboarded', 'BOOLEAN DEFAULT false');
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS contractor_profiles (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        business_name VARCHAR(255),
-        office_address TEXT,
-        phone VARCHAR(20),
-        license_number VARCHAR(100),
-        license_type VARCHAR(100),
-        category VARCHAR(100) NOT NULL,
-        skills TEXT[],
-        years_experience INTEGER,
-        bio TEXT,
-        is_verified BOOLEAN DEFAULT false,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(user_id)
-      );
-    `);
-
-    // ── v3: Email verification ──
-    await addColumnIfNotExists(pool, 'users', 'is_email_verified', 'BOOLEAN DEFAULT false');
-    await addColumnIfNotExists(pool, 'users', 'verification_code', 'VARCHAR(6)');
-    await addColumnIfNotExists(pool, 'users', 'verification_code_expires', 'TIMESTAMP WITH TIME ZONE');
-
-    console.log('[migrate] All migrations applied successfully.');
+    console.log('[migrate] All domain migrations complete.');
   } catch (error) {
     console.error('[migrate] Migration failed:', error);
     throw error;
   } finally {
     await pool.end();
-  }
-}
-
-/**
- * Idempotent column addition — skips if column already exists.
- */
-async function addColumnIfNotExists(pool: Pool, table: string, column: string, definition: string): Promise<void> {
-  const result = await pool.query(
-    `SELECT 1 FROM information_schema.columns WHERE table_name = $1 AND column_name = $2`,
-    [table, column]
-  );
-  if (result.rowCount === 0) {
-    await pool.query(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
-    console.log(`[migrate] Added column ${table}.${column}`);
   }
 }

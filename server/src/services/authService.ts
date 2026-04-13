@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env';
-import { dataService } from './dataService';
+import { authDb } from './domainDb';
 import { User, UserResponse, JwtPayload, VALID_ROLES } from '../types';
 
 /**
@@ -49,7 +49,7 @@ export function verifyToken(token: string): JwtPayload {
  */
 export async function findUserByEmail(email: string): Promise<User | null> {
   try {
-    return await dataService.queryOne<User>(
+    return await authDb.queryOne<User>(
       'SELECT id, email, password_hash, first_name, last_name, phone, role, is_onboarded, created_at, updated_at FROM users WHERE email = $1',
       [email]
     );
@@ -64,7 +64,7 @@ export async function findUserByEmail(email: string): Promise<User | null> {
  */
 export async function findUserById(id: string): Promise<User | null> {
   try {
-    return await dataService.queryOne<User>(
+    return await authDb.queryOne<User>(
       'SELECT id, email, password_hash, first_name, last_name, phone, role, is_onboarded, created_at, updated_at FROM users WHERE id = $1',
       [id]
     );
@@ -82,7 +82,7 @@ export async function createUser(first_name: string, last_name: string, email: s
     const password_hash = await hashPassword(password);
     const needsOnboarding = role === 'homeowner';
 
-    const user = await dataService.queryOne<User>(
+    const user = await authDb.queryOne<User>(
       `INSERT INTO users (first_name, last_name, email, password_hash, role, is_onboarded)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, first_name, last_name, email, role, is_onboarded, created_at`,
@@ -151,7 +151,7 @@ export async function authenticateUser(email: string, password: string): Promise
  */
 export async function markOnboarded(userId: string): Promise<void> {
   try {
-    await dataService.query('UPDATE users SET is_onboarded = true, updated_at = NOW() WHERE id = $1', [userId]);
+    await authDb.query('UPDATE users SET is_onboarded = true, updated_at = NOW() WHERE id = $1', [userId]);
   } catch (error) {
     console.error('Mark onboarded error:', error);
     throw new Error('Failed to mark user as onboarded');
@@ -164,7 +164,7 @@ export async function markOnboarded(userId: string): Promise<void> {
 export async function storeVerificationCode(userId: string, code: string): Promise<void> {
   try {
     const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
-    await dataService.query(
+    await authDb.query(
       'UPDATE users SET verification_code = $2, verification_code_expires = $3, updated_at = NOW() WHERE id = $1',
       [userId, code, expires]
     );
@@ -179,14 +179,14 @@ export async function storeVerificationCode(userId: string, code: string): Promi
  */
 export async function verifyEmailCode(email: string, code: string): Promise<boolean> {
   try {
-    const user = await dataService.queryOne<{ id: string; verification_code: string; verification_code_expires: Date }>(
+    const user = await authDb.queryOne<{ id: string; verification_code: string; verification_code_expires: Date }>(
       'SELECT id, verification_code, verification_code_expires FROM users WHERE email = $1',
       [email]
     );
     if (!user || user.verification_code !== code) return false;
     if (new Date() > new Date(user.verification_code_expires)) return false;
 
-    await dataService.query(
+    await authDb.query(
       'UPDATE users SET is_email_verified = true, verification_code = NULL, verification_code_expires = NULL, updated_at = NOW() WHERE id = $1',
       [user.id]
     );
@@ -202,7 +202,7 @@ export async function verifyEmailCode(email: string, code: string): Promise<bool
  */
 export async function getUnverifiedUser(email: string): Promise<{ id: string; first_name: string } | null> {
   try {
-    return await dataService.queryOne<{ id: string; first_name: string }>(
+    return await authDb.queryOne<{ id: string; first_name: string }>(
       'SELECT id, first_name FROM users WHERE email = $1 AND is_email_verified = false',
       [email]
     );

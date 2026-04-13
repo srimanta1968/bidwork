@@ -47,4 +47,27 @@ export const config = {
     fromEmail: process.env.SENDGRID_FROM_EMAIL || 'welcome@projexlight.com',
     fromName: process.env.SENDGRID_FROM_NAME || 'BidWork',
   },
+
+  // AWS S3
+  s3: {
+    region: process.env.S3_REGION || process.env.AWS_REGION || 'us-east-1',
+    bucket: process.env.S3_BUCKET || 'bidwork1',
+    prefix: process.env.S3_PREFIX || 'bidwork',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+  },
+
+  // Together AI
+  together: {
+    apiKey: process.env.TOGETHER_API_KEY || '',
+    visionModel: process.env.TOGETHER_VISION_MODEL || 'Qwen/Qwen3-VL-8B-Instruct',
+    textModel: process.env.TOGETHER_TEXT_MODEL || 'google/gemma-3n-E4B-it',
+    baseUrl: 'https://api.together.xyz/v1',
+  },
+
+  // AI Worker
+  aiWorker: {
+    concurrency: parseInt(process.env.AI_WORKER_CONCURRENCY || '3', 10),
+    pollIntervalMs: parseInt(process.env.AI_POLL_INTERVAL_MS || '3000', 10),
+  },
 };
