@@ -18,7 +18,8 @@
       "Bash(node -e \"const d = require\\('dotenv'\\); console.log\\(typeof d, Object.keys\\(d\\)\\)\")",
       "Bash(ls \"C:/Users/srima/projex_verticals/BidWork/client/tailwind.config.\"*)",
       "Bash(ls \"C:/Users/srima/projex_verticals/BidWork/client/postcss.config.\"*)",
-      "Bash(PGPASSWORD=postgres psql -h localhost -U postgres -d bidwork_db -c \"\\\\d users\")"
+      "Bash(PGPASSWORD=postgres psql -h localhost -U postgres -d bidwork_db -c \"\\\\d users\")",
+      "Bash(PGPASSWORD=postgres psql:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export default function HomeownerDashboard() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const firstName = user?.first_name || 'there';
 
   const stats = [
@@ -52,7 +53,7 @@ export default function HomeownerDashboard() {
             <div style={{ fontSize: 48, marginBottom: 16 }}>📸</div>
             <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Start a New Project</h3>
             <p style={{ fontSize: 14, color: '#64748b', marginBottom: 20 }}>Upload photos of your home project and let AI scope the work.</p>
-            <button style={{ padding: '12px 28px', fontSize: 14, fontWeight: 600, color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', background: 'linear-gradient(135deg, #2563eb, #4f46e5)' }}>
+            <button onClick={() => navigate('/projects/new')} style={{ padding: '12px 28px', fontSize: 14, fontWeight: 600, color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', background: 'linear-gradient(135deg, #2563eb, #4f46e5)' }}>
               Upload Photos
             </button>
           </div>

@@ -9,6 +9,10 @@ import OnboardingPage from './pages/OnboardingPage';
 import HomeownerDashboard from './pages/dashboards/HomeownerDashboard';
 import ContractorDashboard from './pages/dashboards/ContractorDashboard';
 import SkilledLaborDashboard from './pages/dashboards/SkilledLaborDashboard';
+import CreateProjectPage from './pages/projects/CreateProjectPage';
+import ScopeReviewPage from './pages/projects/ScopeReviewPage';
+import AvailableJobsPage from './pages/projects/AvailableJobsPage';
+import BidComparisonPage from './pages/projects/BidComparisonPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -45,6 +49,10 @@ function AppRoutes() {
       <Route path="/verify-email" element={<ProtectedRoute><VerifyEmailPage /></ProtectedRoute>} />
       <Route path="/onboarding" element={<ProtectedRoute><OnboardingGuard /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardRouter /></ProtectedRoute>} />
+      <Route path="/projects/new" element={<ProtectedRoute><CreateProjectPage /></ProtectedRoute>} />
+      <Route path="/projects/:id" element={<ProtectedRoute><ScopeReviewPage /></ProtectedRoute>} />
+      <Route path="/projects/:id/bids" element={<ProtectedRoute><BidComparisonPage /></ProtectedRoute>} />
+      <Route path="/jobs" element={<ProtectedRoute><AvailableJobsPage /></ProtectedRoute>} />
     </Routes>
   );
 }
