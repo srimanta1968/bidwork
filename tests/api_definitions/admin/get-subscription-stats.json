@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/subscriptions/stats",
+  "method": "GET",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Get subscription statistics for admin dashboard",
+  "requiresAuth": true,
+  "priority": 42,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get subscription stats successfully",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

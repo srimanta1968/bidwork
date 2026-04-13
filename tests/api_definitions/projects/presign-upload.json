@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/projects/presign",
+  "method": "POST",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Get presigned S3 upload URLs for project media",
+  "requiresAuth": true,
+  "priority": 14,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Get presigned upload URLs successfully",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "project_id": "{{cache:projects.create.response.data.project_id}}",
+      "files": [{"name": "{{static:test-photo.jpg}}", "type": "{{static:image/jpeg}}"}]
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

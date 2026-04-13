@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/projects/available",
+  "method": "GET",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Get available projects for contractors to bid on",
+  "requiresAuth": true,
+  "priority": 18,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Get available projects successfully",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

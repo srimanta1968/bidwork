@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/bids/:id/accept",
+  "method": "POST",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Accept a bid on a project",
+  "requiresAuth": true,
+  "priority": 63,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Accept a bid successfully",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

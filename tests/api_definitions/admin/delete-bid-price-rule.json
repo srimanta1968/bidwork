@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/rules/bid-price/:id",
+  "method": "DELETE",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Delete a bid price rule",
+  "requiresAuth": true,
+  "priority": 23,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Delete bid price rule successfully",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

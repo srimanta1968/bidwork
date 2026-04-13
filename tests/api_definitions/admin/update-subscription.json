@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/admin/subscriptions/:id",
+  "method": "PUT",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Update a user subscription",
+  "requiresAuth": true,
+  "priority": 43,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Update subscription successfully",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {
+      "status": "{{static:active}}"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

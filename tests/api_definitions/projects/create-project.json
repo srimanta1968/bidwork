@@ -1,0 +1,26 @@
+{
+  "endpoint": "/api/projects",
+  "method": "POST",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Create a new project",
+  "requiresAuth": true,
+  "priority": 10,
+  "dependsOn": ["POST /api/auth/register"],
+  "captureResponse": {
+    "projects.create.response.data.project_id": "data.project_id",
+    "projects.create.response.data.id": "data.id"
+  },
+  "testCases": [{
+    "name": "Create a project successfully",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "title": "{{dynamic:name}}",
+      "description": "{{dynamic:text}}",
+      "location_address": "{{dynamic:address}}",
+      "urgency": "{{static:medium}}",
+      "quality_tier": "{{static:standard}}"
+    },
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

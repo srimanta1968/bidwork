@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/catalogs/:catalogId/items",
+  "method": "GET",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Get all items in a catalog",
+  "requiresAuth": true,
+  "priority": 53,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Get catalog items successfully",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

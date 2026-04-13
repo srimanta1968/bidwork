@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/projects/:id/approve",
+  "method": "POST",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Approve a project after AI processing",
+  "requiresAuth": true,
+  "priority": 16,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Approve project successfully",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

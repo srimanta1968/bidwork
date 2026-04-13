@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/projects/:id/status",
+  "method": "GET",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Get the processing status of a project",
+  "requiresAuth": true,
+  "priority": 13,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Get project status successfully",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

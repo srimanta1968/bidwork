@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/admin/rules/bid-price/:id",
+  "method": "PUT",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Update an existing bid price rule",
+  "requiresAuth": true,
+  "priority": 22,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Update bid price rule successfully",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {
+      "min_price": 100,
+      "max_price": 10000
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

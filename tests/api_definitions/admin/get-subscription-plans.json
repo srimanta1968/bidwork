@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/subscription-plans",
+  "method": "GET",
+  "taskId": "c95859f6-79b5-4ccf-884e-fde22b99f7ef",
+  "description": "Get all subscription plans",
+  "requiresAuth": true,
+  "priority": 44,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get subscription plans successfully",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}
