@@ -63,8 +63,22 @@ async function processClassify(job: AiJob): Promise<void> {
 
   if (!media) throw new Error('No media found for project');
 
-  const imageUrl = await s3Service.getPresignedDownloadUrl(media.s3_key);
-  const result = await togetherApi.classifyProject(imageUrl, project?.description || '');
+  // Vision models need images, not videos. Try to find a photo first.
+  const photoMedia = await projectDb.queryOne<{ s3_key: string }>(
+    "SELECT s3_key FROM project_media WHERE project_id = $1 AND media_type = 'photo' ORDER BY is_representative DESC, sort_order ASC LIMIT 1",
+    [job.project_id]
+  );
+  const bestMedia = photoMedia || media;
+
+  // If only video is available, classify from description only (text model)
+  let result;
+  if (bestMedia.s3_key.endsWith('.mp4') || bestMedia.s3_key.endsWith('.mov') || bestMedia.s3_key.endsWith('.avi')) {
+    // Video only — classify from description using text model
+    result = await togetherApi.classifyFromDescription(project?.description || 'home project');
+  } else {
+    const imageUrl = await s3Service.getPresignedDownloadUrl(bestMedia.s3_key);
+    result = await togetherApi.classifyProject(imageUrl, project?.description || '');
+  }
 
   // Save result and update project
   await workerDb.query(
@@ -99,7 +113,37 @@ async function processScopeGen(job: AiJob): Promise<void> {
     'SELECT s3_key FROM project_media WHERE project_id = $1 ORDER BY sort_order', [job.project_id]
   );
 
-  const imageUrls = await Promise.all(mediaRows.map(m => s3Service.getPresignedDownloadUrl(m.s3_key)));
+  // Filter to images only for vision model (skip videos)
+  const imageMedia = mediaRows.filter(m => !m.s3_key.endsWith('.mp4') && !m.s3_key.endsWith('.mov') && !m.s3_key.endsWith('.avi'));
+
+  let imageUrls: string[];
+  if (imageMedia.length > 0) {
+    imageUrls = await Promise.all(imageMedia.map(m => s3Service.getPresignedDownloadUrl(m.s3_key)));
+  } else {
+    // No photos — generate scope from description only using text model
+    const descResult = await togetherApi.generateScopeFromDescription(
+      project.description || 'home project', project.category || 'general', project.quality_tier || 'standard'
+    );
+    // Save tasks and chain to bid_calc
+    for (let i = 0; i < descResult.tasks.length; i++) {
+      const t = descResult.tasks[i];
+      await projectDb.query(
+        `INSERT INTO scope_tasks (project_id, sort_order, title, description, quantity, unit, materials, labor_hours_min, labor_hours_max, cost_min, cost_max, ai_confidence)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+        [job.project_id, i, t.title, t.description, t.quantity || 1, t.unit || 'each',
+         JSON.stringify(t.materials || []), t.labor_hours_min || 0, t.labor_hours_max || 0,
+         t.cost_min || 0, t.cost_max || 0, t.confidence || 0.7]
+      );
+    }
+    await workerDb.query(
+      'UPDATE ai_jobs SET result = $2, model_used = $3, input_tokens = $4, output_tokens = $5 WHERE id = $1',
+      [job.id, JSON.stringify({ taskCount: descResult.tasks.length }), descResult.model, descResult.inputTokens, descResult.outputTokens]
+    );
+    await projectDb.query("UPDATE projects SET scope_status = 'calculating_bids', updated_at = NOW() WHERE id = $1", [job.project_id]);
+    await projectDb.query("INSERT INTO ai_jobs (project_id, stage, priority) VALUES ($1, 'bid_calc', 2)", [job.project_id]);
+    console.log(`[pipeline] Generated ${descResult.tasks.length} scope tasks from description for project ${job.project_id}`);
+    return;
+  }
   if (imageUrls.length === 0) throw new Error('No media found');
 
   const result = await togetherApi.generateScope(imageUrls, project.category || 'general', project.description || '', project.quality_tier || 'standard');

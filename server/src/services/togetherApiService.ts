@@ -144,4 +144,45 @@ export async function calculateBidRange(tasks: any[], location: string, qualityT
   };
 }
 
-export const togetherApi = { classifyProject, generateScope, calculateBidRange };
+/**
+ * Fallback: Classify from description only (no image — e.g., video-only uploads)
+ */
+export async function classifyFromDescription(description: string): Promise<{
+  category: string; complexity: string; confidence: number;
+  model: string; inputTokens: number; outputTokens: number;
+}> {
+  const result = await callTogether(config.together.textModel, [
+    { role: 'user', content: `You are a home project classifier. Based on this description, classify the project. Return ONLY valid JSON (no markdown):\n{"category": "one of: kitchen|bathroom|bedroom|living_room|exterior|roofing|landscaping|painting|flooring|plumbing|electrical|general_repair|deck_patio|garage|basement|other", "complexity": "simple|medium|complex", "confidence": 0.0 to 1.0}\n\nDescription: "${description}"` },
+  ], 150);
+
+  const parsed = extractJson(result.content);
+  return {
+    category: parsed.category || 'other',
+    complexity: parsed.complexity || 'medium',
+    confidence: Math.min(parsed.confidence || 0.4, 0.7), // lower confidence without photo
+    model: result.model,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+  };
+}
+
+/**
+ * Fallback: Generate scope from description only (no images)
+ */
+export async function generateScopeFromDescription(description: string, category: string, qualityTier: string): Promise<{
+  tasks: any[]; model: string; inputTokens: number; outputTokens: number;
+}> {
+  const result = await callTogether(config.together.textModel, [
+    { role: 'user', content: `You are an expert home renovation estimator. Generate a scope of work for this ${category} project (${qualityTier} quality tier). Description: "${description}"\n\nReturn ONLY valid JSON (no markdown):\n{"tasks": [{"title": "...", "description": "...", "quantity": number, "unit": "sq_ft|linear_ft|each|hour", "materials": [{"name": "...", "estimated_cost": number}], "labor_hours_min": number, "labor_hours_max": number, "cost_min": number, "cost_max": number, "confidence": 0.0 to 1.0}]}\n\nBe thorough. Include realistic USD costs. Minimum 3 tasks.` },
+  ], 2000);
+
+  const parsed = extractJson(result.content);
+  return {
+    tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
+    model: result.model,
+    inputTokens: result.inputTokens,
+    outputTokens: result.outputTokens,
+  };
+}
+
+export const togetherApi = { classifyProject, classifyFromDescription, generateScope, generateScopeFromDescription, calculateBidRange };
