@@ -8,6 +8,7 @@ import { Pool } from 'pg';
 export async function runProjectMigration(pool: Pool): Promise<void> {
   console.log('[migrate:projects] Running projects domain migrations...');
 
+  try {
   await pool.query('CREATE SCHEMA IF NOT EXISTS projects');
 
   await pool.query(`
@@ -118,5 +119,93 @@ export async function runProjectMigration(pool: Pool): Promise<void> {
     WHERE is_listed = true
   `);
 
-  console.log('[migrate:projects] Projects domain ready.');
+  // ── v2: Photo support & draft resume enhancements ──
+
+  // Add default 'video' to media_type for existing column (idempotent)
+  await pool.query(`
+    ALTER TABLE projects.project_media
+      ALTER COLUMN media_type SET DEFAULT 'video'
+  `);
+
+  // Ensure existing records without media_type default to 'video'
+  await pool.query(`
+    UPDATE projects.project_media
+    SET media_type = 'video'
+    WHERE media_type IS NULL OR media_type = ''
+  `);
+
+  // Add CHECK constraint for valid media types (photo, video)
+  // Drop-and-recreate is idempotent
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.project_media
+        DROP CONSTRAINT IF EXISTS chk_media_type;
+      ALTER TABLE projects.project_media
+        ADD CONSTRAINT chk_media_type CHECK (media_type IN ('photo', 'video'));
+    END $$
+  `);
+
+  // Composite index for filtering media by type within a project
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_project_media_type
+    ON projects.project_media (project_id, media_type)
+  `);
+
+  // Add owner_start_price to scope_tasks (nullable — null means use AI price)
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.scope_tasks ADD COLUMN owner_start_price DECIMAL(10, 2);
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$
+  `);
+
+  // Create bid_price_rules configuration table
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS projects.bid_price_rules (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      job_category VARCHAR(100),
+      min_price_percentage INTEGER NOT NULL DEFAULT 50,
+      effective_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      created_by UUID,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Unique constraint: one rule per job_category (null = global default)
+  await pool.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_bid_price_rules_category
+    ON projects.bid_price_rules (COALESCE(job_category, '__global__'))
+  `);
+
+  // Seed global default rule (50%) if not exists
+  await pool.query(`
+    INSERT INTO projects.bid_price_rules (job_category, min_price_percentage)
+    SELECT NULL, 50
+    WHERE NOT EXISTS (
+      SELECT 1 FROM projects.bid_price_rules WHERE job_category IS NULL
+    )
+  `);
+
+  // Add dimensions column to scope_tasks (nullable, freeform text for measurements)
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.scope_tasks ADD COLUMN dimensions TEXT;
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$
+  `);
+
+  // Add is_hidden column to scope_tasks (hidden tasks excluded from published scope)
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.scope_tasks ADD COLUMN is_hidden BOOLEAN DEFAULT false;
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$
+  `);
+
+  console.log('[migrate:projects] Projects domain ready (v2: photo + pricing + task customization).');
+  } catch (error) {
+    console.error('[migrate:projects] Migration failed:', error);
+    throw error;
+  }
 }

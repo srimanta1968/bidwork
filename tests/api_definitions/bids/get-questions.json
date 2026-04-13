@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/bids/questions/project/:projectId",
+  "method": "GET",
+  "taskId": "d99882a8-9096-427a-86b0-8ca2c42fc497",
+  "description": "Get all Q&A for a project (visible to all bidders)",
+  "requiresAuth": true,
+  "priority": 41,
+  "dependsOn": ["POST /api/auth/register", "POST /api/bids/questions"],
+  "testCases": [{
+    "name": "Get project questions",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

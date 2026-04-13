@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/projects/:id/tasks/:taskId/price",
+  "method": "PUT",
+  "taskId": "4a952656-b94c-40a6-bb54-7d5bcec8caa1",
+  "description": "Set owner start price for a task with threshold validation",
+  "requiresAuth": true,
+  "priority": 32,
+  "dependsOn": ["POST /api/auth/register", "POST /api/projects"],
+  "testCases": [{
+    "name": "Set task price override",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"owner_start_price": 500},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

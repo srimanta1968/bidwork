@@ -52,5 +52,13 @@ export async function runAuthMigration(pool: Pool): Promise<void> {
     CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_users_email ON auth.users(email)
   `);
 
+  // Seed default admin user for development (password: Admin123!)
+  // bcrypt hash of 'Admin123!' with 10 rounds
+  await pool.query(`
+    INSERT INTO auth.users (email, password_hash, first_name, last_name, role, is_onboarded, is_email_verified)
+    SELECT 'admin@bidwork.com', '$2a$10$rqHQxK3T5e5YZWV.dQpCnuN3v7RfVpQWGzHsxkzfU1XqKYGq6Y5aG', 'BidWork', 'Admin', 'admin', true, true
+    WHERE NOT EXISTS (SELECT 1 FROM auth.users WHERE email = 'admin@bidwork.com')
+  `);
+
   console.log('[migrate:auth] Auth domain ready.');
 }

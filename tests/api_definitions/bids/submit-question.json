@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/bids/questions",
+  "method": "POST",
+  "taskId": "d99882a8-9096-427a-86b0-8ca2c42fc497",
+  "description": "Submit a bid question (AI moderated to strip contact info)",
+  "requiresAuth": true,
+  "priority": 40,
+  "dependsOn": ["POST /api/auth/register"],
+  "captureResponse": {
+    "questions.create.response.data.question.id": "data.question.id"
+  },
+  "testCases": [{
+    "name": "Submit bid question",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"project_id": "{{cache:projects.create.response.data.project_id}}", "question": "{{dynamic:text}}"},
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

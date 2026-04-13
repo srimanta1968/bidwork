@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/catalogs",
+  "method": "POST",
+  "taskId": "4ad92381-768f-422e-b3d7-aa66441bda6d",
+  "description": "Create a contractor product catalog",
+  "requiresAuth": true,
+  "priority": 50,
+  "dependsOn": ["POST /api/auth/register"],
+  "captureResponse": {
+    "catalogs.create.response.data.catalog.id": "data.catalog.id"
+  },
+  "testCases": [{
+    "name": "Create catalog",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"job_category": "{{dynamic:text}}", "name": "{{dynamic:name}}"},
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

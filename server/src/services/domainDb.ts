@@ -108,6 +108,20 @@ export const biddingDb = new DomainDb({
   label: 'biddingDb',
 });
 
+export const adminDb = new DomainDb({
+  connectionUrl: buildUrl('ADMIN_DB_URL'),
+  schema: 'admin',
+  poolMax: 5,
+  label: 'adminDb',
+});
+
+export const catalogDb = new DomainDb({
+  connectionUrl: buildUrl('CATALOG_DB_URL'),
+  schema: 'catalog',
+  poolMax: 5,
+  label: 'catalogDb',
+});
+
 // Worker gets its own pool so it doesn't starve the API
 export const workerDb = new DomainDb({
   connectionUrl: buildUrl('PROJECT_DB_URL'),

@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/subscriptions",
+  "method": "GET",
+  "taskId": "25d92bb0-913b-4e84-831a-43887c9d1a35",
+  "description": "Get paginated subscription list",
+  "requiresAuth": true,
+  "priority": 40,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get subscriptions",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

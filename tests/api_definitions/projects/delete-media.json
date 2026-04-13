@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/projects/:id/media/:mediaId",
+  "method": "DELETE",
+  "taskId": "ad94772d-8b2f-4d1b-8ac8-58fb690df2a6",
+  "description": "Delete a media item from a project",
+  "requiresAuth": true,
+  "priority": 35,
+  "dependsOn": ["POST /api/auth/register", "POST /api/projects"],
+  "testCases": [{
+    "name": "Delete media item",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

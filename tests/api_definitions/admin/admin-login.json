@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/admin/auth/login",
+  "method": "POST",
+  "taskId": "c978bcfd-6b5e-4c21-8e55-3ffadc31cd42",
+  "description": "Admin portal login - validates admin role before issuing JWT",
+  "requiresAuth": false,
+  "priority": 1,
+  "captureResponse": {
+    "admin.login.response.data.token": "data.token",
+    "admin.login.response.data.user.id": "data.user.id"
+  },
+  "testCases": [{
+    "name": "Admin login",
+    "payload": {"email": "{{static:admin@bidwork.com}}", "password": "{{static:Admin123!}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true, "data": {"token": "string"}}
+  }]
+}

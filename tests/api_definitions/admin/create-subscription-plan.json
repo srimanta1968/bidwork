@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/admin/subscription-plans",
+  "method": "POST",
+  "taskId": "25d92bb0-913b-4e84-831a-43887c9d1a35",
+  "description": "Create a subscription plan",
+  "requiresAuth": true,
+  "priority": 41,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "captureResponse": {
+    "subscriptionPlans.create.response.data.plan.id": "data.plan.id"
+  },
+  "testCases": [{
+    "name": "Create plan",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {"name": "{{dynamic:name}}", "price": 29.99, "billing_cycle": "{{static:monthly}}", "features": ["feature1"]},
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

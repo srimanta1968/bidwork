@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/analytics/price-variance",
+  "method": "GET",
+  "taskId": "efabc2e7-1ec9-49d2-adf6-c3a5cbaedeca",
+  "description": "Get price variance analytics by category",
+  "requiresAuth": true,
+  "priority": 30,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get price variance",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

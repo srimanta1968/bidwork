@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/bids/questions/:questionId/reply",
+  "method": "PUT",
+  "taskId": "d99882a8-9096-427a-86b0-8ca2c42fc497",
+  "description": "Homeowner answers a bid question",
+  "requiresAuth": true,
+  "priority": 42,
+  "dependsOn": ["POST /api/auth/register", "POST /api/bids/questions"],
+  "testCases": [{
+    "name": "Answer a question",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"answer": "{{dynamic:text}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

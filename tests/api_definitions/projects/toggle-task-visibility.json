@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/projects/:id/tasks/:taskId/visibility",
+  "method": "PATCH",
+  "taskId": "878fa4be-77d6-452d-9a60-1305a42c7009",
+  "description": "Toggle task visibility (hide/show before publishing)",
+  "requiresAuth": true,
+  "priority": 34,
+  "dependsOn": ["POST /api/auth/register", "POST /api/projects"],
+  "testCases": [{
+    "name": "Hide a task",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"is_hidden": true},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

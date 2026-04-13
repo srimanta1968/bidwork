@@ -9,6 +9,8 @@ import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
 import projectRoutes from './routes/projectRoutes';
 import bidRoutes from './routes/bidRoutes';
+import adminRoutes from './routes/adminRoutes';
+import catalogRoutes from './routes/catalogRoutes';
 
 interface ServerConfig {
   port: number;
@@ -19,7 +21,9 @@ const serverConfig: ServerConfig = {
   port: config.port || 3000,
   corsOrigins: [
     'http://localhost:3000',
+    'http://localhost:3001',
     'http://localhost:5173',
+    'http://localhost:5174',
     'https://projexlight.com',
     'https://dev.projexlight.com',
     ...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : []),
@@ -46,6 +50,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/bids', bidRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/catalogs', catalogRoutes);
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {

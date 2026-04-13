@@ -42,8 +42,23 @@ export async function getProjectMedia(projectId: string) {
   catch (error) { console.error('Get media error:', error); throw error; }
 }
 
-export async function getScopeTasks(projectId: string) {
-  try { return await projectDb.queryAll('SELECT * FROM scope_tasks WHERE project_id = $1 AND is_removed = false ORDER BY sort_order', [projectId]); }
+export async function getScopeTasks(projectId: string, forContractor: boolean = false) {
+  try {
+    if (forContractor) {
+      // Contractor view: show effective_start_price, hide ceiling, exclude hidden tasks
+      return await projectDb.queryAll(
+        `SELECT id, project_id, sort_order, title, description, category, quantity, unit,
+                COALESCE(owner_start_price, cost_min) AS effective_start_price,
+                labor_hours_min, labor_hours_max, ai_confidence, photo_evidence_keys,
+                homeowner_notes, dimensions, created_at
+         FROM scope_tasks
+         WHERE project_id = $1 AND is_removed = false AND is_hidden = false
+         ORDER BY sort_order`,
+        [projectId]
+      );
+    }
+    return await projectDb.queryAll('SELECT * FROM scope_tasks WHERE project_id = $1 AND is_removed = false ORDER BY sort_order', [projectId]);
+  }
   catch (error) { console.error('Get scope tasks error:', error); throw error; }
 }
 
@@ -74,16 +89,166 @@ export async function retryPipeline(projectId: string) {
   } catch (error) { console.error('Retry pipeline error:', error); throw error; }
 }
 
-export async function getAvailableProjects(category: string) {
+export async function getAvailableProjects(filters: { category?: string; city?: string; page?: number; limit?: number }) {
   try {
+    const conditions = ["is_listed = true", "status = 'bidding'"];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (filters.category) { conditions.push(`category = $${idx++}`); values.push(filters.category); }
+    if (filters.city) { conditions.push(`location_address ILIKE $${idx++}`); values.push(`%${filters.city}%`); }
+
+    const page = filters.page || 1;
+    const limit = filters.limit || 20;
+    const offset = (page - 1) * limit;
+
+    values.push(limit);
+    values.push(offset);
+
+    const where = conditions.join(' AND ');
     return await projectDb.queryAll(
-      "SELECT * FROM projects WHERE is_listed = true AND status = 'bidding' AND ($1 = '' OR category = $1) ORDER BY created_at DESC",
-      [category || '']
+      `SELECT id, title, description, location_address, category, complexity_tier, bid_floor, bid_ceiling,
+              estimated_days_min, estimated_days_max, status, created_at
+       FROM projects WHERE ${where} ORDER BY created_at DESC LIMIT $${idx++} OFFSET $${idx++}`,
+      values
     );
   } catch (error) { console.error('Get available projects error:', error); throw error; }
 }
 
+export async function updateProject(projectId: string, data: { title?: string; description?: string; location_address?: string; urgency?: string; quality_tier?: string }) {
+  try {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (data.title !== undefined) { fields.push(`title = $${idx++}`); values.push(data.title); }
+    if (data.description !== undefined) { fields.push(`description = $${idx++}`); values.push(data.description); }
+    if (data.location_address !== undefined) { fields.push(`location_address = $${idx++}`); values.push(data.location_address); }
+    if (data.urgency !== undefined) { fields.push(`urgency = $${idx++}`); values.push(data.urgency); }
+    if (data.quality_tier !== undefined) { fields.push(`quality_tier = $${idx++}`); values.push(data.quality_tier); }
+
+    if (fields.length === 0) return await getProject(projectId);
+
+    fields.push(`updated_at = NOW()`);
+    values.push(projectId);
+
+    return await projectDb.queryOne(
+      `UPDATE projects SET ${fields.join(', ')} WHERE id = $${idx} AND status = 'draft' RETURNING *`,
+      values
+    );
+  } catch (error) { console.error('Update project error:', error); throw error; }
+}
+
+export async function deleteMedia(mediaId: string) {
+  try {
+    return await projectDb.queryOne('DELETE FROM project_media WHERE id = $1 RETURNING *', [mediaId]);
+  } catch (error) { console.error('Delete media error:', error); throw error; }
+}
+
+export async function getBidPriceRule(jobCategory?: string) {
+  try {
+    // Try category-specific rule first, then fall back to global default
+    if (jobCategory) {
+      const categoryRule = await projectDb.queryOne<{ min_price_percentage: number }>(
+        'SELECT min_price_percentage FROM bid_price_rules WHERE job_category = $1 ORDER BY effective_date DESC LIMIT 1',
+        [jobCategory]
+      );
+      if (categoryRule) return categoryRule;
+    }
+    const globalRule = await projectDb.queryOne<{ min_price_percentage: number }>(
+      'SELECT min_price_percentage FROM bid_price_rules WHERE job_category IS NULL ORDER BY effective_date DESC LIMIT 1', []
+    );
+    return globalRule || { min_price_percentage: 50 };
+  } catch (error) { console.error('Get bid price rule error:', error); throw error; }
+}
+
+export async function setTaskOwnerPrice(projectId: string, taskId: string, ownerStartPrice: number) {
+  try {
+    return await projectDb.queryOne(
+      'UPDATE scope_tasks SET owner_start_price = $3, updated_at = NOW() WHERE id = $2 AND project_id = $1 RETURNING *',
+      [projectId, taskId, ownerStartPrice]
+    );
+  } catch (error) { console.error('Set task owner price error:', error); throw error; }
+}
+
+export async function getScopeTask(taskId: string) {
+  try {
+    return await projectDb.queryOne('SELECT * FROM scope_tasks WHERE id = $1', [taskId]);
+  } catch (error) { console.error('Get scope task error:', error); throw error; }
+}
+
+export async function updateScopeTask(projectId: string, taskId: string, data: { title?: string; description?: string; homeowner_notes?: string; dimensions?: string; quantity?: number; unit?: string }) {
+  try {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (data.title !== undefined) { fields.push(`title = $${idx++}`); values.push(data.title); }
+    if (data.description !== undefined) { fields.push(`description = $${idx++}`); values.push(data.description); }
+    if (data.homeowner_notes !== undefined) { fields.push(`homeowner_notes = $${idx++}`); values.push(data.homeowner_notes); }
+    if (data.dimensions !== undefined) { fields.push(`dimensions = $${idx++}`); values.push(data.dimensions); }
+    if (data.quantity !== undefined) { fields.push(`quantity = $${idx++}`); values.push(data.quantity); }
+    if (data.unit !== undefined) { fields.push(`unit = $${idx++}`); values.push(data.unit); }
+
+    if (fields.length === 0) return await getScopeTask(taskId);
+
+    fields.push(`updated_at = NOW()`);
+    values.push(taskId);
+    values.push(projectId);
+
+    return await projectDb.queryOne(
+      `UPDATE scope_tasks SET ${fields.join(', ')} WHERE id = $${idx} AND project_id = $${idx + 1} RETURNING *`,
+      values
+    );
+  } catch (error) { console.error('Update scope task error:', error); throw error; }
+}
+
+export async function toggleTaskVisibility(projectId: string, taskId: string, isHidden: boolean) {
+  try {
+    return await projectDb.queryOne(
+      'UPDATE scope_tasks SET is_hidden = $3, updated_at = NOW() WHERE id = $2 AND project_id = $1 RETURNING *',
+      [projectId, taskId, isHidden]
+    );
+  } catch (error) { console.error('Toggle task visibility error:', error); throw error; }
+}
+
+/**
+ * Strips full street address, keeping only city and zip for privacy.
+ * Input: "123 Main St, Springfield, IL 62701"
+ * Output: "Springfield, IL 62701"
+ */
+export function maskAddress(fullAddress: string | null): string {
+  if (!fullAddress) return '';
+  const parts = fullAddress.split(',').map(p => p.trim());
+  if (parts.length >= 2) {
+    return parts.slice(1).join(', ');
+  }
+  return fullAddress;
+}
+
+/**
+ * Sanitize project for contractor view - hide full address
+ */
+export function sanitizeProjectForContractor(project: any, isAcceptedBidder: boolean): any {
+  if (isAcceptedBidder) return project;
+  return {
+    ...project,
+    location_address: maskAddress(project.location_address),
+  };
+}
+
+export async function isAcceptedBidder(projectId: string, contractorId: string): Promise<boolean> {
+  try {
+    const project = await projectDb.queryOne<{ assigned_contractor_id: string }>(
+      'SELECT assigned_contractor_id FROM projects WHERE id = $1', [projectId]
+    );
+    return project?.assigned_contractor_id === contractorId;
+  } catch (error) { console.error('Check accepted bidder error:', error); return false; }
+}
+
 export const projectService = {
   createProject, addMedia, startAiPipeline, getProject, getProjectsByHomeowner,
-  getProjectMedia, getScopeTasks, getProjectStatus, approveProject, retryPipeline, getAvailableProjects,
+  getProjectMedia, getScopeTasks, getProjectStatus, approveProject, retryPipeline,
+  getAvailableProjects, updateProject, deleteMedia, getBidPriceRule, setTaskOwnerPrice,
+  getScopeTask, updateScopeTask, toggleTaskVisibility, maskAddress, sanitizeProjectForContractor, isAcceptedBidder,
 };

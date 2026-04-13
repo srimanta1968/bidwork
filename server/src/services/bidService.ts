@@ -67,4 +67,29 @@ export async function rejectBid(bidId: string, homeownerId: string) {
   } catch (error) { console.error('Reject bid error:', error); throw error; }
 }
 
-export const bidService = { submitBid, getBidsForProject, getMyBids, acceptBid, rejectBid };
+export async function addBidMaterials(bidId: string, materials: Array<{ task_id: string; catalog_item_id: string; quantity: number; unit_price: number }>) {
+  try {
+    const results = [];
+    for (const m of materials) {
+      const total = m.quantity * m.unit_price;
+      const result = await biddingDb.queryOne(
+        `INSERT INTO bid_materials (bid_id, task_id, catalog_item_id, quantity, unit_price, total)
+         VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+        [bidId, m.task_id, m.catalog_item_id, m.quantity, m.unit_price, total]
+      );
+      results.push(result);
+    }
+    return results;
+  } catch (error) { console.error('Add bid materials error:', error); throw error; }
+}
+
+export async function getBidMaterials(bidId: string) {
+  try {
+    return await biddingDb.queryAll(
+      'SELECT * FROM bid_materials WHERE bid_id = $1 ORDER BY created_at',
+      [bidId]
+    );
+  } catch (error) { console.error('Get bid materials error:', error); throw error; }
+}
+
+export const bidService = { submitBid, getBidsForProject, getMyBids, acceptBid, rejectBid, addBidMaterials, getBidMaterials };

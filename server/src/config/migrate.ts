@@ -3,6 +3,8 @@ import { databaseConfig } from './database';
 import { runAuthMigration } from './migrations/authMigration';
 import { runProjectMigration } from './migrations/projectMigration';
 import { runBiddingMigration } from './migrations/biddingMigration';
+import { runCatalogMigration } from './migrations/catalogMigration';
+import { runAdminMigration } from './migrations/adminMigration';
 
 /**
  * Master migration runner.
@@ -30,6 +32,8 @@ export async function runMigrations(): Promise<void> {
     await runAuthMigration(pool);
     await runProjectMigration(pool);
     await runBiddingMigration(pool);
+    await runCatalogMigration(pool);
+    await runAdminMigration(pool);
 
     // ── Legacy: migrate data from public schema if exists ──
     // Check if old public.users exists and auth.users is empty

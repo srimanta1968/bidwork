@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/catalogs/:catalogId/items",
+  "method": "POST",
+  "taskId": "4ad92381-768f-422e-b3d7-aa66441bda6d",
+  "description": "Add item to a catalog",
+  "requiresAuth": true,
+  "priority": 52,
+  "dependsOn": ["POST /api/auth/register", "POST /api/catalogs"],
+  "captureResponse": {
+    "catalogItems.create.response.data.item.id": "data.item.id"
+  },
+  "testCases": [{
+    "name": "Add catalog item",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"name": "{{dynamic:name}}", "brand": "{{dynamic:name}}", "unit_price": 49.99},
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

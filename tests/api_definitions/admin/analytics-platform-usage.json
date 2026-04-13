@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/analytics/platform-usage",
+  "method": "GET",
+  "taskId": "b00cbc3c-63fc-4225-9426-3b02c825445f",
+  "description": "Get platform usage stats (users, projects, bids)",
+  "requiresAuth": true,
+  "priority": 31,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get platform usage",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

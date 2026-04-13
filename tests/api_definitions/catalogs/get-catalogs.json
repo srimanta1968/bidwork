@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/catalogs",
+  "method": "GET",
+  "taskId": "4ad92381-768f-422e-b3d7-aa66441bda6d",
+  "description": "Get contractor's catalogs",
+  "requiresAuth": true,
+  "priority": 51,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Get catalogs",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

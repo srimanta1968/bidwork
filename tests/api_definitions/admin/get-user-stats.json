@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/users/stats",
+  "method": "GET",
+  "taskId": "9b26e37a-70bc-4e62-bf77-676fd9c4dad4",
+  "description": "Get user counts grouped by role",
+  "requiresAuth": true,
+  "priority": 11,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get user stats",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

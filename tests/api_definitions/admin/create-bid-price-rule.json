@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/admin/rules/bid-price",
+  "method": "POST",
+  "taskId": "4e2315b0-fee2-43d6-84b4-9e9859bd408f",
+  "description": "Create a bid price rule for a job category",
+  "requiresAuth": true,
+  "priority": 21,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "captureResponse": {
+    "bidPriceRules.create.response.data.rule.id": "data.rule.id"
+  },
+  "testCases": [{
+    "name": "Create category rule",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {"job_category": "{{dynamic:text}}", "min_price_percentage": 60},
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

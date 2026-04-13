@@ -63,16 +63,16 @@ async function processClassify(job: AiJob): Promise<void> {
 
   if (!media) throw new Error('No media found for project');
 
-  // Vision models need images, not videos. Try to find a photo first.
-  const photoMedia = await projectDb.queryOne<{ s3_key: string }>(
-    "SELECT s3_key FROM project_media WHERE project_id = $1 AND media_type = 'photo' ORDER BY is_representative DESC, sort_order ASC LIMIT 1",
+  // Vision models need images, not videos. Try to find a photo first using media_type column.
+  const photoMedia = await projectDb.queryOne<{ s3_key: string; media_type: string }>(
+    "SELECT s3_key, media_type FROM project_media WHERE project_id = $1 AND media_type = 'photo' ORDER BY is_representative DESC, sort_order ASC LIMIT 1",
     [job.project_id]
   );
   const bestMedia = photoMedia || media;
 
   // If only video is available, classify from description only (text model)
   let result;
-  if (bestMedia.s3_key.endsWith('.mp4') || bestMedia.s3_key.endsWith('.mov') || bestMedia.s3_key.endsWith('.avi')) {
+  if (!photoMedia) {
     // Video only — classify from description using text model
     result = await togetherApi.classifyFromDescription(project?.description || 'home project');
   } else {
@@ -109,12 +109,11 @@ async function processScopeGen(job: AiJob): Promise<void> {
   );
   if (!project) throw new Error('Project not found');
 
-  const mediaRows = await projectDb.queryAll<{ s3_key: string }>(
-    'SELECT s3_key FROM project_media WHERE project_id = $1 ORDER BY sort_order', [job.project_id]
+  // Get photos for vision model using media_type column
+  const imageMedia = await projectDb.queryAll<{ s3_key: string }>(
+    "SELECT s3_key FROM project_media WHERE project_id = $1 AND media_type = 'photo' ORDER BY sort_order",
+    [job.project_id]
   );
-
-  // Filter to images only for vision model (skip videos)
-  const imageMedia = mediaRows.filter(m => !m.s3_key.endsWith('.mp4') && !m.s3_key.endsWith('.mov') && !m.s3_key.endsWith('.avi'));
 
   let imageUrls: string[];
   if (imageMedia.length > 0) {

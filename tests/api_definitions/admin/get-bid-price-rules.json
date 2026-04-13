@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/rules/bid-price",
+  "method": "GET",
+  "taskId": "4e2315b0-fee2-43d6-84b4-9e9859bd408f",
+  "description": "Get all bid price rules (global + per-category)",
+  "requiresAuth": true,
+  "priority": 20,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get bid price rules",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

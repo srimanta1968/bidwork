@@ -45,5 +45,62 @@ export async function runBiddingMigration(pool: Pool): Promise<void> {
     ON bidding.bids (contractor_id, created_at DESC)
   `);
 
-  console.log('[migrate:bidding] Bidding domain ready.');
+  // ── v2: Bid Q&A system ──
+
+  // Questions asked by contractors, moderated by AI before posting
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS bidding.bid_questions (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      project_id UUID NOT NULL,
+      contractor_id UUID NOT NULL,
+      raw_question TEXT NOT NULL,
+      sanitized_question TEXT,
+      answer TEXT,
+      status VARCHAR(20) DEFAULT 'pending',
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      answered_at TIMESTAMP WITH TIME ZONE,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // CHECK constraint for valid statuses
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE bidding.bid_questions
+        DROP CONSTRAINT IF EXISTS chk_question_status;
+      ALTER TABLE bidding.bid_questions
+        ADD CONSTRAINT chk_question_status CHECK (status IN ('pending', 'posted', 'answered', 'rejected'));
+    END $$
+  `);
+
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_bid_questions_project
+    ON bidding.bid_questions (project_id, created_at DESC)
+  `);
+
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_bid_questions_contractor
+    ON bidding.bid_questions (contractor_id, created_at DESC)
+  `);
+
+  // ── v3: Bid materials ──
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS bidding.bid_materials (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      bid_id UUID NOT NULL REFERENCES bidding.bids(id) ON DELETE CASCADE,
+      task_id UUID NOT NULL,
+      catalog_item_id UUID NOT NULL,
+      quantity INTEGER NOT NULL DEFAULT 1,
+      unit_price DECIMAL(10, 2),
+      total DECIMAL(10, 2),
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_bid_materials_bid
+    ON bidding.bid_materials (bid_id)
+  `);
+
+  console.log('[migrate:bidding] Bidding domain ready (v3: Q&A + materials).');
 }

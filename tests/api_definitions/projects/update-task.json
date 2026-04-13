@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/projects/:id/tasks/:taskId",
+  "method": "PUT",
+  "taskId": "878fa4be-77d6-452d-9a60-1305a42c7009",
+  "description": "Update task details including notes and dimensions",
+  "requiresAuth": true,
+  "priority": 33,
+  "dependsOn": ["POST /api/auth/register", "POST /api/projects"],
+  "testCases": [{
+    "name": "Update task with notes and dimensions",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"homeowner_notes": "{{dynamic:text}}", "dimensions": "{{dynamic:text}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/admin/users/:id/status",
+  "method": "PUT",
+  "taskId": "9b26e37a-70bc-4e62-bf77-676fd9c4dad4",
+  "description": "Activate or deactivate a user account",
+  "requiresAuth": true,
+  "priority": 12,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Deactivate user",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {"is_active": false},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

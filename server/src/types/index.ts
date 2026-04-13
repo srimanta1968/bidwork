@@ -81,7 +81,7 @@ export interface OnboardingPayload {
   bio?: string;
 }
 
-export const VALID_ROLES = ['homeowner', 'contractor', 'skilled_labor'] as const;
+export const VALID_ROLES = ['homeowner', 'contractor', 'skilled_labor', 'admin'] as const;
 export type UserRole = typeof VALID_ROLES[number];
 
 export const CONTRACTOR_CATEGORIES = [

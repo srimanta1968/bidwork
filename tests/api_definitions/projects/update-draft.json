@@ -1,0 +1,25 @@
+{
+  "endpoint": "/api/projects/:id",
+  "method": "PUT",
+  "taskId": "ad94772d-8b2f-4d1b-8ac8-58fb690df2a6",
+  "description": "Update draft project details",
+  "requiresAuth": true,
+  "priority": 31,
+  "dependsOn": ["POST /api/auth/register", "POST /api/projects"],
+  "pathParams": {
+    "id": "{{cache:projects.create.response.data.project_id}}"
+  },
+  "testCases": [{
+    "name": "Update draft project",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "title": "{{dynamic:name}}",
+      "description": "{{dynamic:text}}",
+      "location_address": "{{dynamic:text}}",
+      "urgency": "{{static:urgent}}",
+      "quality_tier": "{{static:premium}}"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}
