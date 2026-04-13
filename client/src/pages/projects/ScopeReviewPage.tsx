@@ -132,13 +132,25 @@ export default function ScopeReviewPage() {
             {/* Media Grid */}
             {media.length > 0 && (
               <div style={{ marginBottom: 24 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>Project Photos ({media.length})</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8 }}>
-                  {media.map((m: any) => (
-                    <div key={m.id} style={{ borderRadius: 10, overflow: 'hidden', aspectRatio: '1', border: '1px solid #e2e8f0' }}>
-                      <img src={m.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                  ))}
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>Project Media ({media.length})</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+                  {media.map((m: any) => {
+                    const isVideo = m.media_type === 'video' || m.s3_key?.endsWith('.mp4') || m.s3_key?.endsWith('.mov') || m.mime_type?.startsWith('video/');
+                    return (
+                      <div key={m.id} style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #e2e8f0', background: '#f8fafc' }}>
+                        {isVideo ? (
+                          <video src={m.url} controls style={{ width: '100%', maxHeight: 240, objectFit: 'contain', background: '#000' }} />
+                        ) : (
+                          <img src={m.url} alt="" style={{ width: '100%', height: 180, objectFit: 'cover' }} />
+                        )}
+                        <div style={{ padding: '8px 12px', fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span>{isVideo ? '🎥' : '📷'}</span>
+                          <span>{isVideo ? 'Video' : 'Photo'}</span>
+                          {m.file_size_bytes && <span style={{ marginLeft: 'auto' }}>{(m.file_size_bytes / 1024 / 1024).toFixed(1)} MB</span>}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -146,24 +158,49 @@ export default function ScopeReviewPage() {
             {/* Task List */}
             <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>Scope of Work ({tasks.length} tasks)</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
-              {tasks.map((task: any, i: number) => (
-                <div key={task.id} style={{ background: 'white', borderRadius: 14, padding: 24, border: '1px solid #e2e8f0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 4 }}>#{i + 1}</span>
-                        <h4 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{task.title}</h4>
+              {tasks.map((task: any, i: number) => {
+                const totalMin = tasks.reduce((s: number, t: any) => s + Number(t.cost_min || 0), 0);
+                const taskPercent = totalMin > 0 ? (Number(task.cost_min || 0) / totalMin * 100) : 0;
+                const materials = (() => { try { return typeof task.materials === 'string' ? JSON.parse(task.materials) : task.materials; } catch { return []; } })();
+
+                return (
+                  <div key={task.id} style={{ background: 'white', borderRadius: 14, padding: 24, border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 4 }}>#{i + 1}</span>
+                          <h4 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{task.title}</h4>
+                        </div>
+                        <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>{task.description}</p>
                       </div>
-                      <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>{task.description}</p>
-                      {task.quantity && <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 4 }}>{task.quantity} {task.unit}</p>}
+                      <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 20 }}>
+                        <p style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>${Number(task.cost_min || 0).toLocaleString()} - ${Number(task.cost_max || 0).toLocaleString()}</p>
+                        <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>{task.labor_hours_min || 0}-{task.labor_hours_max || 0} hrs labor</p>
+                      </div>
                     </div>
-                    <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 16 }}>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>${Number(task.cost_min || 0).toLocaleString()} - ${Number(task.cost_max || 0).toLocaleString()}</p>
-                      <p style={{ fontSize: 12, color: '#94a3b8' }}>{task.labor_hours_min || 0}-{task.labor_hours_max || 0} hrs labor</p>
+
+                    {/* Cost proportion bar */}
+                    <div style={{ height: 4, background: '#f1f5f9', borderRadius: 2, marginBottom: 12 }}>
+                      <div style={{ height: '100%', width: `${Math.min(taskPercent, 100)}%`, background: 'linear-gradient(90deg, #2563eb, #7c3aed)', borderRadius: 2 }} />
+                    </div>
+
+                    {/* Details row */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: 13, color: '#64748b' }}>
+                      {task.quantity && <span style={{ background: '#f8fafc', padding: '4px 10px', borderRadius: 6 }}>📐 {task.quantity} {task.unit}</span>}
+                      {Array.isArray(materials) && materials.length > 0 && (
+                        <span style={{ background: '#f8fafc', padding: '4px 10px', borderRadius: 6 }}>
+                          🔧 {materials.map((m: any) => m.name || m).join(', ')}
+                        </span>
+                      )}
+                      {task.ai_confidence && (
+                        <span style={{ background: Number(task.ai_confidence) > 0.7 ? '#ecfdf5' : '#fefce8', padding: '4px 10px', borderRadius: 6, color: Number(task.ai_confidence) > 0.7 ? '#059669' : '#ca8a04' }}>
+                          AI Confidence: {Math.round(Number(task.ai_confidence) * 100)}%
+                        </span>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Approve Button */}
