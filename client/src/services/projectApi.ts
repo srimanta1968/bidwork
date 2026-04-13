@@ -84,3 +84,86 @@ export async function uploadFileToS3(presignedUrl: string, file: File): Promise<
     return res.ok;
   } catch { return false; }
 }
+
+// ── Draft Resume & Photo Upload ──
+
+export async function getDraftProject(id: string) {
+  const res = await fetch(`${API}/projects/${id}/draft`, { headers: authHeaders() });
+  return res.json();
+}
+
+export async function updateDraftProject(id: string, data: { title?: string; description?: string; location_address?: string; urgency?: string; quality_tier?: string }) {
+  const res = await fetch(`${API}/projects/${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function deleteMedia(projectId: string, mediaId: string) {
+  const res = await fetch(`${API}/projects/${projectId}/media/${mediaId}`, { method: 'DELETE', headers: authHeaders() });
+  return res.json();
+}
+
+// ── Task Customization ──
+
+export async function updateTask(projectId: string, taskId: string, data: { title?: string; description?: string; homeowner_notes?: string; dimensions?: string; quantity?: number; unit?: string }) {
+  const res = await fetch(`${API}/projects/${projectId}/tasks/${taskId}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function setTaskPrice(projectId: string, taskId: string, ownerStartPrice: number) {
+  const res = await fetch(`${API}/projects/${projectId}/tasks/${taskId}/price`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ owner_start_price: ownerStartPrice }) });
+  return res.json();
+}
+
+export async function toggleTaskVisibility(projectId: string, taskId: string, isHidden: boolean) {
+  const res = await fetch(`${API}/projects/${projectId}/tasks/${taskId}/visibility`, { method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ is_hidden: isHidden }) });
+  return res.json();
+}
+
+// ── Q&A System ──
+
+export async function submitQuestion(projectId: string, question: string) {
+  const res = await fetch(`${API}/bids/questions`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ project_id: projectId, question }) });
+  return res.json();
+}
+
+export async function getProjectQuestions(projectId: string) {
+  const res = await fetch(`${API}/bids/questions/project/${projectId}`, { headers: authHeaders() });
+  return res.json();
+}
+
+export async function answerQuestion(questionId: string, answer: string) {
+  const res = await fetch(`${API}/bids/questions/${questionId}/reply`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ answer }) });
+  return res.json();
+}
+
+// ── Contractor Catalogs ──
+
+export async function getCatalogs() {
+  const res = await fetch(`${API}/catalogs`, { headers: authHeaders() });
+  return res.json();
+}
+
+export async function createCatalog(data: { job_category: string; name: string }) {
+  const res = await fetch(`${API}/catalogs`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function getCatalogItems(catalogId: string) {
+  const res = await fetch(`${API}/catalogs/${catalogId}/items`, { headers: authHeaders() });
+  return res.json();
+}
+
+export async function addCatalogItem(catalogId: string, data: { name: string; brand?: string; model?: string; specifications?: string; image_url?: string; unit_price?: number }) {
+  const res = await fetch(`${API}/catalogs/${catalogId}/items`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function updateCatalogItem(itemId: string, data: any) {
+  const res = await fetch(`${API}/catalogs/items/${itemId}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function deleteCatalogItem(itemId: string) {
+  const res = await fetch(`${API}/catalogs/items/${itemId}`, { method: 'DELETE', headers: authHeaders() });
+  return res.json();
+}

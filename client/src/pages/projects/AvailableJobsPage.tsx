@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAvailableProjects, submitBid } from '../../services/projectApi';
+import { getAvailableProjects, submitBid, submitQuestion, getProjectQuestions } from '../../services/projectApi';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AvailableJobsPage() {
@@ -15,6 +15,9 @@ export default function AvailableJobsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [newQuestion, setNewQuestion] = useState('');
+  const [askingQuestion, setAskingQuestion] = useState(false);
 
   useEffect(() => { loadJobs(); }, []);
 
@@ -55,6 +58,24 @@ export default function AvailableJobsPage() {
     finally { setSubmitting(false); }
   };
 
+  const loadQuestions = async (projectId: string) => {
+    try {
+      const result = await getProjectQuestions(projectId);
+      if (result.success) setQuestions(result.data.questions || []);
+    } catch { /* silent */ }
+  };
+
+  const handleAskQuestion = async () => {
+    if (!selectedProject || !newQuestion.trim()) return;
+    setAskingQuestion(true);
+    try {
+      const result = await submitQuestion(selectedProject.id, newQuestion);
+      if (result.success) { setNewQuestion(''); loadQuestions(selectedProject.id); }
+      else setError(result.error || 'Failed to submit question');
+    } catch { setError('Failed to submit question'); }
+    finally { setAskingQuestion(false); }
+  };
+
   const inputStyle: React.CSSProperties = { width: '100%', padding: '12px 16px', fontSize: 15, border: '1px solid #e2e8f0', borderRadius: 10, outline: 'none', color: '#0f172a', background: '#f8fafc' };
 
   if (loading) return <div style={{ minHeight: '100vh', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><p style={{ color: '#64748b' }}>Loading jobs...</p></div>;
@@ -82,7 +103,7 @@ export default function AvailableJobsPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {projects.map((p: any) => (
               <div key={p.id} style={{ background: 'white', borderRadius: 16, padding: 28, border: selectedProject?.id === p.id ? '2px solid #2563eb' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.2s' }}
-                onClick={() => setSelectedProject(selectedProject?.id === p.id ? null : p)}>
+                onClick={() => { const isExpand = selectedProject?.id !== p.id; setSelectedProject(isExpand ? p : null); if (isExpand) loadQuestions(p.id); }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
@@ -128,6 +149,38 @@ export default function AvailableJobsPage() {
                         background: submitting ? '#93c5fd' : 'linear-gradient(135deg, #2563eb, #4f46e5)' }}>
                       {submitting ? 'Submitting...' : 'Submit Bid'}
                     </button>
+
+                    {/* Q&A Section */}
+                    <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid #f1f5f9' }}>
+                      <h4 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Questions & Answers</h4>
+                      <div style={{ background: '#fefce8', border: '1px solid #fde68a', borderRadius: 8, padding: '10px 14px', fontSize: 12, color: '#92400e', marginBottom: 12 }}>
+                        Do not share personal contact info, email, phone, or links. AI will automatically remove such content.
+                      </div>
+
+                      {questions.length > 0 && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+                          {questions.map((q: any) => (
+                            <div key={q.id} style={{ background: '#f8fafc', borderRadius: 8, padding: 12, border: '1px solid #f1f5f9' }}>
+                              <p style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 4 }}>Q: {q.sanitized_question}</p>
+                              {q.answer ? (
+                                <p style={{ fontSize: 13, color: '#059669', marginLeft: 16 }}>A: {q.answer}</p>
+                              ) : (
+                                <p style={{ fontSize: 12, color: '#94a3b8', marginLeft: 16, fontStyle: 'italic' }}>Awaiting homeowner reply...</p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <input value={newQuestion} onChange={e => setNewQuestion(e.target.value)} placeholder="Ask a question about this project..."
+                          style={{ flex: 1, padding: '10px 14px', fontSize: 14, border: '1px solid #e2e8f0', borderRadius: 8, outline: 'none' }} />
+                        <button onClick={handleAskQuestion} disabled={askingQuestion || !newQuestion.trim()}
+                          style={{ padding: '10px 18px', fontSize: 13, fontWeight: 600, color: 'white', background: '#7c3aed', border: 'none', borderRadius: 8, cursor: 'pointer', opacity: askingQuestion ? 0.6 : 1 }}>
+                          {askingQuestion ? '...' : 'Ask'}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

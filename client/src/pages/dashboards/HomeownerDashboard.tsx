@@ -123,9 +123,15 @@ export default function HomeownerDashboard() {
                         {p.category || 'Uncategorized'} &middot; {p.quality_tier || 'standard'} &middot; {new Date(p.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       {p.bid_floor && (
                         <p style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>${Number(p.bid_floor).toLocaleString()} - ${Number(p.bid_ceiling).toLocaleString()}</p>
+                      )}
+                      {p.status === 'draft' && (
+                        <button onClick={(e) => { e.stopPropagation(); navigate(`/projects/${p.id}/edit`); }}
+                          style={{ padding: '6px 16px', fontSize: 13, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, cursor: 'pointer' }}>
+                          Continue
+                        </button>
                       )}
                       <span style={{ fontSize: 13, color: '#94a3b8' }}>&rarr;</span>
                     </div>

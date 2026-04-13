@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProject, getProjectStatus, approveProject, retryProject } from '../../services/projectApi';
+import { getProject, getProjectStatus, approveProject, retryProject, updateTask, setTaskPrice, toggleTaskVisibility } from '../../services/projectApi';
 
 /**
  * Lazy video player — zero S3 data until user clicks play.
@@ -217,25 +217,44 @@ export default function ScopeReviewPage() {
             )}
 
             {/* Task List */}
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>Scope of Work ({tasks.length} tasks)</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>
+                Scope of Work ({tasks.filter(t => !t.is_hidden).length} tasks)
+                {tasks.some(t => t.is_hidden) && <span style={{ fontSize: 13, fontWeight: 500, color: '#94a3b8', marginLeft: 8 }}>({tasks.filter(t => t.is_hidden).length} hidden)</span>}
+              </h3>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
               {tasks.map((task: any, i: number) => {
                 const totalMin = tasks.reduce((s: number, t: any) => s + Number(t.cost_min || 0), 0);
                 const taskPercent = totalMin > 0 ? (Number(task.cost_min || 0) / totalMin * 100) : 0;
                 const materials = (() => { try { return typeof task.materials === 'string' ? JSON.parse(task.materials) : task.materials; } catch { return []; } })();
+                const aiPrice = Number(task.cost_min || 0);
+                const effectivePrice = task.owner_start_price ? Number(task.owner_start_price) : aiPrice;
 
                 return (
-                  <div key={task.id} style={{ background: 'white', borderRadius: 14, padding: 24, border: '1px solid #e2e8f0' }}>
+                  <div key={task.id} style={{ background: task.is_hidden ? '#f8fafc' : 'white', borderRadius: 14, padding: 24, border: `1px solid ${task.is_hidden ? '#e2e8f0' : '#e2e8f0'}`, opacity: task.is_hidden ? 0.6 : 1, position: 'relative' }}>
+                    {/* Hide/Show toggle */}
+                    {!project?.is_approved && (
+                      <button onClick={async () => {
+                        const result = await toggleTaskVisibility(id!, task.id, !task.is_hidden);
+                        if (result.success) setTasks(prev => prev.map(t => t.id === task.id ? { ...t, is_hidden: !t.is_hidden } : t));
+                      }}
+                        style={{ position: 'absolute', top: 12, right: 12, fontSize: 12, fontWeight: 600, color: task.is_hidden ? '#059669' : '#94a3b8', background: task.is_hidden ? '#ecfdf5' : '#f8fafc', border: `1px solid ${task.is_hidden ? '#bbf7d0' : '#e2e8f0'}`, borderRadius: 6, padding: '4px 10px', cursor: 'pointer' }}>
+                        {task.is_hidden ? 'Show' : 'Hide'}
+                      </button>
+                    )}
+
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                           <span style={{ fontSize: 12, fontWeight: 700, color: '#2563eb', background: '#eff6ff', padding: '2px 8px', borderRadius: 4 }}>#{i + 1}</span>
                           <h4 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{task.title}</h4>
+                          {task.is_hidden && <span style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8', background: '#f1f5f9', padding: '2px 8px', borderRadius: 4 }}>HIDDEN</span>}
                         </div>
                         <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>{task.description}</p>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 20 }}>
-                        <p style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>${Number(task.cost_min || 0).toLocaleString()} - ${Number(task.cost_max || 0).toLocaleString()}</p>
+                        <p style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>${aiPrice.toLocaleString()} - ${Number(task.cost_max || 0).toLocaleString()}</p>
                         <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>{task.labor_hours_min || 0}-{task.labor_hours_max || 0} hrs labor</p>
                       </div>
                     </div>
@@ -246,7 +265,7 @@ export default function ScopeReviewPage() {
                     </div>
 
                     {/* Details row */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: 13, color: '#64748b' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: 13, color: '#64748b', marginBottom: 12 }}>
                       {task.quantity && <span style={{ background: '#f8fafc', padding: '4px 10px', borderRadius: 6 }}>📐 {task.quantity} {task.unit}</span>}
                       {Array.isArray(materials) && materials.length > 0 && (
                         <span style={{ background: '#f8fafc', padding: '4px 10px', borderRadius: 6 }}>
@@ -259,6 +278,48 @@ export default function ScopeReviewPage() {
                         </span>
                       )}
                     </div>
+
+                    {/* Price Override + Notes/Dimensions (only before approval) */}
+                    {!project?.is_approved && !task.is_hidden && (
+                      <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                        {/* Price Override */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>Start Bid Price:</span>
+                          <span style={{ fontSize: 12, color: '#94a3b8' }}>AI: ${aiPrice.toLocaleString()}</span>
+                          <input type="number" defaultValue={effectivePrice} min={0} step={10}
+                            onBlur={async (e) => {
+                              const val = Number(e.target.value);
+                              if (val === aiPrice && !task.owner_start_price) return;
+                              const result = await setTaskPrice(id!, task.id, val);
+                              if (result.success) { setTasks(prev => prev.map(t => t.id === task.id ? { ...t, owner_start_price: val } : t)); }
+                              else { setError(result.error || 'Price too low'); e.target.value = String(effectivePrice); }
+                            }}
+                            style={{ width: 110, padding: '6px 10px', fontSize: 14, fontWeight: 600, border: '1px solid #d1d5db', borderRadius: 6, textAlign: 'right' }} />
+                          {task.owner_start_price && (
+                            <button onClick={async () => {
+                              const result = await setTaskPrice(id!, task.id, aiPrice);
+                              if (result.success) setTasks(prev => prev.map(t => t.id === task.id ? { ...t, owner_start_price: null } : t));
+                            }} style={{ fontSize: 12, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Reset to AI</button>
+                          )}
+                        </div>
+
+                        {/* Notes & Dimensions */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                          <div>
+                            <label style={{ fontSize: 12, fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Notes (optional)</label>
+                            <input placeholder="Add notes..." defaultValue={task.homeowner_notes || ''}
+                              onBlur={async (e) => { if (e.target.value !== (task.homeowner_notes || '')) await updateTask(id!, task.id, { homeowner_notes: e.target.value }); }}
+                              style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid #e2e8f0', borderRadius: 6, boxSizing: 'border-box' }} />
+                          </div>
+                          <div>
+                            <label style={{ fontSize: 12, fontWeight: 600, color: '#64748b', display: 'block', marginBottom: 4 }}>Dimensions (optional)</label>
+                            <input placeholder="e.g., 10ft x 12ft" defaultValue={task.dimensions || ''}
+                              onBlur={async (e) => { if (e.target.value !== (task.dimensions || '')) await updateTask(id!, task.id, { dimensions: e.target.value }); }}
+                              style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid #e2e8f0', borderRadius: 6, boxSizing: 'border-box' }} />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
