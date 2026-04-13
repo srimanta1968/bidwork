@@ -63,7 +63,7 @@ async function processClassify(job: AiJob): Promise<void> {
 
   if (!media) throw new Error('No media found for project');
 
-  const imageUrl = s3Service.getPublicUrl(media.s3_key);
+  const imageUrl = await s3Service.getPresignedDownloadUrl(media.s3_key);
   const result = await togetherApi.classifyProject(imageUrl, project?.description || '');
 
   // Save result and update project
@@ -99,7 +99,7 @@ async function processScopeGen(job: AiJob): Promise<void> {
     'SELECT s3_key FROM project_media WHERE project_id = $1 ORDER BY sort_order', [job.project_id]
   );
 
-  const imageUrls = mediaRows.map(m => s3Service.getPublicUrl(m.s3_key));
+  const imageUrls = await Promise.all(mediaRows.map(m => s3Service.getPresignedDownloadUrl(m.s3_key)));
   if (imageUrls.length === 0) throw new Error('No media found');
 
   const result = await togetherApi.generateScope(imageUrls, project.category || 'general', project.description || '', project.quality_tier || 'standard');
