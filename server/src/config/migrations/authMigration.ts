@@ -52,6 +52,21 @@ export async function runAuthMigration(pool: Pool): Promise<void> {
     CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_users_email ON auth.users(email)
   `);
 
+  // v2: Add serving areas to contractor profiles
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE auth.contractor_profiles ADD COLUMN serving_cities TEXT[] DEFAULT '{}';
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$
+  `);
+
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE auth.contractor_profiles ADD COLUMN serving_zipcodes TEXT[] DEFAULT '{}';
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$
+  `);
+
   // Seed default admin user for development (password: Admin123!)
   // bcrypt hash of 'Admin123!' with 10 rounds
   await pool.query(`

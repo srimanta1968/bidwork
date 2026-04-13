@@ -203,7 +203,46 @@ export async function runProjectMigration(pool: Pool): Promise<void> {
     END $$
   `);
 
-  console.log('[migrate:projects] Projects domain ready (v2: photo + pricing + task customization).');
+  // ── v3: Worker type preference and location parsing ──
+
+  // Add worker_type_preference to projects (contractor/skilled_labor/both)
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.projects ADD COLUMN worker_type_preference VARCHAR(20) DEFAULT 'both';
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$
+  `);
+
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.projects DROP CONSTRAINT IF EXISTS chk_worker_type;
+      ALTER TABLE projects.projects ADD CONSTRAINT chk_worker_type CHECK (worker_type_preference IN ('contractor', 'skilled_labor', 'both'));
+    END $$
+  `);
+
+  // Add parsed city and zip_code for efficient job matching
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.projects ADD COLUMN city VARCHAR(100);
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$
+  `);
+
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.projects ADD COLUMN zip_code VARCHAR(20);
+    EXCEPTION WHEN duplicate_column THEN NULL;
+    END $$
+  `);
+
+  // Index for job matching queries
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_projects_job_matching
+    ON projects.projects (city, zip_code, worker_type_preference)
+    WHERE is_listed = true AND status = 'bidding'
+  `);
+
+  console.log('[migrate:projects] Projects domain ready (v3: worker type + location).');
   } catch (error) {
     console.error('[migrate:projects] Migration failed:', error);
     throw error;

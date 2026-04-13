@@ -1,11 +1,33 @@
 import { projectDb } from './domainDb';
 
-export async function createProject(homeownerId: string, data: { title: string; description?: string; location_address?: string; urgency?: string; quality_tier?: string }) {
+/**
+ * Parse city and zip from a location address string.
+ * Handles formats like "123 Main St, Springfield, IL 62701"
+ */
+export function parseCityZip(address: string | null): { city: string | null; zip_code: string | null } {
+  if (!address) return { city: null, zip_code: null };
+  const zipMatch = address.match(/\b(\d{5}(?:-\d{4})?)\b/);
+  const zip_code = zipMatch ? zipMatch[1] : null;
+  const parts = address.split(',').map(p => p.trim());
+  let city: string | null = null;
+  if (parts.length >= 2) {
+    city = parts[parts.length - 2] || parts[0];
+    // Remove state abbreviation and zip from city
+    city = city.replace(/\b[A-Z]{2}\b/g, '').replace(/\d+/g, '').trim();
+    if (!city && parts.length >= 3) city = parts[parts.length - 3];
+  } else if (parts.length === 1) {
+    city = parts[0].replace(/\d+/g, '').trim();
+  }
+  return { city: city || null, zip_code };
+}
+
+export async function createProject(homeownerId: string, data: { title: string; description?: string; location_address?: string; urgency?: string; quality_tier?: string; worker_type_preference?: string }) {
   try {
+    const { city, zip_code } = parseCityZip(data.location_address || null);
     return await projectDb.queryOne(
-      `INSERT INTO projects (homeowner_id, title, description, location_address, urgency, quality_tier, scope_status, status)
-       VALUES ($1, $2, $3, $4, $5, $6, 'uploading', 'draft') RETURNING *`,
-      [homeownerId, data.title, data.description || null, data.location_address || null, data.urgency || 'flexible', data.quality_tier || 'standard']
+      `INSERT INTO projects (homeowner_id, title, description, location_address, city, zip_code, urgency, quality_tier, worker_type_preference, scope_status, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'uploading', 'draft') RETURNING *`,
+      [homeownerId, data.title, data.description || null, data.location_address || null, city, zip_code, data.urgency || 'flexible', data.quality_tier || 'standard', data.worker_type_preference || 'both']
     );
   } catch (error) { console.error('Create project error:', error); throw error; }
 }
@@ -89,14 +111,39 @@ export async function retryPipeline(projectId: string) {
   } catch (error) { console.error('Retry pipeline error:', error); throw error; }
 }
 
-export async function getAvailableProjects(filters: { category?: string; city?: string; page?: number; limit?: number }) {
+export async function getAvailableProjects(filters: { category?: string; city?: string; page?: number; limit?: number; userRole?: string; servingCities?: string[]; servingZipcodes?: string[] }) {
   try {
     const conditions = ["is_listed = true", "status = 'bidding'"];
     const values: any[] = [];
     let idx = 1;
 
     if (filters.category) { conditions.push(`category = $${idx++}`); values.push(filters.category); }
-    if (filters.city) { conditions.push(`location_address ILIKE $${idx++}`); values.push(`%${filters.city}%`); }
+
+    // Filter by worker type preference matching user role
+    if (filters.userRole === 'contractor') {
+      conditions.push(`worker_type_preference IN ('contractor', 'both')`);
+    } else if (filters.userRole === 'skilled_labor') {
+      conditions.push(`worker_type_preference IN ('skilled_labor', 'both')`);
+    }
+
+    // Filter by service area (city OR zip match)
+    if (filters.servingCities?.length || filters.servingZipcodes?.length) {
+      const areaConditions: string[] = [];
+      if (filters.servingCities?.length) {
+        areaConditions.push(`city = ANY($${idx++})`);
+        values.push(filters.servingCities);
+      }
+      if (filters.servingZipcodes?.length) {
+        areaConditions.push(`zip_code = ANY($${idx++})`);
+        values.push(filters.servingZipcodes);
+      }
+      if (areaConditions.length) conditions.push(`(${areaConditions.join(' OR ')})`);
+    } else if (filters.city) {
+      // Fallback: ILIKE on city column
+      conditions.push(`(city ILIKE $${idx} OR location_address ILIKE $${idx})`);
+      values.push(`%${filters.city}%`);
+      idx++;
+    }
 
     const page = filters.page || 1;
     const limit = filters.limit || 20;
@@ -107,8 +154,8 @@ export async function getAvailableProjects(filters: { category?: string; city?: 
 
     const where = conditions.join(' AND ');
     return await projectDb.queryAll(
-      `SELECT id, title, description, location_address, category, complexity_tier, bid_floor, bid_ceiling,
-              estimated_days_min, estimated_days_max, status, created_at
+      `SELECT id, title, description, location_address, city, zip_code, category, complexity_tier, bid_floor, bid_ceiling,
+              estimated_days_min, estimated_days_max, worker_type_preference, status, created_at
        FROM projects WHERE ${where} ORDER BY created_at DESC LIMIT $${idx++} OFFSET $${idx++}`,
       values
     );

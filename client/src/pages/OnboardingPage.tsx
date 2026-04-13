@@ -2,9 +2,10 @@ import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { onboardProfile } from '../services/authService';
+import { updateServingAreas } from '../services/projectApi';
 
-const CONTRACTOR_CATEGORIES = ['General Contractor', 'Electrical', 'Plumbing', 'HVAC', 'Roofing', 'Painting', 'Flooring', 'Remodeling', 'Carpentry', 'Masonry'];
-const SKILLED_LABOR_CATEGORIES = ['Landscaping', 'Cleaning', 'Moving', 'Handyman', 'Pressure Washing', 'Gutter Cleaning', 'Fence Repair', 'Demolition', 'Hauling', 'Assembly'];
+const CONTRACTOR_CATEGORIES = ['General Contractor', 'Electrical', 'Plumbing', 'HVAC', 'Roofing', 'Painting', 'Flooring', 'Remodeling', 'Carpentry', 'Masonry', 'Deck/Patio'];
+const SKILLED_LABOR_CATEGORIES = ['Landscaping', 'Cleaning', 'Moving', 'Handyman', 'Pressure Washing', 'Gutter Cleaning', 'Fence Repair', 'Demolition', 'Hauling', 'Assembly', 'Painting', 'Flooring', 'Carpentry'];
 
 export default function OnboardingPage() {
   const { user, token, updateUser } = useAuth();
@@ -22,6 +23,8 @@ export default function OnboardingPage() {
   const [skills, setSkills] = useState<string[]>([]);
   const [yearsExp, setYearsExp] = useState('');
   const [bio, setBio] = useState('');
+  const [servingCitiesInput, setServingCitiesInput] = useState('');
+  const [servingZipcodesInput, setServingZipcodesInput] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -40,6 +43,12 @@ export default function OnboardingPage() {
 
       const result = await onboardProfile(token!, payload);
       if (result.success) {
+        // Save serving areas
+        const cities = servingCitiesInput.split(',').map(c => c.trim()).filter(Boolean);
+        const zips = servingZipcodesInput.split(',').map(z => z.trim()).filter(Boolean);
+        if (cities.length > 0 || zips.length > 0) {
+          await updateServingAreas({ serving_cities: cities, serving_zipcodes: zips });
+        }
         updateUser({ ...user!, is_onboarded: true });
         navigate('/dashboard');
       } else { setError(result.error || 'Failed to save profile'); }
@@ -162,9 +171,22 @@ export default function OnboardingPage() {
                   <label style={labelStyle}>Years of Experience</label>
                   <input type="number" value={yearsExp} onChange={(e) => setYearsExp(e.target.value)} placeholder="e.g. 5" min="0" style={inputStyle} />
                 </div>
-                <div style={{ marginBottom: 24 }}>
+                <div style={{ marginBottom: 16 }}>
                   <label style={labelStyle}>Short Bio</label>
-                  <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Tell homeowners about your experience and what makes you stand out..." style={{ ...inputStyle, minHeight: 100, resize: 'vertical' as const }} />
+                  <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Tell homeowners about your experience and what makes you stand out..." style={{ ...inputStyle, minHeight: 80, resize: 'vertical' as const }} />
+                </div>
+
+                <div style={{ background: '#eff6ff', borderRadius: 12, padding: 16, marginBottom: 24, border: '1px solid #bfdbfe' }}>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#1e3a8a', marginBottom: 12 }}>Service Area</h3>
+                  <p style={{ fontSize: 12, color: '#64748b', marginBottom: 12 }}>Jobs posted in these cities/zip codes will appear on your dashboard.</p>
+                  <div style={{ marginBottom: 12 }}>
+                    <label style={{ ...labelStyle, fontSize: 13 }}>Cities you serve (comma-separated)</label>
+                    <input value={servingCitiesInput} onChange={(e) => setServingCitiesInput(e.target.value)} placeholder="e.g., Springfield, Columbus, Dayton" style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={{ ...labelStyle, fontSize: 13 }}>Zip codes you serve (comma-separated)</label>
+                    <input value={servingZipcodesInput} onChange={(e) => setServingZipcodesInput(e.target.value)} placeholder="e.g., 62701, 43215, 45402" style={inputStyle} />
+                  </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12 }}>
                   <button type="button" onClick={() => setStep(2)} style={{ flex: 1, padding: 14, fontSize: 15, fontWeight: 600, color: '#475569', border: '1px solid #e2e8f0', borderRadius: 10, cursor: 'pointer', background: 'white' }}>Back</button>

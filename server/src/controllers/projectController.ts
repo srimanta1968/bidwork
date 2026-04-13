@@ -32,10 +32,10 @@ export async function presignUpload(req: AuthenticatedRequest, res: Response): P
 export async function createProject(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
-    const { title, description, location_address, urgency, quality_tier, media } = req.body;
+    const { title, description, location_address, urgency, quality_tier, worker_type_preference, media } = req.body;
     if (!title) { res.status(400).json({ success: false, error: 'Title is required' }); return; }
 
-    const project = await projectService.createProject(req.user.userId, { title, description, location_address, urgency, quality_tier });
+    const project = await projectService.createProject(req.user.userId, { title, description, location_address, urgency, quality_tier, worker_type_preference });
 
     // Add media records and mark first as representative
     if (media?.length > 0) {
@@ -124,23 +124,29 @@ export async function getAvailableProjects(req: AuthenticatedRequest, res: Respo
   try {
     if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
 
-    let city = req.query.city as string | undefined;
     const category = req.query.category as string | undefined;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
 
-    // Default to contractor's city from profile if not specified
-    if (!city) {
-      const profile = await profileService.getProfileByUserId(req.user.userId);
-      if (profile?.office_address) {
-        // Extract city from office_address (simple heuristic: split by comma, take first part)
-        const parts = profile.office_address.split(',');
-        city = parts[0]?.trim();
-      }
+    // Get contractor's serving areas and role for filtering
+    const profile = await profileService.getProfileByUserId(req.user.userId);
+    const servingCities = (profile as any)?.serving_cities || [];
+    const servingZipcodes = (profile as any)?.serving_zipcodes || [];
+    const userRole = req.user.role;
+
+    // Fallback city from profile if no serving areas configured
+    let city = req.query.city as string | undefined;
+    if (!city && servingCities.length === 0 && servingZipcodes.length === 0 && profile?.office_address) {
+      const parts = profile.office_address.split(',');
+      city = parts[0]?.trim();
     }
 
-    const projects = await projectService.getAvailableProjects({ category, city, page, limit });
-    res.status(200).json({ success: true, data: { projects, filters: { city, category, page, limit } } });
+    const projects = await projectService.getAvailableProjects({
+      category, city, page, limit, userRole,
+      servingCities: servingCities.length > 0 ? servingCities : undefined,
+      servingZipcodes: servingZipcodes.length > 0 ? servingZipcodes : undefined,
+    });
+    res.status(200).json({ success: true, data: { projects, filters: { city, category, page, limit, servingCities, servingZipcodes } } });
   } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
 }
 

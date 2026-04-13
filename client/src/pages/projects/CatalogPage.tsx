@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCatalogs, createCatalog, getCatalogItems, addCatalogItem, deleteCatalogItem } from '../../services/projectApi';
+import { getCatalogs, createCatalog, getCatalogItems, addCatalogItem, deleteCatalogItem, getCategories } from '../../services/projectApi';
 
 export default function CatalogPage() {
   const navigate = useNavigate();
@@ -14,8 +14,20 @@ export default function CatalogPage() {
   const [newCatalogCategory, setNewCatalogCategory] = useState('');
   const [newItem, setNewItem] = useState({ name: '', brand: '', model: '', specifications: '', unit_price: '' });
   const [error, setError] = useState('');
+  const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
 
-  useEffect(() => { loadCatalogs(); }, []);
+  useEffect(() => { loadCatalogs(); loadCategories(); }, []);
+
+  const loadCategories = async () => {
+    try {
+      const result = await getCategories();
+      if (result.success) {
+        // Merge contractor + skilled_labor categories (user sees their role's categories)
+        const all = [...(result.data.contractor || []), ...(result.data.skilled_labor || [])];
+        setCategoryOptions([...new Set(all)].sort());
+      }
+    } catch {}
+  };
 
   const loadCatalogs = async () => {
     try {
@@ -97,7 +109,10 @@ export default function CatalogPage() {
 
             {showNewCatalog && (
               <div style={{ background: 'white', borderRadius: 10, padding: 14, border: '1px solid #e2e8f0', marginBottom: 8 }}>
-                <input placeholder="Category (e.g., Plumbing)" value={newCatalogCategory} onChange={e => setNewCatalogCategory(e.target.value)} style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid #d1d5db', borderRadius: 6, marginBottom: 6, boxSizing: 'border-box' }} />
+                <select value={newCatalogCategory} onChange={e => setNewCatalogCategory(e.target.value)} style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid #d1d5db', borderRadius: 6, marginBottom: 6, boxSizing: 'border-box' }}>
+                  <option value="">Select Category...</option>
+                  {categoryOptions.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
                 <input placeholder="Catalog Name" value={newCatalogName} onChange={e => setNewCatalogName(e.target.value)} style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid #d1d5db', borderRadius: 6, marginBottom: 8, boxSizing: 'border-box' }} />
                 <div style={{ display: 'flex', gap: 6 }}>
                   <button onClick={handleCreateCatalog} style={{ flex: 1, padding: '6px', fontSize: 12, fontWeight: 600, color: 'white', background: '#2563eb', border: 'none', borderRadius: 6, cursor: 'pointer' }}>Create</button>

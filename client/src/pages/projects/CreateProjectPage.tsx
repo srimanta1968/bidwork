@@ -15,6 +15,7 @@ export default function CreateProjectPage() {
   const [location, setLocation] = useState('');
   const [urgency, setUrgency] = useState('flexible');
   const [qualityTier, setQualityTier] = useState('standard');
+  const [workerType, setWorkerType] = useState('both');
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -34,7 +35,7 @@ export default function CreateProjectPage() {
     if (!title || !category) { setError('Title and category are required'); return; }
     setError('');
     try {
-      const result = await createProject({ title, description, location_address: location, urgency, quality_tier: qualityTier });
+      const result = await createProject({ title, description, location_address: location, urgency, quality_tier: qualityTier, worker_type_preference: workerType } as any);
       if (result.success) { setProjectId(result.data.project_id); setStep(2); }
       else setError(result.error || 'Failed to create project');
     } catch { setError('Network error'); }
@@ -131,6 +132,26 @@ export default function CreateProjectPage() {
                   </select>
                 </div>
               </div>
+
+              {/* Worker Type Preference */}
+              <div>
+                <label style={labelStyle}>Who should bid on this project?</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+                  {[
+                    { value: 'contractor', label: 'Licensed Contractor', desc: 'For licensed work (electrical, plumbing, HVAC, roofing)', icon: '🏗️' },
+                    { value: 'skilled_labor', label: 'Skilled Labor', desc: 'For general work (landscaping, cleaning, handyman)', icon: '🔧' },
+                    { value: 'both', label: 'Both', desc: 'Open to contractors and skilled labor', icon: '👥' },
+                  ].map(opt => (
+                    <div key={opt.value} onClick={() => setWorkerType(opt.value)}
+                      style={{ padding: 16, borderRadius: 10, border: `2px solid ${workerType === opt.value ? '#2563eb' : '#e2e8f0'}`, background: workerType === opt.value ? '#eff6ff' : 'white', cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s' }}>
+                      <div style={{ fontSize: 24, marginBottom: 6 }}>{opt.icon}</div>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 4 }}>{opt.label}</p>
+                      <p style={{ fontSize: 11, color: '#64748b' }}>{opt.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <button type="submit" style={{ width: '100%', padding: 14, fontSize: 15, fontWeight: 700, color: 'white', border: 'none', borderRadius: 10, cursor: 'pointer', background: 'linear-gradient(135deg, #2563eb, #4f46e5)' }}>
                 Continue to Upload
               </button>

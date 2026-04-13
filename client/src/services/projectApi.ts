@@ -167,3 +167,15 @@ export async function deleteCatalogItem(itemId: string) {
   const res = await fetch(`${API}/catalogs/items/${itemId}`, { method: 'DELETE', headers: authHeaders() });
   return res.json();
 }
+
+// ── Serving Areas ──
+
+export async function updateServingAreas(data: { serving_cities?: string[]; serving_zipcodes?: string[] }) {
+  const res = await fetch(`${API}/profile/serving-areas`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function getCategories() {
+  const res = await fetch(`${API}/profile/categories`, { headers: authHeaders() });
+  return res.json();
+}

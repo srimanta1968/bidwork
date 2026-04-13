@@ -59,7 +59,35 @@ export async function onboardProfile(userId: string, payload: OnboardingPayload)
   }
 }
 
+/**
+ * Update contractor/skilled labor serving areas
+ */
+export async function updateServingAreas(userId: string, data: { serving_cities?: string[]; serving_zipcodes?: string[] }): Promise<ContractorProfile | null> {
+  try {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (data.serving_cities !== undefined) { fields.push(`serving_cities = $${idx++}`); values.push(data.serving_cities); }
+    if (data.serving_zipcodes !== undefined) { fields.push(`serving_zipcodes = $${idx++}`); values.push(data.serving_zipcodes); }
+
+    if (fields.length === 0) return await getProfileByUserId(userId);
+
+    fields.push('updated_at = NOW()');
+    values.push(userId);
+
+    return await authDb.queryOne<ContractorProfile>(
+      `UPDATE contractor_profiles SET ${fields.join(', ')} WHERE user_id = $${idx} RETURNING *`,
+      values
+    );
+  } catch (error) {
+    console.error('Update serving areas error:', error);
+    throw error;
+  }
+}
+
 export const profileService = {
   getProfileByUserId,
   onboardProfile,
+  updateServingAreas,
 };

@@ -109,3 +109,22 @@ export const SKILLED_LABOR_CATEGORIES = [
   'Hauling',
   'Assembly',
 ] as const;
+
+// Categories available to both contractor and skilled labor
+export const BOTH_CATEGORIES = [
+  'Painting',
+  'Flooring',
+  'Carpentry',
+  'Deck/Patio',
+] as const;
+
+// All project categories (shown to homeowners)
+export const ALL_PROJECT_CATEGORIES = [
+  'Kitchen', 'Bathroom', 'Bedroom', 'Living Room', 'Exterior',
+  'Roofing', 'Landscaping', 'Painting', 'Flooring', 'Plumbing',
+  'Electrical', 'Deck/Patio', 'Garage', 'Basement', 'HVAC',
+  'Remodeling', 'Carpentry', 'Masonry', 'General Repair', 'Other',
+] as const;
+
+export const WORKER_TYPE_PREFERENCES = ['contractor', 'skilled_labor', 'both'] as const;
+export type WorkerTypePreference = typeof WORKER_TYPE_PREFERENCES[number];

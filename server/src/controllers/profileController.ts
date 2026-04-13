@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { profileService } from '../services/profileService';
-import { AuthenticatedRequest, CONTRACTOR_CATEGORIES, SKILLED_LABOR_CATEGORIES } from '../types';
+import { AuthenticatedRequest, CONTRACTOR_CATEGORIES, SKILLED_LABOR_CATEGORIES, BOTH_CATEGORIES, ALL_PROJECT_CATEGORIES } from '../types';
 
 /**
  * GET /api/profile/me
@@ -62,11 +62,27 @@ export async function getCategories(req: AuthenticatedRequest, res: Response): P
     res.status(200).json({
       success: true,
       data: {
-        contractor: [...CONTRACTOR_CATEGORIES],
-        skilled_labor: [...SKILLED_LABOR_CATEGORIES],
+        contractor: [...CONTRACTOR_CATEGORIES, ...BOTH_CATEGORIES],
+        skilled_labor: [...SKILLED_LABOR_CATEGORIES, ...BOTH_CATEGORIES],
+        all_project: [...ALL_PROJECT_CATEGORIES],
       },
     });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
+}
+
+/**
+ * PUT /api/profile/serving-areas
+ */
+export async function updateServingAreas(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
+
+    const { serving_cities, serving_zipcodes } = req.body;
+    const profile = await profileService.updateServingAreas(req.user.userId, { serving_cities, serving_zipcodes });
+    if (!profile) { res.status(404).json({ success: false, error: 'Profile not found' }); return; }
+
+    res.status(200).json({ success: true, data: { profile } });
+  } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
 }
