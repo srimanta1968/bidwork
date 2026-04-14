@@ -75,6 +75,24 @@ export async function getCategories(req: AuthenticatedRequest, res: Response): P
 /**
  * PUT /api/profile/serving-areas
  */
+/**
+ * PUT /api/profile/update
+ */
+export async function updateProfile(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
+
+    const { business_name, office_address, phone, license_number, license_type, category, skills, years_experience, bio, serving_cities, serving_zipcodes } = req.body;
+    const profile = await profileService.updateProfile(req.user.userId, {
+      business_name, office_address, phone, license_number, license_type,
+      category, skills, years_experience, bio, serving_cities, serving_zipcodes,
+    });
+    if (!profile) { res.status(404).json({ success: false, error: 'Profile not found. Complete onboarding first.' }); return; }
+
+    res.status(200).json({ success: true, data: { profile } });
+  } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
+}
+
 export async function updateServingAreas(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }

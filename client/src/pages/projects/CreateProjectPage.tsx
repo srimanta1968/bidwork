@@ -16,6 +16,8 @@ export default function CreateProjectPage() {
   const [urgency, setUrgency] = useState('flexible');
   const [qualityTier, setQualityTier] = useState('standard');
   const [workerType, setWorkerType] = useState('both');
+  const [city, setCity] = useState('');
+  const [zipCode, setZipCode] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -35,7 +37,7 @@ export default function CreateProjectPage() {
     if (!title || !category) { setError('Title and category are required'); return; }
     setError('');
     try {
-      const result = await createProject({ title, description, location_address: location, urgency, quality_tier: qualityTier, worker_type_preference: workerType } as any);
+      const result = await createProject({ title, description, location_address: location, city, zip_code: zipCode, urgency, quality_tier: qualityTier, worker_type_preference: workerType } as any);
       if (result.success) { setProjectId(result.data.project_id); setStep(2); }
       else setError(result.error || 'Failed to create project');
     } catch { setError('Network error'); }
@@ -111,8 +113,18 @@ export default function CreateProjectPage() {
                 <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Describe what you want done..." style={{ ...inputStyle, minHeight: 80, resize: 'vertical' as const }} />
               </div>
               <div style={{ marginBottom: 16 }}>
-                <label style={labelStyle}>Location</label>
-                <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="City, State" style={inputStyle} />
+                <label style={labelStyle}>Full Address</label>
+                <input type="text" value={location} onChange={e => setLocation(e.target.value)} placeholder="123 Main St, City, State ZIP" style={inputStyle} />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 12, marginBottom: 16 }}>
+                <div>
+                  <label style={labelStyle}>City *</label>
+                  <input type="text" value={city} onChange={e => setCity(e.target.value)} placeholder="e.g., Danville" style={inputStyle} required />
+                </div>
+                <div>
+                  <label style={labelStyle}>Zip Code</label>
+                  <input type="text" value={zipCode} onChange={e => setZipCode(e.target.value)} placeholder="e.g., 94526" style={inputStyle} />
+                </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
                 <div>

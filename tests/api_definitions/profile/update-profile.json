@@ -1,0 +1,22 @@
+{
+  "endpoint": "/api/profile/update",
+  "method": "PUT",
+  "taskId": "2fc709d6-5d63-45fa-a296-01e4a2d4fbef",
+  "description": "Update contractor/skilled labor full profile including serving areas",
+  "requiresAuth": true,
+  "priority": 71,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Update profile with serving areas",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "business_name": "{{dynamic:name}}",
+      "phone": "{{dynamic:phone}}",
+      "category": "{{static:Plumbing}}",
+      "serving_cities": ["Springfield", "Columbus"],
+      "serving_zipcodes": ["62701", "43215"]
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

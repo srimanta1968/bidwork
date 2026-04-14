@@ -179,3 +179,13 @@ export async function getCategories() {
   const res = await fetch(`${API}/profile/categories`, { headers: authHeaders() });
   return res.json();
 }
+
+export async function updateProfile(data: any) {
+  const res = await fetch(`${API}/profile/update`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function getMyProfile() {
+  const res = await fetch(`${API}/profile/me`, { headers: authHeaders() });
+  return res.json();
+}

@@ -43,6 +43,7 @@ export default function ContractorDashboard() {
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span style={{ fontSize: 12, fontWeight: 500, color: 'white', background: '#059669', padding: '4px 10px', borderRadius: 20 }}>Contractor</span>
+          <button onClick={() => navigate('/profile')} style={{ fontSize: 13, fontWeight: 500, color: '#7c3aed', background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' }}>My Profile</button>
           <button onClick={() => navigate('/catalogs')} style={{ fontSize: 13, fontWeight: 500, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' }}>My Catalogs</button>
           <span style={{ fontSize: 14, color: '#64748b' }}>{user?.email}</span>
           <button onClick={logout} style={{ fontSize: 14, fontWeight: 500, color: '#64748b', background: 'none', border: '1px solid #e2e8f0', borderRadius: 8, padding: '6px 16px', cursor: 'pointer' }}>Logout</button>
@@ -54,7 +55,8 @@ export default function ContractorDashboard() {
           <div>
             <h1 style={{ fontSize: 28, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>Welcome, {firstName} 🔨</h1>
             <p style={{ fontSize: 15, color: '#64748b' }}>
-              {cityFilter ? `Showing jobs near ${cityFilter}` : 'Find pre-scoped jobs and submit competitive bids.'}
+              {cityFilter && cityFilter !== 'All Areas' ? `Showing jobs in ${cityFilter}` : 'Showing all available jobs.'}
+              {cityFilter === 'All Areas' && <span style={{ fontSize: 13, color: '#2563eb', cursor: 'pointer', marginLeft: 8 }} onClick={() => navigate('/profile')}>Set your service area &rarr;</span>}
             </p>
           </div>
           <button onClick={() => navigate('/jobs')} style={{ padding: '12px 24px', fontSize: 14, fontWeight: 600, color: 'white', border: 'none', borderRadius: 10, cursor: 'pointer', background: 'linear-gradient(135deg, #2563eb, #4f46e5)' }}>

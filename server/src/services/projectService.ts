@@ -21,9 +21,12 @@ export function parseCityZip(address: string | null): { city: string | null; zip
   return { city: city || null, zip_code };
 }
 
-export async function createProject(homeownerId: string, data: { title: string; description?: string; location_address?: string; urgency?: string; quality_tier?: string; worker_type_preference?: string }) {
+export async function createProject(homeownerId: string, data: { title: string; description?: string; location_address?: string; city?: string; zip_code?: string; urgency?: string; quality_tier?: string; worker_type_preference?: string }) {
   try {
-    const { city, zip_code } = parseCityZip(data.location_address || null);
+    // Use explicit city/zip if provided, otherwise parse from location_address
+    const parsed = parseCityZip(data.location_address || null);
+    const city = data.city || parsed.city;
+    const zip_code = data.zip_code || parsed.zip_code;
     return await projectDb.queryOne(
       `INSERT INTO projects (homeowner_id, title, description, location_address, city, zip_code, urgency, quality_tier, worker_type_preference, scope_status, status)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'uploading', 'draft') RETURNING *`,

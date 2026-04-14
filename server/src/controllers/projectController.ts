@@ -32,10 +32,10 @@ export async function presignUpload(req: AuthenticatedRequest, res: Response): P
 export async function createProject(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
     if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
-    const { title, description, location_address, urgency, quality_tier, worker_type_preference, media } = req.body;
+    const { title, description, location_address, city, zip_code, urgency, quality_tier, worker_type_preference, media } = req.body;
     if (!title) { res.status(400).json({ success: false, error: 'Title is required' }); return; }
 
-    const project = await projectService.createProject(req.user.userId, { title, description, location_address, urgency, quality_tier, worker_type_preference });
+    const project = await projectService.createProject(req.user.userId, { title, description, location_address, city, zip_code, urgency, quality_tier, worker_type_preference });
 
     // Add media records and mark first as representative
     if (media?.length > 0) {

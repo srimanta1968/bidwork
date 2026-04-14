@@ -15,6 +15,7 @@ import AvailableJobsPage from './pages/projects/AvailableJobsPage';
 import BidComparisonPage from './pages/projects/BidComparisonPage';
 import EditProjectPage from './pages/projects/EditProjectPage';
 import CatalogPage from './pages/projects/CatalogPage';
+import ProfilePage from './pages/ProfilePage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -57,6 +58,7 @@ function AppRoutes() {
       <Route path="/projects/:id/bids" element={<ProtectedRoute><BidComparisonPage /></ProtectedRoute>} />
       <Route path="/jobs" element={<ProtectedRoute><AvailableJobsPage /></ProtectedRoute>} />
       <Route path="/catalogs" element={<ProtectedRoute><CatalogPage /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
     </Routes>
   );
 }

@@ -86,8 +86,45 @@ export async function updateServingAreas(userId: string, data: { serving_cities?
   }
 }
 
+/**
+ * Update contractor/skilled labor full profile
+ */
+export async function updateProfile(userId: string, payload: OnboardingPayload & { serving_cities?: string[]; serving_zipcodes?: string[] }): Promise<ContractorProfile | null> {
+  try {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (payload.business_name !== undefined) { fields.push(`business_name = $${idx++}`); values.push(payload.business_name || null); }
+    if (payload.office_address !== undefined) { fields.push(`office_address = $${idx++}`); values.push(payload.office_address || null); }
+    if (payload.phone !== undefined) { fields.push(`phone = $${idx++}`); values.push(payload.phone); }
+    if (payload.license_number !== undefined) { fields.push(`license_number = $${idx++}`); values.push(payload.license_number || null); }
+    if (payload.license_type !== undefined) { fields.push(`license_type = $${idx++}`); values.push(payload.license_type || null); }
+    if (payload.category !== undefined) { fields.push(`category = $${idx++}`); values.push(payload.category); }
+    if (payload.skills !== undefined) { fields.push(`skills = $${idx++}`); values.push(payload.skills || null); }
+    if (payload.years_experience !== undefined) { fields.push(`years_experience = $${idx++}`); values.push(payload.years_experience || null); }
+    if (payload.bio !== undefined) { fields.push(`bio = $${idx++}`); values.push(payload.bio || null); }
+    if (payload.serving_cities !== undefined) { fields.push(`serving_cities = $${idx++}`); values.push(payload.serving_cities); }
+    if (payload.serving_zipcodes !== undefined) { fields.push(`serving_zipcodes = $${idx++}`); values.push(payload.serving_zipcodes); }
+
+    if (fields.length === 0) return await getProfileByUserId(userId);
+
+    fields.push('updated_at = NOW()');
+    values.push(userId);
+
+    return await authDb.queryOne<ContractorProfile>(
+      `UPDATE contractor_profiles SET ${fields.join(', ')} WHERE user_id = $${idx} RETURNING *`,
+      values
+    );
+  } catch (error) {
+    console.error('Update profile error:', error);
+    throw error;
+  }
+}
+
 export const profileService = {
   getProfileByUserId,
   onboardProfile,
   updateServingAreas,
+  updateProfile,
 };
