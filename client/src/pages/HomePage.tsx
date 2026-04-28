@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useI18n } from '../i18n';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
+import { MarketingFooter } from '../components/common/MarketingLayout';
 
 /* ═══════════════════════ NAVBAR ═══════════════════════ */
 function Navbar() {
@@ -15,9 +16,12 @@ function Navbar() {
           <span style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>BidWork</span>
         </Link>
 
-        <div style={{ display: 'none', gap: 32, alignItems: 'center' }} className="md:!flex">
+        <div style={{ display: 'none', gap: 28, alignItems: 'center' }} className="md:!flex">
           <a href="#features" style={{ fontSize: 14, fontWeight: 500, color: '#64748b', textDecoration: 'none' }}>{t.features.label}</a>
           <a href="#how-it-works" style={{ fontSize: 14, fontWeight: 500, color: '#64748b', textDecoration: 'none' }}>{t.howItWorks.label}</a>
+          <Link to="/about" style={{ fontSize: 14, fontWeight: 500, color: '#64748b', textDecoration: 'none' }}>About</Link>
+          <Link to="/faq" style={{ fontSize: 14, fontWeight: 500, color: '#64748b', textDecoration: 'none' }}>FAQ</Link>
+          <Link to="/contact" style={{ fontSize: 14, fontWeight: 500, color: '#64748b', textDecoration: 'none' }}>Contact</Link>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -268,20 +272,98 @@ function CTA() {
   );
 }
 
-/* ═══════════════════════ FOOTER ═══════════════════════ */
-function Footer() {
-  const { t } = useI18n();
+/* ═══════════════════════ PRICING ═══════════════════════ */
+function Pricing() {
   return (
-    <footer style={{ borderTop: '1px solid #f1f5f9', padding: '32px 0', background: 'white' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ width: 26, height: 26, borderRadius: 7, background: 'linear-gradient(135deg, #2563eb, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: 11 }}>B</div>
-          <span style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>BidWork</span>
+    <section style={{ padding: '96px 0', background: 'white' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: '#0891b2', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Simple pricing</p>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: 16 }}>One fee. No surprises.</h2>
+          <p style={{ fontSize: 17, color: '#64748b', maxWidth: 640, margin: '0 auto' }}>
+            BidWork charges a single platform service fee — 5% of the contract value — collected as a deposit when a contractor accepts your offer. That's it. Final payment for the work goes directly between homeowner and contractor.
+          </p>
         </div>
-        <p style={{ fontSize: 13, color: '#94a3b8' }}>{t.footer.tagline}</p>
-        <p style={{ fontSize: 13, color: '#cbd5e1' }}>&copy; {new Date().getFullYear()} BidWork. {t.footer.rights}</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, maxWidth: 960, margin: '0 auto' }}>
+          {[
+            { who: 'Homeowners', cost: 'Free to start', desc: 'Free account, free AI scoping, free bid review. The 5% deposit is paid once you select a contractor and is recognized as the platform fee at contract signature.', cta: 'Start a project', to: '/register' },
+            { who: 'Contractors & skilled workers', cost: 'Free to bid', desc: 'No subscription, no per-lead charges, no hidden cuts. We never take a percentage of the homeowner\'s payment to you. Build a profile, bid on jobs, win work.', cta: 'Sign up free', to: '/register' },
+          ].map(card => (
+            <div key={card.who} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, padding: 32 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{card.who}</p>
+              <p style={{ fontSize: 28, fontWeight: 800, color: '#0f172a', marginBottom: 12 }}>{card.cost}</p>
+              <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.7, marginBottom: 20 }}>{card.desc}</p>
+              <Link to={card.to} style={{ display: 'inline-block', padding: '10px 22px', fontSize: 14, fontWeight: 700, color: 'white', background: 'linear-gradient(135deg, #2563eb, #4f46e5)', borderRadius: 10, textDecoration: 'none' }}>{card.cta}</Link>
+            </div>
+          ))}
+        </div>
       </div>
-    </footer>
+    </section>
+  );
+}
+
+/* ═══════════════════════ TRUST & SAFETY ═══════════════════════ */
+function TrustSafety() {
+  const items = [
+    { icon: '🔒', title: 'Privacy by default', body: 'Your address and contact info are hidden from contractors until you accept a bid. No one sees other contractors\' bids.' },
+    { icon: '✍️', title: 'Mutual e-signed contracts', body: 'Every engagement is recorded in a work order signed by both parties with IP and timestamp. We retain the audit trail for 7 years.' },
+    { icon: '💳', title: 'Escrowed deposit', body: 'The 5% platform fee is held by BidWork until both parties sign. If a contractor abandons, the deposit becomes a credit on your project — not a loss.' },
+    { icon: '🚩', title: 'Public abandonment flags', body: 'Contractors who fail to honor accepted offers get a visible flag on their profile so future homeowners can factor reliability into their selection.' },
+    { icon: '🤖', title: 'AI scoping, human refined', body: 'Every project is scoped by AI from your photos, then you review and edit before publishing. Pricing is bounded by a per-task floor.' },
+    { icon: '📑', title: 'Receipts for both sides', body: 'BidWork issues a service-fee receipt to you. The contractor issues a final payment receipt with their own legal company name. Two documents, one paper trail.' },
+  ];
+  return (
+    <section style={{ padding: '96px 0', background: '#0f172a', color: 'white' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: '#7dd3fc', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Trust &amp; safety</p>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: 'white', letterSpacing: '-0.02em', marginBottom: 16 }}>Built so both sides can act in good faith</h2>
+          <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.7)', maxWidth: 640, margin: '0 auto' }}>
+            BidWork is opinionated about privacy, accountability, and paper trails — not because it sounds nice, but because every dispute we've seen in home services traces back to one of those three things.
+          </p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+          {items.map(it => (
+            <div key={it.title} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 24 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 11, background: 'rgba(125,211,252,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 14 }}>{it.icon}</div>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: 'white', marginBottom: 6 }}>{it.title}</h3>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.7 }}>{it.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════ FAQ TEASER ═══════════════════════ */
+function FaqTeaser() {
+  const items = [
+    { q: 'Is it free to start a project?', a: 'Yes. Sign-up, AI scoping, and bid review are free. The 5% platform fee is collected as a deposit only when you select a contractor.' },
+    { q: 'How is privacy handled?', a: 'Contractors never see homeowner email/phone/address before a bid is accepted. Other contractors never see competing bids.' },
+    { q: 'What if a contractor doesn\'t respond?', a: 'After 72 working hours of no response, the bid auto-abandons, the contractor\'s profile is flagged, and your deposit becomes a credit on your project.' },
+    { q: 'Who sees the final payment receipt?', a: 'Both parties. The receipt is issued by the contractor\'s legal company (not BidWork) — we render the document but the seller is the contractor.' },
+  ];
+  return (
+    <section style={{ padding: '96px 0', background: 'white' }}>
+      <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: '#0891b2', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Frequently asked</p>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 38px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>Quick answers</h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 16 }}>
+          {items.map(it => (
+            <div key={it.q} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: 20 }}>
+              <p style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>{it.q}</p>
+              <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.7 }}>{it.a}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <Link to="/faq" style={{ fontSize: 15, fontWeight: 600, color: '#2563eb', textDecoration: 'none' }}>See all FAQs (Homeowner · Contractor · Skilled Worker) →</Link>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -294,9 +376,12 @@ export default function HomePage() {
       <FeaturesGrid />
       <HowItWorks />
       <ForWho />
+      <Pricing />
+      <TrustSafety />
       <Testimonials />
+      <FaqTeaser />
       <CTA />
-      <Footer />
+      <MarketingFooter />
     </div>
   );
 }

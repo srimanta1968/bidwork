@@ -1,0 +1,157 @@
+{
+  "tasks": [
+    {
+      "title": "Add billing/tax columns to contractor_profiles for receipt generation",
+      "description": "ALTER auth.contractor_profiles to add: legal_company_name VARCHAR(255), ein VARCHAR(32), billing_address_line1 VARCHAR(255), billing_address_line2 VARCHAR(255), billing_city VARCHAR(120), billing_state VARCHAR(60), billing_zip VARCHAR(20), billing_phone VARCHAR(40), signature_s3_key VARCHAR(500), billing_profile_completed_at TIMESTAMP NULL. The billing_profile_completed_at is set by the API when all required billing fields (legal_company_name, ein, billing_address_line1, billing_city, billing_state, billing_zip, billing_phone) are non-empty. Backfill legal_company_name = COALESCE(business_name, NULL) for existing rows.",
+      "task_type": "database_migration",
+      "feature_id": "3e029edf-cdb6-496f-ad72-441420557359",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Contractor billing profile API and pre-payment-receipt completeness check",
+      "description": "GET /api/profile/billing — returns the caller's contractor billing/tax profile fields plus a billing_profile_completed boolean. PUT /api/profile/billing body {legal_company_name, ein, billing_address_line1, billing_address_line2?, billing_city, billing_state, billing_zip, billing_phone, signature_s3_key?} — contractor-only; validates EIN format (NN-NNNNNNN or 9 digits), updates billing_profile_completed_at when all required fields are present, otherwise nulls it. POST /api/profile/billing/signature/presign — returns S3 presigned PUT URL for the signature image (PNG/JPEG, ≤2 MB). Add a guard: POST /api/bids/:id/payment-confirmed (TK-2702 endpoint) and the contractor final receipt generator must return 412 Precondition Required if the contractor has not completed their billing profile, with a message directing them to /profile/billing.",
+      "task_type": "api_endpoint",
+      "feature_id": "3e029edf-cdb6-496f-ad72-441420557359",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Contractor profile UI section for Billing & Tax Information with signature upload",
+      "description": "On the contractor profile page (existing FT-780), add a Billing & Tax Information collapsible section above Service Areas. Fields: Company Legal Name, EIN/Tax ID (with format helper text 'XX-XXXXXXX'), Billing Address (line 1, line 2, city, state, zip), Billing Phone, Signature (drag-drop image uploader using POST /api/profile/billing/signature/presign → S3 PUT → PUT /api/profile/billing). Save calls PUT /api/profile/billing with the full payload; toast on save. A status badge at the top of the section shows 'Receipt-ready' (green) when all required fields are populated, or 'Incomplete — receipts cannot be issued until you complete this section' (amber) otherwise. The same banner is surfaced inline on the contractor's bid Mark Payment Received screen if the profile is incomplete, blocking submission with a Complete Profile CTA.",
+      "task_type": "frontend",
+      "feature_id": "3e029edf-cdb6-496f-ad72-441420557359",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Create additional_work_orders table with owner-acceptance state",
+      "description": "Create bidding.additional_work_orders: id UUID PK, bid_id UUID FK→bids ON DELETE CASCADE, contractor_id UUID FK→users, title VARCHAR(255), description TEXT, amount_cents BIGINT NOT NULL CHECK (amount_cents > 0), photo_evidence_keys TEXT[] DEFAULT '{}', owner_status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (owner_status IN ('pending','accepted','rejected')), owner_response_notes TEXT, owner_signature_typed_name VARCHAR(255), owner_responded_at TIMESTAMP NULL, contractor_submitted_at TIMESTAMP DEFAULT NOW(), created_at, updated_at. Index on (bid_id, owner_status). Constraint: an additional work order can only be created while the parent bid's selection_workflow_state is in ('addresses_revealed','in_progress','completion_submitted'). Recording-only — no payment columns, no service_fee snapshot, because BidWork takes no fee on additional work.",
+      "task_type": "database",
+      "feature_id": "f3f71b3e-f68d-456d-91dd-0fcebf830918",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Additional work orders API: contractor submit, owner accept/reject, list",
+      "description": "POST /api/bids/:bidId/additional-work — contractor-only, only allowed while parent bid is in_progress; body {title, description, amount_cents, photo_evidence_keys?}; creates row in pending. POST /api/bids/:bidId/additional-work/:awoId/accept — homeowner-only; body {owner_signature_typed_name, owner_response_notes?}; transitions to accepted, sets owner_responded_at. POST /api/bids/:bidId/additional-work/:awoId/reject — homeowner-only; body {owner_response_notes}; transitions to rejected. GET /api/bids/:bidId/additional-work — visible to bid's contractor and project's homeowner only (other contractors get 403); returns chronological list with status. Each transition emits an in-app notification + workflow_audit_log row. Accepted additional work items are exposed by GET /api/bids/:bidId so the contractor final payment receipt generator (feat-two-tier-receipts) can include them as itemized lines.",
+      "task_type": "api_endpoint",
+      "feature_id": "f3f71b3e-f68d-456d-91dd-0fcebf830918",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Contractor Add Extra Work UI and homeowner Accept/Reject panel",
+      "description": "On the contractor's active job detail (post addresses-revealed), add an Add Extra Work CTA opening a modal: title, description, amount, optional photo upload (reuses existing S3 presign flow). Submit calls POST /api/bids/:bidId/additional-work and the item appears as Pending Approval. On the homeowner's job detail, render an Additional Work Requested panel listing pending items with photos/amount/description and Accept (typed-name signature required) / Reject (with notes) buttons. Both sides see a chronological log of all accepted and rejected items beneath the original work order summary. Display a banner on both sides explaining 'Additional work is between you and your contractor — BidWork only records it.'",
+      "task_type": "frontend",
+      "feature_id": "f3f71b3e-f68d-456d-91dd-0fcebf830918",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Create service_fee_config versioned table with seed",
+      "description": "Create admin.service_fee_config: id UUID PK, percent NUMERIC(5,4) NOT NULL CHECK (percent >= 0 AND percent <= 1), effective_from TIMESTAMP NOT NULL DEFAULT NOW(), set_by_admin_id UUID FK→users NULL, notes TEXT, created_at TIMESTAMP DEFAULT NOW(). Append-only by convention (never UPDATE/DELETE rows). Seed with one row: percent=0.05 (matches DEPOSIT_PERCENT env default), effective_from=NOW(), notes='Initial 5% platform service fee'. Add helper SQL view current_service_fee returning the row with the latest effective_from <= NOW(). Index (effective_from DESC).",
+      "task_type": "database",
+      "feature_id": "5427a656-6eff-4af4-9b86-0b5f48662711",
+      "epic_id": "b4d11c00-d7be-4ef0-95b3-fd0ad8cfeb6a",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Admin service fee API: get current, set new, list history",
+      "description": "GET /api/admin/service-fee/current — admin-only via existing adminAuth middleware; returns the row from current_service_fee view. GET /api/admin/service-fee/history — admin-only; returns all rows ordered by effective_from DESC with the admin user who set each. POST /api/admin/service-fee body {percent, effective_from?, notes?} — admin-only; validates 0 <= percent <= 0.5 (50% safety cap with a warning above 0.10); if effective_from omitted defaults to NOW(); inserts new row, never updates. Modify the deposit intent endpoint (TK-2699) to read the current effective fee at deposit creation and snapshot it on the deposit row's percent column — historical deposits keep their original percent regardless of later admin changes.",
+      "task_type": "api_endpoint",
+      "feature_id": "5427a656-6eff-4af4-9b86-0b5f48662711",
+      "epic_id": "b4d11c00-d7be-4ef0-95b3-fd0ad8cfeb6a",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Admin portal Service Fee management UI",
+      "description": "In the separate admin portal (admin-client), add a Service Fee section under Platform Settings. Top card shows current percent (formatted as percentage), effective_from date, last changed by, and notes. Below: form with percent input (with helper text 'Default 5%. Values above 10% will require confirmation'), effective_from datetime picker (defaults to now), notes textarea, and a Save New Rate button calling POST /api/admin/service-fee. Below the form: paginated history table showing percent / effective_from / set_by_admin / notes / created_at for every prior row. A confirm modal appears for any percent > 0.10 with the message 'You are setting the platform fee above 10%. New bids' deposits will be charged at the new rate from this effective date forward. Continue?'",
+      "task_type": "frontend",
+      "feature_id": "5427a656-6eff-4af4-9b86-0b5f48662711",
+      "epic_id": "b4d11c00-d7be-4ef0-95b3-fd0ad8cfeb6a",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Replace single receipts model with service_fee_receipts and contractor_payment_receipts tables",
+      "description": "Replaces the single bidding.receipts table introduced in TK-2701 with two role-specific tables. Create bidding.service_fee_receipts: id UUID PK, bid_id UUID FK UNIQUE, project_id UUID FK, deposit_id UUID FK→deposits, owner_id UUID FK→users, amount_cents BIGINT, percent_at_time NUMERIC(5,4), receipt_pdf_s3_key VARCHAR(500), receipt_number VARCHAR(40) UNIQUE (format SF-YYYYMMDD-NNNN), issued_at TIMESTAMP, emailed_at TIMESTAMP NULL. Create bidding.contractor_payment_receipts: id UUID PK, bid_id UUID FK UNIQUE, project_id UUID FK, owner_id UUID FK→users, contractor_id UUID FK→users, contract_total_cents BIGINT, additional_work_total_cents BIGINT DEFAULT 0, grand_total_cents BIGINT, line_items JSONB (snapshot of bid task_breakdown + accepted additional_work_orders at time of issuance), receipt_pdf_s3_key VARCHAR(500), receipt_number VARCHAR(40) UNIQUE (format CR-YYYYMMDD-NNNN), issuer_legal_name VARCHAR(255) NOT NULL, issuer_ein VARCHAR(32), issuer_billing_address TEXT, issuer_billing_phone VARCHAR(40), issuer_signature_s3_key VARCHAR(500), issued_at TIMESTAMP, emailed_at TIMESTAMP NULL. Both tables index on bid_id and owner_id. The original receipts table from TK-2701 should be migrated: any existing rows become contractor_payment_receipts; the original table is then dropped.",
+      "task_type": "database_migration",
+      "feature_id": "bc7a30ae-f9c2-48af-9e7c-87ba81807c4f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Service-fee receipt generator triggered at deposit conversion (BidWork as issuer)",
+      "description": "src/services/receipts/serviceFeeReceiptGenerator.ts. Hook into the existing TK-2699 'contract executed → deposit converted_to_fee' transition. Inputs: deposit_id. Loads deposit + project + homeowner + percent_at_time (from deposit.percent snapshot). Renders templates/service-fee-receipt.hbs with BidWork as legal issuer (RECEIPT_COMPANY_LEGAL_NAME, RECEIPT_COMPANY_ADDRESS, RECEIPT_TAX_ID env vars), homeowner as recipient, line item 'Platform service fee — <percent>% of contract value', amount = deposit.amount_cents, receipt_number SF-<date>-<seq>. Converts HTML→PDF (Puppeteer), uploads to S3 under receipts/service-fee/<bid_id>/<receipt_number>.pdf, persists service_fee_receipts row, calls emailService.queue('service_fee_receipt_issued', homeowner_email, {receipt_url, amount, percent}) with PDF attached. Idempotent: if a service_fee_receipts row already exists for this bid_id, return it.",
+      "task_type": "service_layer",
+      "feature_id": "bc7a30ae-f9c2-48af-9e7c-87ba81807c4f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Contractor-issued final payment receipt generator using contractor billing profile",
+      "description": "src/services/receipts/contractorPaymentReceiptGenerator.ts. Replaces the BidWork-as-issuer logic in TK-2702. Triggered when POST /api/bids/:id/payment-confirmed succeeds. Inputs: bid_id. Steps: (1) verify contractor's billing_profile_completed_at IS NOT NULL — return 412 with completion CTA otherwise; (2) load bid + task_breakdown + accepted additional_work_orders + contractor's billing/tax profile from auth.contractor_profiles + homeowner profile; (3) compute contract_total_cents = sum(line_total) of task_breakdown, additional_work_total_cents = sum(amount_cents) of accepted additional_work_orders, grand_total_cents = contract_total_cents + additional_work_total_cents (validate matches the payment-confirmed amount); (4) render templates/contractor-payment-receipt.hbs with the contractor's company as the legal issuer (legal_company_name, ein, billing_address, billing_phone, signature image embedded), homeowner as recipient, itemized line items showing per-task labor + materials + each accepted additional work order, BidWork only as 'Generated via BidWork' footer with a small logo; (5) PDF, S3 upload, persist contractor_payment_receipts row with snapshot of issuer fields and line_items JSONB; (6) email both parties via emailService.queue('contractor_payment_receipt_issued', ...) with PDF attached. Idempotent on bid_id.",
+      "task_type": "service_layer",
+      "feature_id": "bc7a30ae-f9c2-48af-9e7c-87ba81807c4f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Owner Receipts panel showing both BidWork service-fee and contractor final receipts",
+      "description": "On the homeowner's project / job detail page, add a Receipts tab. Lists, in chronological order, two cards per completed engagement: (1) BidWork Service Fee Receipt — shown as soon as the contract is executed; card shows receipt_number, amount, percent_at_time, issuer 'BidWork, Inc.', issued_at, and a Download PDF button calling a presigned S3 GET. (2) Final Payment Receipt — shown only after the contractor marks payment received and the receipt is issued; card shows receipt_number, contractor's legal_company_name as issuer, contract_total + additional_work_total + grand_total, issued_at, and a Download PDF button. Below the second card, an itemized accordion expands to show task line items + accepted additional work. Empty state when no contracts have been executed yet.",
+      "task_type": "frontend",
+      "feature_id": "bc7a30ae-f9c2-48af-9e7c-87ba81807c4f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Add abandonment_flag_count and last_abandoned_at to contractor profile; create deposit_credits ledger",
+      "description": "ALTER auth.contractor_profiles add abandonment_flag_count INT NOT NULL DEFAULT 0, last_abandoned_at TIMESTAMP NULL. Create bidding.deposit_credits ledger table: id UUID PK, owner_id UUID FK→users, project_id UUID FK→projects, source_deposit_id UUID FK→deposits, source_bid_id UUID FK→bids (the abandoned bid that produced the credit), amount_cents BIGINT NOT NULL CHECK (amount_cents > 0), status VARCHAR(20) NOT NULL DEFAULT 'available' CHECK (status IN ('available','partially_applied','fully_applied','expired')), applied_to_bid_id UUID FK→bids NULL, applied_amount_cents BIGINT DEFAULT 0, created_at TIMESTAMP DEFAULT NOW(), applied_at TIMESTAMP NULL, expires_at TIMESTAMP NULL. Index (owner_id, project_id, status) for the credit-application lookup. The credit is per (homeowner, project) so it cannot be applied to a different project's bid.",
+      "task_type": "database_migration",
+      "feature_id": "f48cd961-86d7-49c6-8e64-078b56b28e9a",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Auto-abandon hook: increment flag, convert deposit to credit, and credit-application service",
+      "description": "Extend the timer agent's auto-abandon path (TK-2705) so that when a notified bid is abandoned at 72 working hours: (1) increment auth.contractor_profiles.abandonment_flag_count by 1 and set last_abandoned_at = NOW() for the offending contractor; (2) instead of refunding the deposit, transition deposits.status from 'collected' to 'available_as_credit' and INSERT a bidding.deposit_credits row (owner_id, project_id, source_deposit_id, source_bid_id, amount_cents = deposits.amount_cents, status='available'); (3) emit an in-app notification + email to the homeowner that includes the credit balance. Build src/services/depositCredits.ts with helper applyAvailableCreditForBid(ownerId, projectId, newDepositAmountCents): finds 'available' rows ordered by created_at, applies as much as needed, marks 'partially_applied' or 'fully_applied', writes applied_to_bid_id + applied_amount_cents + applied_at, returns the residual amount the owner still owes (>=0). The existing TK-2699 deposit-intent endpoint must call this helper before creating a Stripe PaymentIntent — if residual is 0 the contract proceeds without any new charge.",
+      "task_type": "service_layer",
+      "feature_id": "f48cd961-86d7-49c6-8e64-078b56b28e9a",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Expose abandonment flag publicly and surface deposit credit at checkout",
+      "description": "Two surfaces. (A) GET /api/projects/available, GET /api/projects/:id/bids, and any contractor-card endpoint serializer must include the contractor's abandonment_flag_count and last_abandoned_at — these are public reliability signals (PII redactor in feat-bid-pii-redaction must allow them through). (B) Modify POST /api/contracts/:id/deposit/intent (TK-2699) so its response includes available_credit_cents and residual_due_cents = max(0, full_deposit - credit). When residual_due_cents = 0, the response indicates no Stripe PaymentIntent was created; otherwise the Stripe intent is created for the residual only. The webhook on payment_intent.succeeded must also call applyAvailableCreditForBid to mark the credit ledger rows applied, so credit consumption is atomic with payment success.",
+      "task_type": "api_endpoint",
+      "feature_id": "f48cd961-86d7-49c6-8e64-078b56b28e9a",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Abandonment warning badge and deposit credit indicator UI",
+      "description": "Two UI surfaces. (A) Wherever a contractor card is shown to homeowners (Available Jobs page bidder list, Bid Review cards, Shortlist UI), if abandonment_flag_count > 0 render a small amber warning chip 'Abandoned X bid(s) · last <relative-time>' next to the contractor's name; on hover show a tooltip explaining 'This contractor has been auto-abandoned by the system after failing to respond to a homeowner offer within 72 working hours.' (B) On the deposit checkout screen (the page from TK-2700), call GET /api/contracts/:id/deposit/intent first; if available_credit_cents > 0 render a green banner 'Credit applied: $X from a previous abandoned bid'; if residual_due_cents = 0 the page collapses to 'No additional payment due — your previous deposit is fully applied. Click Confirm to execute the contract.'; otherwise show 'You owe $Y today (full deposit $Z minus $X credit)' with the Stripe Elements form for the residual only.",
+      "task_type": "frontend",
+      "feature_id": "f48cd961-86d7-49c6-8e64-078b56b28e9a",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    }
+  ]
+}

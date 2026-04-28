@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:id/attachments",
+  "method": "POST",
+  "taskId": "d2c1c6e5-4344-4fed-b960-4cc7ac0879f4",
+  "description": "Record metadata after the client uploads to S3",
+  "requiresAuth": true,
+  "priority": 85,
+  "dependsOn": ["POST /api/bids/:id/attachments/presign"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Finalize attachment",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"file_name": "proposal.pdf", "s3_key": "bidwork/bid-attachments/sample.pdf", "mime_type": "application/pdf", "size_bytes": 12345},
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

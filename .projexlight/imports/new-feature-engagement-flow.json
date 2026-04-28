@@ -1,0 +1,15 @@
+{
+  "epic_id_mapping": {
+    "epic-selection-workflow": "cae507d5-ecfe-488e-a94a-f6a55f5932cc"
+  },
+  "features": [
+    {
+      "temp_id": "feat-engagement-workflow-ui-and-schedule",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Engagement Workflow UI Wiring + Schedule Approval + Deposit Gating",
+      "description": "Closes the visible gap between bid acceptance and project start. After a contractor wins a bid: (1) Contractor sees an Accept Offer CTA on their dashboard, signs the auto-generated work order, then submits a proposed schedule (start_date, end_date). Both parties can download the work order PDF. (2) Owner sees a per-project engagement card on their dashboard with the winning bid's amount, contract signing status, schedule status, and a Review/Approve schedule action. (3) Deposit collection is GATED on owner-approved schedule — `POST /api/bids/:id/deposit/intent` returns 412 with a clear message until the schedule is in 'approved' state. (4) Contractor identity (full street address + phone) reveals only after the owner has paid the deposit, in line with the privacy invariant. (5) Email + in-app notification to the owner the moment the contractor accepts the offer ('your contractor accepted — review their schedule'). Also fixes the regression where a legacy Quick-Accept path silently bypassed selection_workflow_state, leaving the contract/deposit/schedule UI invisible — a one-shot migration moves any bid with `status='accepted'` but `selection_workflow_state='pending'` into 'approved_by_owner' so the new flow takes over for already-assigned bids without operator intervention.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

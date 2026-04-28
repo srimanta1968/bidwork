@@ -1,0 +1,15 @@
+{
+  "epic_id_mapping": {
+    "epic-bidding": "d03a265e-0322-44a3-8ea2-e94dd6f9c367"
+  },
+  "features": [
+    {
+      "temp_id": "feat-owner-task-price-override",
+      "epic_temp_id": "epic-bidding",
+      "title": "Homeowner Per-Task Start Price Override Editor",
+      "description": "Let the homeowner override the AI-suggested starting bid price on a per-task basis when reviewing the project scope. The owner sees the AI suggested price next to each task and can set a higher or lower owner_start_price; clearing the override falls back to the AI value. The project's calculated starting bid total is the sum across all tasks of COALESCE(owner_start_price, ai_start_price). This total is what the Owner Bid Summary (feat-owner-bid-summary) and the Contractor Start Bid display (FT-767) consume. Complements FT-767 which only handled the read/display side; this feature implements the homeowner-side write path and the live total calculation in the scope review UI.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

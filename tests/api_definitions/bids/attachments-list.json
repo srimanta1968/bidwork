@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/bids/:id/attachments",
+  "method": "GET",
+  "taskId": "d2c1c6e5-4344-4fed-b960-4cc7ac0879f4",
+  "description": "List bid attachments (owner + bidder only); returns presigned download URLs",
+  "requiresAuth": true,
+  "priority": 86,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testCases": [{
+    "name": "List attachments",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

@@ -114,35 +114,55 @@ export async function retryPipeline(projectId: string) {
   } catch (error) { console.error('Retry pipeline error:', error); throw error; }
 }
 
-export async function getAvailableProjects(filters: { category?: string; city?: string; page?: number; limit?: number; userRole?: string; servingCities?: string[]; servingZipcodes?: string[] }) {
+export async function getAvailableProjects(filters: { category?: string; city?: string; page?: number; limit?: number; userRole?: string; servingCities?: string[]; servingZipcodes?: string[]; servingLocationIds?: string[] }) {
   try {
-    const conditions = ["is_listed = true", "status = 'bidding'"];
+    const conditions = [
+      "is_listed = true",
+      "status = 'bidding'",
+      "status NOT IN ('in_contracting','assigned','completed','cancelled')",
+    ];
     const values: any[] = [];
     let idx = 1;
 
     if (filters.category) { conditions.push(`category = $${idx++}`); values.push(filters.category); }
 
-    // Filter by worker type preference matching user role
     if (filters.userRole === 'contractor') {
       conditions.push(`worker_type_preference IN ('contractor', 'both')`);
     } else if (filters.userRole === 'skilled_labor') {
       conditions.push(`worker_type_preference IN ('skilled_labor', 'both')`);
     }
 
-    // Filter by service area (city OR zip match) - only if contractor has configured serving areas
-    if (filters.servingCities?.length || filters.servingZipcodes?.length) {
-      const areaConditions: string[] = [];
-      if (filters.servingCities?.length) {
-        areaConditions.push(`city ILIKE ANY($${idx++})`);
-        values.push(filters.servingCities.map(c => `%${c}%`));
-      }
-      if (filters.servingZipcodes?.length) {
+    // Service-area filter — UNION of every source the contractor populated:
+    //   • serving_location_ids → expand to zip set + city set
+    //   • legacy serving_zipcodes → exact-match zip
+    //   • legacy serving_cities  → ILIKE city fallback
+    // A contractor with a metro picked PLUS a manually-added Danville chip in
+    // the legacy free-text list should see jobs matching either source. The
+    // (city) query-string filter only kicks in when nothing else is set.
+    const areaConditions: string[] = [];
+    if (filters.servingLocationIds?.length) {
+      const { locationService } = await import('./locationService');
+      const expanded = await locationService.expandLocationsForFilter(filters.servingLocationIds);
+      if (expanded.zips.length > 0) {
         areaConditions.push(`zip_code = ANY($${idx++})`);
-        values.push(filters.servingZipcodes);
+        values.push(expanded.zips);
       }
-      if (areaConditions.length) conditions.push(`(${areaConditions.join(' OR ')})`);
+      if (expanded.cities.length > 0) {
+        areaConditions.push(`city ILIKE ANY($${idx++})`);
+        values.push(expanded.cities.map(c => `%${c}%`));
+      }
+    }
+    if (filters.servingCities?.length) {
+      areaConditions.push(`city ILIKE ANY($${idx++})`);
+      values.push(filters.servingCities.map(c => `%${c}%`));
+    }
+    if (filters.servingZipcodes?.length) {
+      areaConditions.push(`zip_code = ANY($${idx++})`);
+      values.push(filters.servingZipcodes);
+    }
+    if (areaConditions.length > 0) {
+      conditions.push(`(${areaConditions.join(' OR ')})`);
     } else if (filters.city) {
-      // Fallback: ILIKE on city or location_address
       conditions.push(`(city ILIKE $${idx} OR location_address ILIKE $${idx})`);
       values.push(`%${filters.city}%`);
       idx++;
@@ -288,6 +308,52 @@ export function sanitizeProjectForContractor(project: any, isAcceptedBidder: boo
   };
 }
 
+/**
+ * Bid summary for the homeowner: AI start price total, owner override total,
+ * effective total, and the range of submitted-bid amounts.
+ */
+export async function getProjectBidSummary(projectId: string) {
+  try {
+    const tasks = await projectDb.queryAll<{ ai_start_price: string | null; owner_start_price: string | null }>(
+      `SELECT cost_min AS ai_start_price, owner_start_price
+         FROM scope_tasks WHERE project_id = $1 AND is_removed = false AND is_hidden = false`,
+      [projectId]
+    );
+    let aiTotal = 0, ownerTotal = 0, effectiveTotal = 0;
+    for (const t of tasks) {
+      const ai = Number(t.ai_start_price || 0);
+      const owner = t.owner_start_price !== null ? Number(t.owner_start_price) : null;
+      aiTotal += ai;
+      if (owner !== null) ownerTotal += owner;
+      effectiveTotal += owner !== null ? owner : ai;
+    }
+    // Submitted bid range — only count bids that are still candidates.
+    const range = await import('./domainDb').then(({ biddingDb }) => biddingDb.queryOne<{
+      submitted_count: string; submitted_low: string | null; submitted_high: string | null; average: string | null;
+    }>(
+      `SELECT COUNT(*)::TEXT AS submitted_count,
+              MIN(bid_amount)::TEXT AS submitted_low,
+              MAX(bid_amount)::TEXT AS submitted_high,
+              AVG(bid_amount)::TEXT AS average
+         FROM bids
+        WHERE project_id = $1
+          AND status = 'pending'
+          AND selection_workflow_state IN ('pending','shortlisted','approved_by_owner')`,
+      [projectId]
+    ));
+    const submittedCount = Number(range?.submitted_count ?? 0);
+    return {
+      ai_start_price_total: Math.round(aiTotal * 100) / 100,
+      owner_start_price_total: Math.round(ownerTotal * 100) / 100,
+      effective_start_price_total: Math.round(effectiveTotal * 100) / 100,
+      submitted_count: submittedCount,
+      submitted_low: submittedCount ? Number(range?.submitted_low) : null,
+      submitted_high: submittedCount ? Number(range?.submitted_high) : null,
+      average: submittedCount ? Math.round(Number(range?.average) * 100) / 100 : null,
+    };
+  } catch (error) { console.error('Get bid summary error:', error); throw error; }
+}
+
 export async function isAcceptedBidder(projectId: string, contractorId: string): Promise<boolean> {
   try {
     const project = await projectDb.queryOne<{ assigned_contractor_id: string }>(
@@ -302,4 +368,5 @@ export const projectService = {
   getProjectMedia, getScopeTasks, getProjectStatus, approveProject, retryPipeline,
   getAvailableProjects, updateProject, deleteMedia, getBidPriceRule, setTaskOwnerPrice,
   getScopeTask, updateScopeTask, toggleTaskVisibility, maskAddress, sanitizeProjectForContractor, isAcceptedBidder,
+  getProjectBidSummary,
 };

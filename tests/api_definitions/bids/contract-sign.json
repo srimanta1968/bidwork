@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:id/contract/sign",
+  "method": "POST",
+  "taskId": "d97b0c86-6d65-41e8-9dca-8ac472311d7e",
+  "description": "Owner or contractor signs the contract with a typed-name signature",
+  "requiresAuth": true,
+  "priority": 93,
+  "dependsOn": ["POST /api/bids/:id/accept-offer"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Sign contract",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"typed_name": "Jane Homeowner"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

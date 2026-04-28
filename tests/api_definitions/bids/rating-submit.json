@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:id/rating",
+  "method": "POST",
+  "taskId": "de5c095c-762d-47b1-ad71-98e85421c7fd",
+  "description": "Owner submits a 1-5 star rating + optional review text for the contractor",
+  "requiresAuth": true,
+  "priority": 81,
+  "dependsOn": ["POST /api/bids/:id/request-rating"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Submit rating",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"rating": 5, "review_text": "Great work, on time"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

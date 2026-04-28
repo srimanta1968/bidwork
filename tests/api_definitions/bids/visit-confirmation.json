@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:id/visit-confirmation",
+  "method": "POST",
+  "taskId": "e14be908-5219-44c0-b187-3874892b53ce",
+  "description": "Owner confirms whether the contractor visited and discussed the work",
+  "requiresAuth": true,
+  "priority": 71,
+  "dependsOn": ["GET /api/bids/:id/visit-status"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Confirm visit",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"visited": true},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

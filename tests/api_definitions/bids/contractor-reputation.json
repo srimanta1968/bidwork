@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/bids/contractor/:contractorId/reputation",
+  "method": "GET",
+  "taskId": "de5c095c-762d-47b1-ad71-98e85421c7fd",
+  "description": "Read aggregate reputation for a contractor: avg rating, rating count, completed jobs, abandonment count",
+  "requiresAuth": true,
+  "priority": 83,
+  "pathParams": {"contractorId": "{{cache:auth.register.response.data.user.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Get reputation",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

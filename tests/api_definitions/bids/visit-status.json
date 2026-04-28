@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/bids/:id/visit-status",
+  "method": "GET",
+  "taskId": "e14be908-5219-44c0-b187-3874892b53ce",
+  "description": "Owner reads the current visit-tracking state for a scheduled workorder",
+  "requiresAuth": true,
+  "priority": 70,
+  "dependsOn": ["POST /api/bids/:id/deposit/intent"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Get visit status",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

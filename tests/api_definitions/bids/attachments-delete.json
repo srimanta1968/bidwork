@@ -1,0 +1,20 @@
+{
+  "endpoint": "/api/bids/:id/attachments/:attachmentId",
+  "method": "DELETE",
+  "taskId": "d2c1c6e5-4344-4fed-b960-4cc7ac0879f4",
+  "description": "Delete a bid attachment (uploader only)",
+  "requiresAuth": true,
+  "priority": 87,
+  "dependsOn": ["POST /api/bids/:id/attachments"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}",
+    "attachmentId": "{{cache:bid_attachments.create.response.data.attachment.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Delete attachment",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

@@ -1,0 +1,48 @@
+{
+  "epic_id_mapping": {
+    "epic-selection-workflow": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+    "epic-admin-portal": "b4d11c00-d7be-4ef0-95b3-fd0ad8cfeb6a"
+  },
+  "features": [
+    {
+      "temp_id": "feat-contractor-billing-profile",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Contractor Billing & Tax Profile for Receipt Generation",
+      "description": "Each contractor maintains a billing/tax profile that BidWork's system uses as the legal issuer on the contractor-issued final payment receipt — so the receipt presents the contractor's own company as the seller, not BidWork. Required fields: legal_company_name, EIN/tax_id, billing_address (street + city + state + zip), billing_phone, signature_s3_key (typed-name image or uploaded scan). Stored as additional columns on auth.contractor_profiles. The contractor must complete this profile before the system can produce their final payment receipt; the API blocks payment-received marking until billing fields are populated. BidWork remains legally non-responsible for the homeowner→contractor payment; we are only the document generator.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-additional-work-orders",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Additional Work Orders Outside Original Bid Scope",
+      "description": "Lets a contractor record extra work that is requested or discovered after a contract is executed and falls outside the original bid scope — for example a homeowner asking for an unplanned upgrade. The contractor adds an additional work item to the active bid with title, description, photo evidence, and an amount; the homeowner must explicitly accept or reject it before it is shown as part of the engagement. Recording-only: no payment flows through BidWork for additional work, and no service fee is taken on these line items (BidWork's 5% applies only to the original contract value). Both parties see a chronological log of accepted additional work alongside the original work order, useful for the contractor's final payment receipt itemization.",
+      "feature_type": "api",
+      "priority": "medium"
+    },
+    {
+      "temp_id": "feat-admin-service-fee-config",
+      "epic_temp_id": "epic-admin-portal",
+      "title": "Admin-Configurable Platform Service Fee Percentage",
+      "description": "BidWork charges a platform service fee — 5% by default — on the contract value, collected at deposit time once the contractor accepts the bid. This feature lets a platform admin raise or lower that percentage from the admin portal at any time. Stored as an append-only versioned table (service_fee_config) so historical bids reflect the percent in effect when their deposit was collected. The deposit calculator (feat-deposit-escrow-reveal / TK-2699) reads the current effective fee at deposit creation and snapshots it onto the deposit row. Admin UI shows the current effective percent, an editable form to set a new percent + effective_from date, and a history table of all prior values with the admin who set them.",
+      "feature_type": "api",
+      "priority": "medium"
+    },
+    {
+      "temp_id": "feat-two-tier-receipts",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Two-Tier Receipt System: BidWork Service-Fee Receipt + Contractor-Issued Final Payment Receipt",
+      "description": "Replaces the single-receipt design from TK-2701/TK-2702 with a two-tier model that mirrors who is actually billing whom. (1) Service-fee receipt — issued by BidWork to the homeowner at the moment the deposit is converted to fee (contract executed). Issuer = BidWork legal entity; recipient = homeowner; amount = the collected deposit; this is the only document where BidWork is the legal seller. (2) Final payment receipt — issued by the contractor (using their billing/tax profile from feat-contractor-billing-profile) to the homeowner once the contractor marks payment received. Issuer = contractor's legal company; recipient = homeowner; amount = original contract value plus any accepted additional work orders (from feat-additional-work-orders); BidWork appears only as a small 'Generated via BidWork' footer. Both receipts are emailed automatically when issued and stored on S3; the homeowner sees both in a Receipts tab with download links. Implements two distinct PDF templates and two storage tables (service_fee_receipts, contractor_payment_receipts) so the legal posture is unambiguous.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-abandon-flag-credit-transfer",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Contractor Abandonment Flag & Deposit Credit Transfer to Next Bidder",
+      "description": "Two linked behaviors that trigger when the timer agent (feat-businessday-reminder-abandon-agent / TK-2705) auto-abandons a notified contractor's offer at the 72 working-hour mark. (A) Abandonment flag — the contractor's profile gains an abandonment_flag_count and last_abandoned_at; this flag is exposed publicly on every subsequent surface where the contractor's identity is shown to homeowners (available jobs list, bid review cards) so future homeowners can factor reliability into their selection. (B) Deposit credit transfer — the deposit the homeowner already paid for the abandoned bid is NOT refunded; it is held by BidWork as a credit attached to that homeowner. When the homeowner clicks Promote Next Ranked Bid, the new deposit obligation is computed, the available credit is applied first, and the homeowner is charged only the delta (or nothing if the new fee is ≤ credit; any excess remains as credit for future bids on the same project). Implements deposit_credits ledger table and the credit-application logic in the deposit intent endpoint. Surfaces the credit clearly in the deposit checkout UI.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "title": "Homeowner per-task start price override API",
+      "description": "PATCH /api/projects/:projectId/tasks/:taskId/start-price — homeowner-only (403 otherwise). Body: {owner_start_price: number | null}. Setting null clears the override and falls back to ai_start_price. Validates owner_start_price >= 0 and that the task belongs to a project owned by the caller and is in editable scope status (e.g. scope_review or published_for_bidding before any bid is accepted). Persists owner_start_price on the existing tasks table column. Response returns the task with {ai_start_price, owner_start_price, effective_start_price}. Also extend GET /api/projects/:id (homeowner view) to expose calculated_start_bid_total = sum of effective_start_price across the project's tasks; this matches what feat-owner-bid-summary uses. Audit: log the change with before/after values.",
+      "task_type": "api_endpoint",
+      "feature_id": "ae42bd8c-8aed-45a1-b8f9-c9415b7f3702",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Homeowner scope review per-task price editor with live total",
+      "description": "On the homeowner project scope review page, render each task row with: scope text, photo thumbnails, an AI Suggested label showing ai_start_price (read-only), and an editable Owner Override input pre-filled with owner_start_price when set (placeholder = AI suggested). A Reset link clears the override (sends null to PATCH endpoint). Show effective_start_price below as the value being used. A sticky footer shows Calculated Starting Bid = sum of effective prices across all tasks, updating live as the homeowner edits any row. Validation: non-negative numbers; debounced auto-save calling PATCH /api/projects/:projectId/tasks/:taskId/start-price; toast on success/failure with optimistic UI rollback. Locked once the project status moves past published_for_bidding into accepted (no further edits allowed).",
+      "task_type": "frontend",
+      "feature_id": "ae42bd8c-8aed-45a1-b8f9-c9415b7f3702",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    }
+  ]
+}

@@ -95,3 +95,19 @@ export async function getContractAllocation() {
   const res = await fetch(`${API}/analytics/contract-allocation`, { headers: authHeaders() });
   return res.json();
 }
+
+// Platform service fee
+export async function getCurrentServiceFee() {
+  const res = await fetch(`${API}/service-fee/current`, { headers: authHeaders() });
+  return res.json();
+}
+
+export async function getServiceFeeHistory(limit = 50) {
+  const res = await fetch(`${API}/service-fee/history?limit=${limit}`, { headers: authHeaders() });
+  return res.json();
+}
+
+export async function setServiceFee(data: { percent: number; effective_from?: string; notes?: string }) {
+  const res = await fetch(`${API}/service-fee`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}

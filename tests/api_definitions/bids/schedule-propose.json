@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:id/contract/schedule",
+  "method": "POST",
+  "taskId": "95abb176-1902-4b25-a722-4b0d5c0236fb",
+  "description": "Contractor proposes start/end dates after the contract is mutually signed",
+  "requiresAuth": true,
+  "priority": 94,
+  "dependsOn": ["POST /api/bids/:id/contract/sign"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Propose schedule",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"proposed_start_date": "2026-05-15", "proposed_end_date": "2026-05-25"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

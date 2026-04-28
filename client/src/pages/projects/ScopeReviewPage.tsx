@@ -223,6 +223,26 @@ export default function ScopeReviewPage() {
                 {tasks.some(t => t.is_hidden) && <span style={{ fontSize: 13, fontWeight: 500, color: '#94a3b8', marginLeft: 8 }}>({tasks.filter(t => t.is_hidden).length} hidden)</span>}
               </h3>
             </div>
+
+            {/* Calculated starting bid (sum of effective prices across visible tasks) */}
+            {tasks.filter(t => !t.is_hidden).length > 0 && (() => {
+              const visible = tasks.filter(t => !t.is_hidden);
+              const effective = visible.reduce((s, t) => s + (Number(t.owner_start_price ?? t.cost_min ?? 0)), 0);
+              const ai = visible.reduce((s, t) => s + Number(t.cost_min ?? 0), 0);
+              const overrides = visible.filter(t => t.owner_start_price !== null && t.owner_start_price !== undefined).length;
+              return (
+                <div style={{ background: 'linear-gradient(135deg, #1e3a8a, #4f46e5)', borderRadius: 12, padding: 16, marginBottom: 16, color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <p style={{ fontSize: 12, fontWeight: 600, opacity: 0.7 }}>CALCULATED STARTING BID</p>
+                    <p style={{ fontSize: 24, fontWeight: 800, marginTop: 2 }}>${effective.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, opacity: 0.7 }}>AI suggested ${ai.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                    {overrides > 0 && <p style={{ fontSize: 11, opacity: 0.8, marginTop: 2 }}>{overrides} task{overrides > 1 ? 's' : ''} overridden</p>}
+                  </div>
+                </div>
+              );
+            })()}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32 }}>
               {tasks.map((task: any, i: number) => {
                 const totalMin = tasks.reduce((s: number, t: any) => s + Number(t.cost_min || 0), 0);

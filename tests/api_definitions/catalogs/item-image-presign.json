@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/catalogs/items/:itemId/image/presign",
+  "method": "POST",
+  "taskId": "75ad5cb2-a1e9-4570-8f1b-44472e5125b5",
+  "description": "Presign S3 PUT URL for a catalog item image (contractor must own the catalog)",
+  "requiresAuth": true,
+  "priority": 60,
+  "dependsOn": ["POST /api/catalogs/:catalogId/items"],
+  "pathParams": {"itemId": "{{cache:catalog_items.create.response.data.item.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Presign catalog item image",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"filename": "product.png", "content_type": "image/png"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

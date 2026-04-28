@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/bids/project/:projectId",
+  "method": "GET",
+  "taskId": "7e9257c5-e033-4119-82c1-15fed7351760",
+  "description": "Project bids list — each row passes through redactBidForViewer + redactContractorForOwner so contractor email/phone/street never leak to the homeowner pre-acceptance",
+  "requiresAuth": true,
+  "priority": 90,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {"projectId": "{{cache:projects.create.response.data.project_id}}"},
+  "testCases": [{
+    "name": "List project bids (PII redacted)",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

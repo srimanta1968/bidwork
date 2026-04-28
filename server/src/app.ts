@@ -5,12 +5,15 @@ import morgan from 'morgan';
 import { config } from './config/env';
 import { runMigrations } from './config/migrate';
 import { startAiWorker } from './services/aiWorker';
+import { startAgents, stopAgents, getAgentsHealth } from './server/agents';
 import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
 import projectRoutes from './routes/projectRoutes';
 import bidRoutes from './routes/bidRoutes';
 import adminRoutes from './routes/adminRoutes';
 import catalogRoutes from './routes/catalogRoutes';
+import webhookRoutes from './routes/webhookRoutes';
+import locationRoutes from './routes/locationRoutes';
 
 interface ServerConfig {
   port: number;
@@ -45,6 +48,16 @@ app.get('/health', (req: Request, res: Response): void => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Workflow agents health (TK-2711)
+app.get('/api/health/agents', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const h = await getAgentsHealth();
+    res.json({ status: 'ok', ...h });
+  } catch (error: any) {
+    res.status(500).json({ status: 'error', error: error.message });
+  }
+});
+
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
@@ -52,6 +65,8 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/bids', bidRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/catalogs', catalogRoutes);
+app.use('/api/webhooks', webhookRoutes);
+app.use('/api/locations', locationRoutes);
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
@@ -59,19 +74,28 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-// Run migrations then start server + AI worker
+// Run migrations then start server + AI worker + workflow agents
 runMigrations()
   .then(() => {
-    app.listen(serverConfig.port, (): void => {
+    const server = app.listen(serverConfig.port, (): void => {
       console.log(`Server running on port ${serverConfig.port}`);
       startAiWorker();
+      startAgents();
     });
+    const shutdown = async (signal: string) => {
+      console.log(`[shutdown] ${signal} received — draining agents...`);
+      await stopAgents();
+      server.close(() => process.exit(0));
+    };
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('SIGINT', () => shutdown('SIGINT'));
   })
   .catch((err) => {
     console.error('Migration failed, starting server anyway:', err.message);
     app.listen(serverConfig.port, (): void => {
       console.log(`Server running on port ${serverConfig.port} (migrations failed)`);
       startAiWorker();
+      startAgents();
     });
   });
 

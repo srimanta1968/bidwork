@@ -1,0 +1,49 @@
+{
+  "tasks": [
+    {
+      "title": "Create projects.locations table + idempotent JSON seed loader at server boot",
+      "description": "Create projects.locations table with columns: id UUID PK, country_code CHAR(2) DEFAULT 'US', state_code VARCHAR(8), state_name VARCHAR(120), county_name VARCHAR(120), city_name VARCHAR(120), zip_code VARCHAR(12), metro_code VARCHAR(20), metro_name VARCHAR(180), latitude NUMERIC(9,6), longitude NUMERIC(9,6), level VARCHAR(20) NOT NULL CHECK (level IN ('state','metro','county','city','zip')), display_label VARCHAR(220) NOT NULL, search_text TEXT NOT NULL. Indexes: GIN trigram on search_text (CREATE EXTENSION IF NOT EXISTS pg_trgm), btree on (state_code, city_name), btree on zip_code, btree on metro_code, btree on level. Add a unique index on (country_code, state_code, county_name, city_name, zip_code, level) so re-seed is naturally idempotent via ON CONFLICT DO NOTHING. Author server/src/data/locations-seed.json containing all 51 US states + DC, top US metros, representative counties/cities/zips with focus on California (Bay Area especially). Build server/src/services/locationsSeeder.ts that reads the JSON file, walks states→metros→counties→cities→zips inserting each row, computes display_label and search_text from the source fields, and short-circuits when projects.locations already has rows. Wire the seeder call into runMigrations() right after runProjectMigration so the first server boot populates the table and subsequent boots are no-ops.",
+      "task_type": "database_migration",
+      "feature_id": "8894a8fb-987f-4ea2-bbe5-4e2c0aa32d1d",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Locations autocomplete + zip-expansion API",
+      "description": "GET /api/locations/search?q=<query>&level=<optional>&limit=<optional> — fuzzy search using pg_trgm similarity over search_text, returns up to 20 rows ordered by similarity DESC then population/level priority (zip < city < county < metro < state). Returns id, level, display_label, state_code, city_name, county_name, metro_name, zip_code. GET /api/locations/:id/zips — returns the zip set the chosen location resolves to (a zip row → itself; a city row → all zip rows matching that city+state; a county row → all zips in that county+state; a metro row → all zips in that metro_code; a state row → all zips in that state_code). Used by the service-area filter to expand a saved location id into its zip cohort. Both endpoints require auth but no role gating — every contractor and homeowner needs to look up locations.",
+      "task_type": "api_endpoint",
+      "feature_id": "8894a8fb-987f-4ea2-bbe5-4e2c0aa32d1d",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Add serving_location_ids to contractor_profiles + backfill from existing serving_cities",
+      "description": "ALTER TABLE auth.contractor_profiles ADD COLUMN serving_location_ids UUID[] NOT NULL DEFAULT '{}'. Add a backfill step in authMigration that, for each row where serving_location_ids = '{}' AND array_length(serving_cities,1) > 0, looks up the best-match location by (city_name ILIKE city, level='city') and inserts that location's id into serving_location_ids. When a serving_cities entry is a region like 'Bay Area' that doesn't match any city row, attempt to match against metro_name ILIKE pattern and use that metro's id instead. The backfill is one-shot (only runs when serving_location_ids is empty for that row) so it's safe to re-run. Never deletes the legacy serving_cities/serving_zipcodes — they stay populated for backward compat during cutover.",
+      "task_type": "database_migration",
+      "feature_id": "8894a8fb-987f-4ea2-bbe5-4e2c0aa32d1d",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Profile API + getAvailableProjects rewrite using location ids with legacy fallback",
+      "description": "Extend PUT /api/profile/serving-areas (and PUT /api/profile/update) body to accept serving_location_ids: string[]. When this field is provided, the server (a) saves it on the profile, and (b) derives serving_cities and serving_zipcodes from the resolved zip set so the legacy filter path keeps working. Rewrite projectService.getAvailableProjects so that when filters.servingLocationIds is non-empty: expand each id to its zip set via the same logic as GET /api/locations/:id/zips, OR each project's zip_code/city against the union, and add 'project city ILIKE city_name from any selected city-level row' as a fallback for projects that haven't populated zip_code yet (Sara's Danville case). When servingLocationIds is empty but legacy serving_cities/serving_zipcodes are populated, keep using the existing ILIKE matching. When both are empty, no city filter (current behavior). Update the /api/projects/available controller to read serving_location_ids from the contractor profile and pass it down.",
+      "task_type": "api_endpoint",
+      "feature_id": "8894a8fb-987f-4ea2-bbe5-4e2c0aa32d1d",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Profile UI: Service Area autocomplete picker replacing free-text chips",
+      "description": "On the Profile page, replace the two free-text chip pickers (Serving Cities and Serving Zip Codes) with a single Service Area autocomplete. Typing 2+ characters calls GET /api/locations/search and renders a results dropdown grouped by level with the level shown as a small badge (state · metro · county · city · zip). Selecting a result adds it as a chip in the saved list. Each chip shows the display_label and the level badge. On Save, send the array of location UUIDs as serving_location_ids in the existing PUT /api/profile/serving-areas request — the server takes care of also populating the legacy serving_cities/serving_zipcodes for backward compat. Show a small explanatory banner above the picker: 'Pick the metros, counties, or specific zip codes you serve. Picking a metro automatically covers every city and zip inside it.' Keep the existing zip-only quick-add field as a secondary option for power users who want to type a known zip directly.",
+      "task_type": "frontend",
+      "feature_id": "8894a8fb-987f-4ea2-bbe5-4e2c0aa32d1d",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    }
+  ]
+}

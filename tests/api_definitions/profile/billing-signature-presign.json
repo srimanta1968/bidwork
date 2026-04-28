@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/profile/billing/signature/presign",
+  "method": "POST",
+  "taskId": "09becd27-196d-457c-ad38-0d1788dba844",
+  "description": "Get S3 presigned PUT URL for uploading contractor signature image",
+  "requiresAuth": true,
+  "priority": 32,
+  "dependsOn": ["POST /api/profile/onboard"],
+  "testCases": [{
+    "name": "Presign signature upload",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "filename": "signature.png",
+      "content_type": "image/png"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

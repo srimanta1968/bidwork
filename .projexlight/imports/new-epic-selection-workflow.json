@@ -1,0 +1,12 @@
+{
+  "epics": [
+    {
+      "temp_id": "epic-selection-workflow",
+      "title": "Contractor Selection, Contracting, Payment & Workflow Automation",
+      "description": "End-to-end automation that takes a homeowner-approved bid through to job completion and receipt. Flow: (1) homeowner shortlists 1–3 bids by rank and clicks Select & Notify on the chosen bid, which sends a BidWork-branded email + in-app alert and moves the bid to approved_by_owner; (2) the contractor clicks Accept Offer, triggering automatic generation of a legal work order/contract document for both parties to e-sign; (3) BidWork collects a 5% deposit from the homeowner before signature; (4) once both parties have signed, the deposit is recognized as the BidWork admin fee and full street addresses + contact details are revealed to both parties so work can begin; (5) on completion the contractor uploads a Completed Workorder document, the homeowner acknowledges and signs it; (6) the homeowner pays the contractor directly (BidWork is not in this transaction); (7) the contractor marks payment received and BidWork generates a receipt that is emailed to the homeowner. A business-day-aware (Mon–Fri, holidays excluded) timer agent enforces deadlines: if the selected contractor does not acknowledge the offer within 24 working hours, an admin reminder email is sent; after 72 working hours the bid is auto-abandoned and the homeowner is notified to promote the next-ranked shortlisted bidder, restarting the same flow for that bid. The epic also delivers the workflow orchestration agent (state machine + audit trail) and the templated email/notification service that all of the above consume.",
+      "epic_type": "feature",
+      "priority": "high",
+      "epic_color": "#1f77b4"
+    }
+  ]
+}

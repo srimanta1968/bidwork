@@ -96,7 +96,34 @@ export async function runAdminMigration(pool: Pool): Promise<void> {
       ON admin.billing_history (subscription_id, invoice_date DESC)
     `);
 
-    console.log('[migrate:admin] Admin domain ready.');
+    // ── v2: Platform service fee (append-only versioned config) ──
+    // BidWork's only billable transaction is this fee, charged as the deposit
+    // when a contractor accepts a bid. Admin can raise or lower the percent at
+    // any time; historical deposits keep the percent in effect when collected.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS admin.service_fee_config (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        percent NUMERIC(5, 4) NOT NULL CHECK (percent >= 0 AND percent <= 1),
+        effective_from TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        set_by_admin_id UUID,
+        notes TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_service_fee_effective
+      ON admin.service_fee_config (effective_from DESC)
+    `);
+
+    // Seed initial 5% rate if the table is empty
+    await pool.query(`
+      INSERT INTO admin.service_fee_config (percent, notes)
+      SELECT 0.0500, 'Initial 5% platform service fee'
+      WHERE NOT EXISTS (SELECT 1 FROM admin.service_fee_config)
+    `);
+
+    console.log('[migrate:admin] Admin domain ready (v2: service fee config).');
   } catch (error) {
     console.error('[migrate:admin] Migration failed:', error);
     throw error;

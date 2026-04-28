@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/projects/:id/promote-next-shortlisted",
+  "method": "POST",
+  "taskId": "c254f61a-0674-483a-8c69-9bcb4c7b5710",
+  "description": "Homeowner promotes the next-ranked shortlisted bid after an abandonment",
+  "requiresAuth": true,
+  "priority": 97,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {"id": "{{cache:projects.create.response.data.project_id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Promote next bid",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

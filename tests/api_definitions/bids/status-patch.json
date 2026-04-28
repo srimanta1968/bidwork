@@ -1,0 +1,20 @@
+{
+  "endpoint": "/api/bids/:id/status",
+  "method": "PATCH",
+  "taskId": "f0912527-0e6d-42e3-81f5-e445c998a028",
+  "description": "Homeowner updates bid workflow status; requires rejection_reason >= 10 chars when rejecting",
+  "requiresAuth": true,
+  "priority": 83,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Move bid under_review",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"status": "shortlisted"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

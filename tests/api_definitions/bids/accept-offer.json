@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/bids/:id/accept-offer",
+  "method": "POST",
+  "taskId": "d97b0c86-6d65-41e8-9dca-8ac472311d7e",
+  "description": "Contractor accepts the homeowner's selected offer; generates contract draft",
+  "requiresAuth": true,
+  "priority": 91,
+  "dependsOn": ["POST /api/bids/:id/select-notify"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Accept offer",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

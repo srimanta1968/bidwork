@@ -5,6 +5,7 @@ import UsersPage from './pages/UsersPage';
 import SubscriptionsPage from './pages/SubscriptionsPage';
 import RulesPage from './pages/RulesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
+import ServiceFeePage from './pages/ServiceFeePage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAdminAuth();
@@ -16,6 +17,7 @@ const NAV_ITEMS = [
   { path: '/dashboard', label: 'Users', icon: '👥' },
   { path: '/subscriptions', label: 'Subscriptions', icon: '💳' },
   { path: '/rules', label: 'Bid Rules', icon: '⚙️' },
+  { path: '/service-fee', label: 'Service Fee', icon: '💰' },
   { path: '/analytics', label: 'Analytics', icon: '📊' },
 ];
 
@@ -71,6 +73,7 @@ function AppRoutes() {
       <Route path="/dashboard" element={<ProtectedRoute><AdminLayout><UsersPage /></AdminLayout></ProtectedRoute>} />
       <Route path="/subscriptions" element={<ProtectedRoute><AdminLayout><SubscriptionsPage /></AdminLayout></ProtectedRoute>} />
       <Route path="/rules" element={<ProtectedRoute><AdminLayout><RulesPage /></AdminLayout></ProtectedRoute>} />
+      <Route path="/service-fee" element={<ProtectedRoute><AdminLayout><ServiceFeePage /></AdminLayout></ProtectedRoute>} />
       <Route path="/analytics" element={<ProtectedRoute><AdminLayout><AnalyticsPage /></AdminLayout></ProtectedRoute>} />
       <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
     </Routes>

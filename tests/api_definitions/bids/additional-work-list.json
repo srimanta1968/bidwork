@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:bidId/additional-work",
+  "method": "GET",
+  "taskId": "049fa826-1642-43f3-829a-50725e7aedc2",
+  "description": "List additional work orders for a bid (contractor or homeowner only)",
+  "requiresAuth": true,
+  "priority": 72,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {
+    "bidId": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testCases": [{
+    "name": "List additional work",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

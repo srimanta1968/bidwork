@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getMyProjects } from '../../services/projectApi';
+import { getMyProjects, getProjectBids } from '../../services/projectApi';
+import AdditionalWorkPanel from '../../components/common/AdditionalWorkPanel';
+import ContractPanel from '../../components/common/ContractPanel';
+import DepositReceiptsPanel from '../../components/common/DepositReceiptsPanel';
+import VisitTrackingPanel from '../../components/common/VisitTrackingPanel';
+import RatingPanel from '../../components/common/RatingPanel';
+import BidMessagesPanel from '../../components/common/BidMessagesPanel';
+import BidMaterialsReview from '../../components/common/BidMaterialsReview';
 
 export default function HomeownerDashboard() {
   const { user, logout } = useAuth();
@@ -9,6 +16,9 @@ export default function HomeownerDashboard() {
   const firstName = user?.first_name || 'there';
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [acceptedBidByProject, setAcceptedBidByProject] = useState<Record<string, string>>({});
+  const [acceptedBidRowByProject, setAcceptedBidRowByProject] = useState<Record<string, any>>({});
+  const [expandedProject, setExpandedProject] = useState<string | null>(null);
 
   useEffect(() => {
     loadProjects();
@@ -17,7 +27,24 @@ export default function HomeownerDashboard() {
   const loadProjects = async () => {
     try {
       const result = await getMyProjects();
-      if (result.success) setProjects(result.data.projects || []);
+      if (result.success) {
+        const list = result.data.projects || [];
+        setProjects(list);
+        // For projects with an assigned contractor, fetch the accepted bid id so we can
+        // render the AdditionalWorkPanel without an extra page navigation.
+        const assigned = list.filter((p: any) => p.status === 'assigned' || p.status === 'in_contracting' || p.status === 'in_progress' || p.status === 'completed');
+        const map: Record<string, string> = {};
+        const rowMap: Record<string, any> = {};
+        await Promise.all(assigned.map(async (p: any) => {
+          try {
+            const r = await getProjectBids(p.id);
+            const accepted = (r?.data?.bids || []).find((b: any) => b.status === 'accepted');
+            if (accepted?.id) { map[p.id] = accepted.id; rowMap[p.id] = accepted; }
+          } catch { /* silent */ }
+        }));
+        setAcceptedBidByProject(map);
+        setAcceptedBidRowByProject(rowMap);
+      }
     } catch { /* silent */ }
     finally { setLoading(false); }
   };
@@ -106,35 +133,78 @@ export default function HomeownerDashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {projects.map((p: any) => {
                 const sl = statusLabel(p);
+                const acceptedBidId = acceptedBidByProject[p.id];
+                const isExpanded = expandedProject === p.id;
                 return (
-                  <div key={p.id} onClick={() => {
-                    if (p.status === 'bidding') navigate(`/projects/${p.id}/bids`);
-                    else navigate(`/projects/${p.id}`);
-                  }}
-                    style={{ background: 'white', borderRadius: 14, padding: 24, border: '1px solid #f1f5f9', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.04)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#f1f5f9'; e.currentTarget.style.boxShadow = 'none'; }}>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{p.title}</h3>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: sl.color, background: sl.bg, padding: '2px 10px', borderRadius: 20 }}>{sl.text}</span>
+                  <div key={p.id} style={{ background: 'white', borderRadius: 14, padding: 24, border: '1px solid #f1f5f9', transition: 'all 0.2s' }}>
+                    <div onClick={() => {
+                      if (acceptedBidId) {
+                        setExpandedProject(isExpanded ? null : p.id);
+                      } else if (p.status === 'bidding') {
+                        navigate(`/projects/${p.id}/bids`);
+                      } else {
+                        navigate(`/projects/${p.id}`);
+                      }
+                    }}
+                      style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                          <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>{p.title}</h3>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: sl.color, background: sl.bg, padding: '2px 10px', borderRadius: 20 }}>{sl.text}</span>
+                        </div>
+                        <p style={{ fontSize: 13, color: '#94a3b8' }}>
+                          {p.category || 'Uncategorized'} &middot; {p.quality_tier || 'standard'} &middot; {new Date(p.created_at).toLocaleDateString()}
+                        </p>
                       </div>
-                      <p style={{ fontSize: 13, color: '#94a3b8' }}>
-                        {p.category || 'Uncategorized'} &middot; {p.quality_tier || 'standard'} &middot; {new Date(p.created_at).toLocaleDateString()}
-                      </p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        {p.bid_floor && (
+                          <p style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>${Number(p.bid_floor).toLocaleString()} - ${Number(p.bid_ceiling).toLocaleString()}</p>
+                        )}
+                        {p.status === 'draft' && (
+                          <button onClick={(e) => { e.stopPropagation(); navigate(`/projects/${p.id}/edit`); }}
+                            style={{ padding: '6px 16px', fontSize: 13, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, cursor: 'pointer' }}>
+                            Continue
+                          </button>
+                        )}
+                        {acceptedBidId ? (
+                          <span aria-label={isExpanded ? 'Collapse engagement details' : 'Expand engagement details'}
+                            style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#f1f5f9', color: '#475569', fontSize: 22, lineHeight: 1, flexShrink: 0, transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.15s' }}>▾</span>
+                        ) : (
+                          <span style={{ fontSize: 18, color: '#94a3b8' }}>→</span>
+                        )}
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      {p.bid_floor && (
-                        <p style={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>${Number(p.bid_floor).toLocaleString()} - ${Number(p.bid_ceiling).toLocaleString()}</p>
-                      )}
-                      {p.status === 'draft' && (
-                        <button onClick={(e) => { e.stopPropagation(); navigate(`/projects/${p.id}/edit`); }}
-                          style={{ padding: '6px 16px', fontSize: 13, fontWeight: 600, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, cursor: 'pointer' }}>
-                          Continue
-                        </button>
-                      )}
-                      <span style={{ fontSize: 13, color: '#94a3b8' }}>&rarr;</span>
-                    </div>
+                    {acceptedBidId && isExpanded && (() => {
+                      const bid = acceptedBidRowByProject[p.id];
+                      return (
+                        <div onClick={e => e.stopPropagation()} style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #f1f5f9' }}>
+                          {bid && (
+                            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 14, marginBottom: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+                              <div>
+                                <p style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Engaged Bid</p>
+                                <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginTop: 2 }}>
+                                  ${Number(bid.bid_amount || 0).toLocaleString()} &middot; {bid.estimated_days} days
+                                </p>
+                                <p style={{ fontSize: 12, color: '#64748b' }}>
+                                  Workflow: <strong>{bid.selection_workflow_state || 'pending'}</strong>
+                                  {bid.contractor_name && <> &middot; {bid.contractor_name}</>}
+                                </p>
+                              </div>
+                              <Link to={`/projects/${p.id}/bids`} style={{ fontSize: 12, fontWeight: 600, color: '#2563eb', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                                Bid history →
+                              </Link>
+                            </div>
+                          )}
+                          <BidMaterialsReview bidId={acceptedBidId} />
+                          <ContractPanel bidId={acceptedBidId} bidWorkflowState={bid?.selection_workflow_state} viewerRole="homeowner" onChange={loadProjects} />
+                          <DepositReceiptsPanel bidId={acceptedBidId} bidWorkflowState={bid?.selection_workflow_state} viewerRole="homeowner" />
+                          <VisitTrackingPanel bidId={acceptedBidId} bidWorkflowState={bid?.selection_workflow_state} viewerRole="homeowner" onChange={loadProjects} />
+                          <RatingPanel bidId={acceptedBidId} bidWorkflowState={bid?.selection_workflow_state} viewerRole="homeowner" />
+                          <AdditionalWorkPanel bidId={acceptedBidId} viewerRole="homeowner" />
+                          {user?.id && <BidMessagesPanel bidId={acceptedBidId} viewerRole="homeowner" currentUserId={user.id} />}
+                        </div>
+                      );
+                    })()}
                   </div>
                 );
               })}

@@ -1,0 +1,55 @@
+{
+  "epic_id_mapping": {
+    "epic-bidding": "d03a265e-0322-44a3-8ea2-e94dd6f9c367"
+  },
+  "features": [
+    {
+      "temp_id": "feat-bid-per-task-breakdown",
+      "epic_temp_id": "epic-bidding",
+      "title": "Per-Task Bid Breakdown with Labor Cost",
+      "description": "Extend the bid model so contractors enter a separate bid amount and labor cost for each task in the homeowner-approved scope. Materials subtotal is auto-derived from the optional material list (FT-772). Per-task line total = labor + materials. Bid total rolls up from all task lines and must respect the per-task floor price (FT-767). Owner sees the line breakdown when reviewing bids. Replaces the previous single project-level bid_amount with a per-task structure while preserving backward compatibility with existing bids.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-owner-bid-summary",
+      "epic_temp_id": "epic-bidding",
+      "title": "Owner Bid Summary & Range Display",
+      "description": "Owner-facing summary on the project bid review page that shows the AI-suggested starting bid (sum of effective_start_price across tasks) when no bids have been received, and switches to a submitted bid range (lowest..highest with bid count) once one or more contractors have bid. The summary helps the homeowner contextualize incoming bids without comparing them line-by-line. Range is computed from total bid_amount across submitted/active bids only (excludes withdrawn/rejected).",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-bid-attachments",
+      "epic_temp_id": "epic-bidding",
+      "title": "Bid Document & File Attachments",
+      "description": "Allow contractors to attach supporting documents (PDFs, DOC/DOCX, images) to their bid submission — for example proposal letters, insurance certificates, license copies, or warranty terms. Files are uploaded to S3 via presigned URLs, listed under the bid, and visible only to the homeowner and the submitting contractor (never to other contractors). Max 10 files, 25 MB each. Owner can preview/download from the bid review screen.",
+      "feature_type": "api",
+      "priority": "medium"
+    },
+    {
+      "temp_id": "feat-bid-status-rejection",
+      "epic_temp_id": "epic-bidding",
+      "title": "Bid Status Workflow & Mandatory Rejection Reason",
+      "description": "Expand bid status lifecycle and require homeowners to provide a reason when rejecting a bid. Statuses: pending → under_review → shortlisted → accepted | rejected | withdrawn. Owner sees a status dropdown on each bid card and can move bids forward in the workflow. When status moves to rejected, a non-empty rejection_reason is required. The rejected contractor is notified and the reason is shown on their My Bids view so they understand why. Status changes are audited (who/when).",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-bid-private-messaging",
+      "epic_temp_id": "epic-bidding",
+      "title": "Private Owner-Contractor Bid Messaging (1-on-1)",
+      "description": "Per-bid private message thread between the homeowner and the single contractor who submitted that bid. Distinct from FT-766 (public pre-bid Q&A visible to all bidders). Use cases: owner asks clarifying questions about a submitted bid, contractor responds, both visible only on that bid. AI moderation strips PII (phone/email/URLs) using the existing FT-766 sanitizer service. Access enforced strictly: only the homeowner and that bid's contractor can read or write; never visible to other contractors.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-bid-pii-redaction",
+      "epic_temp_id": "epic-bidding",
+      "title": "Cross-Role PII Redaction in Bid & Project Views",
+      "description": "Centralized response serializers that strip personally-identifiable information across all bid- and project-related endpoints based on viewer role and bid state. Contractors viewing a project never see homeowner email, phone, or full street address (only city + zip per FT-765). Homeowners viewing a bid never see contractor email, phone, or business street address (only contractor display name, business name, license number, city/state, rating). Full address is released only to the winning contractor after bid acceptance. Integration tests assert no PII leaks across role boundaries.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

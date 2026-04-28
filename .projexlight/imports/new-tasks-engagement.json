@@ -1,0 +1,58 @@
+{
+  "tasks": [
+    {
+      "title": "Add proposed schedule columns to contracts + legacy-accept migration",
+      "description": "ALTER TABLE bidding.contracts: add proposed_start_date DATE, proposed_end_date DATE, schedule_status VARCHAR(20) NOT NULL DEFAULT 'not_proposed' CHECK (schedule_status IN ('not_proposed','proposed','approved','rejected')), schedule_proposed_at TIMESTAMPTZ, schedule_responded_at TIMESTAMPTZ, schedule_response_notes TEXT, schedule_owner_signature VARCHAR(255). One-shot migration to fix legacy bids: UPDATE bidding.bids SET selection_workflow_state='approved_by_owner', approved_by_owner_at=COALESCE(approved_by_owner_at, NOW()) WHERE status='accepted' AND selection_workflow_state='pending'. This brings already-assigned bids into the new workflow so the contract/deposit/schedule UI takes over for them without operator action. Re-runs are no-ops because the WHERE clause requires selection_workflow_state='pending'.",
+      "task_type": "database_migration",
+      "feature_id": "ffad4e72-149c-44bc-b2ed-434f1a58e84f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Schedule submission + approval API; gate deposit intent on schedule_approved",
+      "description": "POST /api/bids/:id/contract/schedule body {proposed_start_date, proposed_end_date} — bid's contractor only; only allowed when contract is mutually signed (both signatures present). Sets schedule_status='proposed', schedule_proposed_at=NOW(); transitions selection_workflow_state to 'schedule_proposed'; emits notification + email to homeowner ('Contractor proposed schedule from X to Y — please review'). PATCH /api/bids/:id/contract/schedule/approve body {owner_signature?} — homeowner-only; transitions to 'schedule_approved'; emits notification to contractor ('Your schedule is approved — homeowner is paying the deposit'). PATCH /api/bids/:id/contract/schedule/reject body {response_notes} — homeowner-only; sets schedule_status='rejected', records notes; transitions back to 'contract_contractor_signed' so contractor can re-propose. GET /api/bids/:id/contract returns the schedule fields so both panels render. createDepositIntent (TK-2699) now returns 412 with message 'Schedule must be approved before deposit' when contracts.schedule_status != 'approved'. Also queues a 'contractor_accepted_offer' notification email to the homeowner the moment selection_workflow_state moves to 'offer_accepted'.",
+      "task_type": "api_endpoint",
+      "feature_id": "ffad4e72-149c-44bc-b2ed-434f1a58e84f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "ContractPanel: add schedule submission + approval stages and PDF download CTA",
+      "description": "Extend ContractPanel.tsx to render four stages keyed on selection_workflow_state and contract.schedule_status: (1) 'Awaiting your acceptance' — contractor sees Accept Offer button (existing); (2) 'Sign the work order' — both parties typed-name e-sign (existing); (3) 'Propose a schedule' — contractor-only inputs: start_date and end_date pickers + Submit button calling POST .../contract/schedule. Shown when both signatures exist and schedule_status='not_proposed'. (4) 'Schedule pending owner approval' / 'Approve schedule' — when schedule_status='proposed', contractor sees a read-only summary with the dates; homeowner sees the same dates plus Approve / Reject buttons (Reject opens a modal forcing notes). (5) 'Schedule approved — homeowner pays deposit' once approved. The existing 'Download contract draft' link is renamed 'Download Work Order' and is shown across stages 2-5. Reject path returns the bid to stage 3 so the contractor can re-propose.",
+      "task_type": "frontend",
+      "feature_id": "ffad4e72-149c-44bc-b2ed-434f1a58e84f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Homeowner Dashboard: render engaged-bid summary + contract/deposit/schedule panels inline",
+      "description": "On HomeownerDashboard, when a project's status is 'assigned'/'in_contracting'/'in_progress'/'completed', the project card expands inline to show: (a) Engaged Bid summary card (winning contractor's display name, business name, license #, bid amount, estimated days), (b) ContractPanel (drives sign + schedule approval), (c) DepositReceiptsPanel (drives deposit checkout once schedule approved + receipt list), (d) AdditionalWorkPanel (already there), (e) BidMessagesPanel (private 1-on-1 messages — already there). Replace the current navigate('/projects/:id') for non-bidding projects with this inline expansion so the homeowner sees everything from the dashboard without leaving. Keep a Browse Bid History link to /projects/:id/bids for full history.",
+      "task_type": "frontend",
+      "feature_id": "ffad4e72-149c-44bc-b2ed-434f1a58e84f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Contractor Dashboard: embed ContractPanel + DepositReceiptsPanel; gate Mark Payment Received",
+      "description": "Add ContractPanel and DepositReceiptsPanel to the contractor's bid card on ContractorDashboard so the contractor can Accept Offer, sign the contract, propose a schedule, and watch the deposit flow without leaving the dashboard. Mark Payment Received CTA is currently triggered by bids.status='accepted' which fires the moment the homeowner accepts the bid — change the gating to selection_workflow_state IN ('completion_acknowledged','in_progress') so the button only appears once the deposit is paid AND the homeowner has acknowledged completion. Pre-deposit/pre-completion states show a contextual message instead ('Awaiting homeowner schedule approval', 'Awaiting deposit', etc.) so the contractor sees what's expected next.",
+      "task_type": "frontend",
+      "feature_id": "ffad4e72-149c-44bc-b2ed-434f1a58e84f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Tighten address-reveal: only after deposit is collected, never on signature alone",
+      "description": "Currently feat-bid-pii-redaction reveals the full address pair when selection_workflow_state IN ('addresses_revealed', 'in_progress', ...). The state machine moved to 'addresses_revealed' on dual signature, which now happens BEFORE the deposit (because the deposit is gated on schedule approval which comes after signatures). Update the redactor's ADDRESS_REVEALED_STATES to require selection_workflow_state IN ('in_progress','completion_submitted','completion_acknowledged','payment_received','receipt_issued') OR (deposits.status='converted_to_fee') — never on signature alone. Also: rename selection_workflow_state value 'addresses_revealed' to 'deposit_collected' for clarity (state machine + check constraint update). Update the schedule-approval transition to land in 'schedule_approved' state instead of jumping to 'addresses_revealed'. Deposit conversion (TK-2699) is what flips the state to 'in_progress', which is the ONLY trigger that opens the redactor.",
+      "task_type": "service_layer",
+      "feature_id": "ffad4e72-149c-44bc-b2ed-434f1a58e84f",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    }
+  ]
+}

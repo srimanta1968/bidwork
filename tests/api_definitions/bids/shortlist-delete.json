@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/bids/:id/shortlist",
+  "method": "DELETE",
+  "taskId": "08beb681-b04a-4650-a681-99db8ab1054c",
+  "description": "Homeowner removes a bid from the shortlist",
+  "requiresAuth": true,
+  "priority": 81,
+  "dependsOn": ["POST /api/bids/:id/shortlist"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Clear shortlist rank",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

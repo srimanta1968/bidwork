@@ -1,0 +1,148 @@
+{
+  "tasks": [
+    {
+      "title": "Create bid_task_breakdown table for per-task labor and materials totals",
+      "description": "Create bid_task_breakdown table: id UUID PK, bid_id UUID FK→bids ON DELETE CASCADE, task_id UUID FK→tasks, labor_cost DECIMAL(12,2) NOT NULL DEFAULT 0, materials_subtotal DECIMAL(12,2) NOT NULL DEFAULT 0, line_total DECIMAL(12,2) GENERATED ALWAYS AS (labor_cost + materials_subtotal) STORED, notes TEXT, created_at TIMESTAMP DEFAULT NOW(), updated_at TIMESTAMP DEFAULT NOW(). UNIQUE (bid_id, task_id). Index on bid_id. Backfill rule: materials_subtotal is recomputed from existing bid_materials grouped by task_id whenever bid_materials are inserted/updated/deleted. Document the trigger or service hook that maintains this aggregate.",
+      "task_type": "database",
+      "feature_id": "42d6044d-51ad-46c8-923f-cac29df8bd17",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Extend bid submission API to accept per-task labor and materials breakdown",
+      "description": "Extend POST /api/bids and PUT /api/bids/:id to accept task_breakdown[] with {task_id, labor_cost, notes?}. Server validates each task_id belongs to the bid's project, labor_cost ≥ 0, and computes line_total = labor_cost + materials_subtotal (subtotal aggregated from bid_materials joined by task_id). Total bid_amount on the bid row is recomputed as sum of line_totals. Validate each line_total ≥ effective_start_price for that task (FT-767 floor). GET /api/bids/:id and /api/bids/my-bids return task_breakdown[] with materials nested inside each entry. Backward compat: bids submitted without task_breakdown still accepted with single bid_amount mapped to a synthetic single-task line.",
+      "task_type": "api_endpoint",
+      "feature_id": "42d6044d-51ad-46c8-923f-cac29df8bd17",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Per-task bid form with labor input and rolled-up bid total",
+      "description": "Replace the single bid_amount input on the bid submission page with a per-task accordion. Each task row shows scope text, photo thumbnails, effective start price, labor cost input, materials subtotal (from the material list section in TK-2367), line total (read-only = labor + materials), and an optional notes field. A sticky footer auto-computes and displays the total bid_amount. Client validation: each line_total must be ≥ that task's floor; submit blocked with inline errors if not. After submit, the bid confirmation screen shows the per-task breakdown.",
+      "task_type": "frontend",
+      "feature_id": "42d6044d-51ad-46c8-923f-cac29df8bd17",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Bid summary endpoint aggregating AI start price and submitted bid range",
+      "description": "GET /api/projects/:id/bid-summary (homeowner-only, 403 otherwise). Returns {ai_start_price_total, owner_start_price_total, effective_start_price_total, submitted_count, submitted_low, submitted_high, average}. ai_start_price_total = sum of ai_start_price across tasks; owner_start_price_total = sum of owner_start_price where set; effective_start_price_total = sum of COALESCE(owner_start_price, ai_start_price). submitted_count counts bids in {pending, under_review, shortlisted, accepted}. submitted_low/high computed from bid_amount across those bids only (excludes withdrawn and rejected); both null when submitted_count=0.",
+      "task_type": "api_endpoint",
+      "feature_id": "7bf3655f-651f-4562-acc6-bb0053bd4a0e",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Owner project detail Bids Overview banner with start price and range switch",
+      "description": "On the homeowner project detail page, render a Bids Overview card at the top of the bids section. Calls GET /api/projects/:id/bid-summary on mount and re-fetches whenever a bid status changes (after PATCH /api/bids/:id/status). When submitted_count=0: render 'AI Suggested Start Price: $X · no bids received yet'. When submitted_count>0: render '$low – $high · N bids received' plus a small footer line showing the AI start price for context. Currency formatted, accessible badge styling.",
+      "task_type": "frontend",
+      "feature_id": "7bf3655f-651f-4562-acc6-bb0053bd4a0e",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Create bid_attachments table",
+      "description": "Create bid_attachments table: id UUID PK, bid_id UUID FK→bids ON DELETE CASCADE, file_name VARCHAR(255), s3_key VARCHAR(500) UNIQUE, mime_type VARCHAR(100), size_bytes BIGINT, uploaded_by UUID FK→users, uploaded_at TIMESTAMP DEFAULT NOW(). Index on bid_id. App-layer constraint: max 10 attachments per bid, max 25 MB per file. Allowed mime types persisted in code: application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, image/png, image/jpeg.",
+      "task_type": "database",
+      "feature_id": "077a07e2-c213-47e3-88c2-d303f18d4dab",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Bid attachment upload, list, and delete API with S3 presigned URLs",
+      "description": "POST /api/bids/:bidId/attachments/presign returns S3 presigned PUT URL plus a draft id (caller must be the contractor who owns this bid). POST /api/bids/:bidId/attachments/finalize records metadata after the client uploads to S3. GET /api/bids/:bidId/attachments returns the list with presigned GET URLs valid 15 minutes — accessible only to the homeowner of the project and the bid's contractor; 403 to other contractors. DELETE /api/bids/:bidId/attachments/:attId — only the original uploader, only while bid status is in {pending, under_review}. Enforce mime allow-list and per-bid count/size caps server-side.",
+      "task_type": "api_endpoint",
+      "feature_id": "077a07e2-c213-47e3-88c2-d303f18d4dab",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Bid form attachment uploader and homeowner attachment viewer",
+      "description": "Bid submission page: drag-drop file uploader supporting max 10 files, 25 MB each, allowed types pdf/doc/docx/png/jpg. Shows per-file progress, file tile (icon + name + size), remove button (calls DELETE if already finalized). Use the presign → PUT to S3 → finalize flow. Owner bid review card: Attachments section listing file name, size, and a Download button that fetches a fresh presigned GET URL on click. Other contractors viewing public project pages must NOT see attachments belonging to other bids.",
+      "task_type": "frontend",
+      "feature_id": "077a07e2-c213-47e3-88c2-d303f18d4dab",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "medium"
+    },
+    {
+      "title": "Add rejection_reason and audit fields, expand bid status enum",
+      "description": "ALTER TABLE bids: add rejection_reason TEXT NULL, status_updated_at TIMESTAMP NULL, status_updated_by UUID FK→users NULL. Expand the bid status enum to include under_review and shortlisted alongside existing pending, accepted, rejected, withdrawn. Backfill: status_updated_at = updated_at and status_updated_by = project's homeowner_id for rows where status != 'pending'. Add CHECK constraint at app layer (rejection_reason cannot be null/empty when status='rejected'). Index (project_id, status) to support the bid summary range query (FT-owner-bid-summary).",
+      "task_type": "database_migration",
+      "feature_id": "1d8d39de-7746-4666-b5f3-081a19e2b5cf",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Bid status PATCH endpoint enforcing rejection reason and emitting notification",
+      "description": "PATCH /api/bids/:id/status with body {status, rejection_reason?}. Homeowner-only (403 otherwise). Allowed transitions: pending→under_review→shortlisted→{accepted|rejected}; pending→{accepted|rejected}; any active→rejected. Reject 400 if status='rejected' and rejection_reason is missing or shorter than 10 chars. On reject: persist reason, set status_updated_at = NOW(), status_updated_by = homeowner.id, emit a notification to the contractor including the reason. On accept: invoke existing FT-759 cascade (other active bids → rejected with auto-reason 'Another bid was selected by the homeowner.'). Extend GET /api/bids/my-bids and GET /api/bids/:id responses to include status, rejection_reason, status_updated_at.",
+      "task_type": "api_endpoint",
+      "feature_id": "1d8d39de-7746-4666-b5f3-081a19e2b5cf",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Owner status dropdown with reject reason modal and contractor rejection banner",
+      "description": "Homeowner bid review card: status dropdown (Pending · Under Review · Shortlisted · Accept · Reject). Selecting Reject opens a modal that forces a free-text rejection_reason ≥ 10 chars before submit. Optimistic UI update with toast on success, rollback on failure. Status changes call PATCH /api/bids/:id/status. Contractor My Bids page: each bid card shows a status badge using the expanded enum; if status='rejected', render a banner 'Homeowner declined this bid' followed by the reason and status_updated_at. After acceptance, badge turns green and the project moves to In Progress.",
+      "task_type": "frontend",
+      "feature_id": "1d8d39de-7746-4666-b5f3-081a19e2b5cf",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Create bid_messages table for 1-on-1 owner-contractor threads",
+      "description": "Create bid_messages table: id UUID PK, bid_id UUID FK→bids ON DELETE CASCADE, sender_role ENUM('homeowner','contractor'), sender_user_id UUID FK→users, raw_message TEXT, sanitized_message TEXT, created_at TIMESTAMP DEFAULT NOW(), read_at TIMESTAMP NULL. Index on (bid_id, created_at). Records always scoped to a single bid_id; no project-level joins permitted (privacy invariant: distinct from project-level Q&A in bid_questions). Foreign keys to users for auditability.",
+      "task_type": "database",
+      "feature_id": "1fe0fd9f-3864-4822-ad56-656ef90bffe5",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Private bid messaging API with PII moderation and strict participant access",
+      "description": "POST /api/bids/:bidId/messages — only the homeowner of the project or the contractor who owns this bid may post (any other user, including a contractor who bid on the same project, gets 403). Reuses the AI moderation service from TK-2352 to strip phone/email/URLs into sanitized_message; raw kept for audit. GET /api/bids/:bidId/messages — same access guard; returns thread ordered by created_at. PATCH /api/bids/:bidId/messages/:msgId/read marks read_at = NOW() (recipient only). Each new message emits a notification to the counterparty (homeowner→contractor or contractor→homeowner).",
+      "task_type": "api_endpoint",
+      "feature_id": "1fe0fd9f-3864-4822-ad56-656ef90bffe5",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Owner Ask Question modal and contractor private thread panel",
+      "description": "Homeowner bid review card: Ask Question button opens a side drawer that loads GET /api/bids/:bidId/messages and shows the thread + composer. Banner: 'This is a private 1-on-1 conversation; no other contractor will see your messages.' Each message tile shows sender role, sanitized text, timestamp, and unread indicator for the recipient. Contractor My Bids detail page: a Messages tab inside the bid card shows the same thread + composer for replies. Posting calls POST /api/bids/:bidId/messages. Strictly scoped to that bid id; do not reuse the public Q&A list (FT-766) UI.",
+      "task_type": "frontend",
+      "feature_id": "1fe0fd9f-3864-4822-ad56-656ef90bffe5",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Role-aware response serializers stripping PII from bid and project payloads",
+      "description": "Add src/serializers/redactors.ts with redactProjectForContractor(project, viewer), redactBidForOwner(bid, viewer), redactContractorForOwner(contractor, bidStatus), redactHomeownerForContractor(homeowner, bidStatus). Rules: contractor never sees homeowner email, phone, full street_address (city + zip allowed per FT-765); homeowner never sees contractor email, phone, business street_address (only display_name, business_name, license_number, city, state, rating, years_experience, profile_photo); winning contractor receives full homeowner address only after their bid status='accepted'. Apply consistently in GET /api/projects/available, GET /api/projects/:id, GET /api/projects/:id/bids, GET /api/bids/:id, GET /api/bids/my-bids. Centralize so bid messaging and attachments responses also pass through.",
+      "task_type": "service_layer",
+      "feature_id": "03379b9c-a6af-4976-816e-1ad0e82d219e",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Integration tests asserting PII does not leak across roles or before acceptance",
+      "description": "Playwright/Jest integration tests covering: register homeowner H, contractors A and B, create project, both contractors submit bids. Assertions: (a) GET /api/projects/:id as A never includes H.email, H.phone, or street_address (city+zip ok); (b) GET /api/bids/my-bids as A never exposes B's email, phone, street_address, or any of B's bid amount/attachments; (c) GET /api/projects/:id/bids as H never includes A.email, A.phone, A.business_street; (d) After H accepts A's bid via PATCH /api/bids/:id/status, GET /api/bids/:idA as A now includes H's full address; (e) GET /api/bids/:idB as B remains redacted post-accept and shows status=rejected with reason. Add tests/api_definitions/*.json for each endpoint with these PII-assertion test cases.",
+      "task_type": "integration_testing",
+      "feature_id": "03379b9c-a6af-4976-816e-1ad0e82d219e",
+      "epic_id": "d03a265e-0322-44a3-8ea2-e94dd6f9c367",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    }
+  ]
+}

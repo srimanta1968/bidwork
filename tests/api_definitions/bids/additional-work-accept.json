@@ -1,0 +1,23 @@
+{
+  "endpoint": "/api/bids/:bidId/additional-work/:awoId/accept",
+  "method": "POST",
+  "taskId": "049fa826-1642-43f3-829a-50725e7aedc2",
+  "description": "Homeowner accepts an additional work order with typed-name signature",
+  "requiresAuth": true,
+  "priority": 74,
+  "dependsOn": ["POST /api/bids/:bidId/additional-work"],
+  "pathParams": {
+    "bidId": "{{cache:bids.create.response.data.bid.id}}",
+    "awoId": "{{cache:additional_work.submit.response.data.additional_work.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Accept additional work",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "owner_signature_typed_name": "Jane Homeowner"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

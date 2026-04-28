@@ -1,0 +1,22 @@
+{
+  "endpoint": "/api/bids/:id/payment-proof/presign",
+  "method": "POST",
+  "taskId": "0be54f63-6bf2-4284-9529-2d7bed7ca4b0",
+  "description": "Presign S3 PUT URL for contractor payment proof document",
+  "requiresAuth": true,
+  "priority": 70,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testCases": [{
+    "name": "Presign payment proof",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "filename": "payment-confirmation.pdf",
+      "content_type": "application/pdf"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

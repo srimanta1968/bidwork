@@ -2,6 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { I18nProvider } from './context/I18nProvider';
 import HomePage from './pages/HomePage';
+import AboutPage from './pages/marketing/AboutPage';
+import ContactPage from './pages/marketing/ContactPage';
+import PrivacyPage from './pages/marketing/PrivacyPage';
+import TermsPage from './pages/marketing/TermsPage';
+import FAQPage from './pages/marketing/FAQPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
@@ -47,6 +52,11 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/faq" element={<FAQPage />} />
       <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <RegisterPage />} />
       <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
       <Route path="/verify-email" element={<ProtectedRoute><VerifyEmailPage /></ProtectedRoute>} />

@@ -1,0 +1,58 @@
+{
+  "tasks": [
+    {
+      "title": "Create payment_transaction_records table for contractor-uploaded proof",
+      "description": "Create bidding.payment_transaction_records: id UUID PK, bid_id UUID FK→bids ON DELETE CASCADE UNIQUE, contractor_id UUID FK→users, payment_method VARCHAR(40) NOT NULL CHECK (payment_method IN ('stripe','paypal','bank_transfer','wire','check','cash','zelle','venmo','crypto','other')), transaction_reference VARCHAR(255) NOT NULL, transaction_date DATE NOT NULL, transaction_amount_cents BIGINT NOT NULL CHECK (transaction_amount_cents > 0), proof_doc_s3_key VARCHAR(500) NOT NULL, proof_mime_type VARCHAR(100), proof_size_bytes BIGINT, contractor_notes TEXT, uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(). One row per bid (UNIQUE on bid_id). The transaction_reference is a free-form string that the contractor types (Stripe payment intent id, check number, wire confirmation, processor reference, etc.). proof_doc_s3_key points to the uploaded document under S3 prefix payment-proofs/<bid_id>/. Index on contractor_id for the contractor's own history view.",
+      "task_type": "database",
+      "feature_id": "c422fbba-269c-47df-bae7-26c3c9457e88",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Payment proof upload API replacing simple payment-confirmed handler",
+      "description": "Replaces the body shape of POST /api/bids/:id/payment-confirmed defined in TK-2702. New flow: POST /api/bids/:id/payment-proof/presign — contractor-only; returns S3 presigned PUT URL for the proof document (allowed mime: pdf, png, jpg, jpeg; max 25 MB) under payment-proofs/<bid_id>/<uuid>.<ext>. POST /api/bids/:id/payment-confirmed body {payment_method, transaction_reference, transaction_date, transaction_amount_cents, proof_s3_key, contractor_notes?}. Preconditions: caller is the bid's contractor; selection_workflow_state is 'completion_acknowledged'; contractor billing profile is complete (returns 412 with completion CTA otherwise per TK-2713). Validates transaction_amount_cents matches bid grand_total (contract + accepted additional work) within ±$0.50 tolerance; rejects with 400 if mismatched. Effects (atomic): insert payment_transaction_records row, transition selection_workflow_state to 'payment_received', call the contractor final receipt generator (TK-2723) which now embeds payment_method + transaction_reference into the receipt's payment-confirmation block, transition projects.status to 'completed', emit notification + email to homeowner with the receipt PDF and a link to download the original proof.",
+      "task_type": "api_endpoint",
+      "feature_id": "c422fbba-269c-47df-bae7-26c3c9457e88",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Contractor Mark Payment Received UI with proof upload and method metadata",
+      "description": "Replaces the simple Mark Payment Received CTA from TK-2703. Opens a modal with: Payment Method dropdown (Stripe / PayPal / Bank Transfer / Wire / Check / Cash / Zelle / Venmo / Crypto / Other), Transaction Reference free-text (placeholder hint changes per method — 'pi_xxx' for Stripe, check number for Check, etc.), Transaction Date picker, Amount confirmation (pre-filled with bid grand_total, read-only), drag-drop file uploader for proof (PDF or image, ≤25 MB) using POST /api/bids/:id/payment-proof/presign → S3 PUT. Submit calls POST /api/bids/:id/payment-confirmed; on 412 the modal redirects to /profile/billing with a banner; on success collapses to a confirmation page showing the issued contractor receipt download link plus 'Project marked complete'. Homeowner side (in their Receipts tab from TK-2724) gains a small 'View payment record' link next to the contractor receipt that opens the contractor-uploaded proof via a fresh presigned GET URL.",
+      "task_type": "frontend",
+      "feature_id": "c422fbba-269c-47df-bae7-26c3c9457e88",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Add paused bid state and in_contracting/completed project statuses",
+      "description": "Two coordinated migrations. (A) Extend the bid selection_workflow_state enum (introduced in TK-2691) to include 'paused' — used for non-selected pending bids on a project once another contractor's offer has been accepted. Distinct from 'rejected' so the bid can be restored to 'pending' if the accepted offer is later abandoned and the homeowner needs to promote the next-ranked one. (B) Extend projects.status with new values 'in_contracting' (set when a contractor accepts the offer and the workorder/contract is being executed) and 'completed' (set when the contractor uploads payment proof and the project is closed). Add CHECK constraint listing the full allowed set: draft, classifying, generating_scope, calculating_bids, review, bidding, in_contracting, assigned, completed, cancelled. Backfill: any existing project with status='assigned' stays as-is (legacy); new flows use in_contracting then completed.",
+      "task_type": "database_migration",
+      "feature_id": "1b527de9-3413-456f-b6dd-d51f12ca6994",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Workflow hooks: lock project on offer_accepted, pause sibling bids, resume on abandon",
+      "description": "Extend the selection state machine (TK-2707) with three transition hooks. (1) On any bid transitioning to selection_workflow_state='offer_accepted' (TK-2696 contractor accept-offer endpoint): atomically set projects.is_listed=false, projects.status='in_contracting', and UPDATE all other pending bids on the same project SET selection_workflow_state='paused'. Shortlisted paused bids retain their shortlist_rank for potential promotion. (2) On the abandoned bid transition (TK-2705 timer agent or manual abandon): atomically set projects.is_listed=true, projects.status='bidding', and UPDATE paused sibling bids SET selection_workflow_state='pending' so the homeowner can promote the next-ranked shortlisted bid. (3) On selection_workflow_state='payment_received' from feat-payment-proof-upload-closure: atomically set projects.status='completed' and UPDATE any still-paused bids on the project SET selection_workflow_state='rejected', rejection_reason='Project completed by another contractor.', status_updated_at=NOW(). All three hooks write workflow_audit_log rows for the project and for every affected sibling bid.",
+      "task_type": "service_layer",
+      "feature_id": "1b527de9-3413-456f-b6dd-d51f12ca6994",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "API and UI surface for project locked / bid paused state",
+      "description": "Two surfaces. (A) GET /api/projects/available already excludes is_listed=false projects (existing logic in projectService.getAvailableProjects); add explicit exclusion of status IN ('in_contracting','assigned','completed','cancelled') as defense in depth and to make intent obvious. GET /api/bids/my-bids and GET /api/bids/:id must include selection_workflow_state and the project's current status so the contractor sees why their bid is paused. (B) On the contractor's My Bids page, paused bids render a grey badge 'Paused — another contractor is currently in contracting on this project' with sub-text 'Your bid will resume automatically if their contract falls through.' On the available jobs list, projects already vanish when locked; if a contractor has a saved Job Detail bookmark for a now-locked project, the page shows 'This project is no longer accepting bids' instead of the bid form. On the homeowner side, the project detail header switches to a green 'In Contracting with <Contractor>' chip and the bid review page becomes read-only until the workflow either completes or abandons.",
+      "task_type": "api_endpoint",
+      "feature_id": "1b527de9-3413-456f-b6dd-d51f12ca6994",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    }
+  ]
+}

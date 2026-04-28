@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/bids/:id/select-notify",
+  "method": "POST",
+  "taskId": "08beb681-b04a-4650-a681-99db8ab1054c",
+  "description": "Promote a shortlisted bid to approved_by_owner; emails the contractor",
+  "requiresAuth": true,
+  "priority": 82,
+  "dependsOn": ["POST /api/bids/:id/shortlist"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Send select-and-notify",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

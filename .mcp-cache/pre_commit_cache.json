@@ -1,0 +1,1387 @@
+{
+  "last_scan": "2026-04-14T00:08:09.886696Z",
+  "scanned_files": {
+    "server/src/app.ts": {
+      "hash": "15eec691fc0bcf2f6a6e5fa9a9cca6762bd10cb5a7e39c8e5714a5edf7136cca",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:02.946584Z",
+      "linesOfCode": 64
+    },
+    "server/src/config/migrate.ts": {
+      "hash": "1c64221189fe48a6d699fdc92718463e985b186a2bf0b0c7d52f568dd1de5bbb",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/config/migrate.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:02.983321Z",
+      "linesOfCode": 71
+    },
+    "server/src/config/migrations/adminMigration.ts": {
+      "hash": "8de685fbd91b96398469e306964be8ca9f503e774f19dacc5f7bd14407bebf8b",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/config/migrations/adminMigration.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:03.016608Z",
+      "linesOfCode": 88
+    },
+    "server/src/config/migrations/authMigration.ts": {
+      "hash": "98457d994542fc1f351fbb291831ba496e224459287e4425729841eebd50c2a1",
+      "compliance": 65,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/config/migrations/authMigration.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/config/migrations/authMigration.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T23:25:30.859614Z",
+      "linesOfCode": 67
+    },
+    "server/src/config/migrations/biddingMigration.ts": {
+      "hash": "28b4d467138a9c120b0a684edf8d16300e7c48a094e89a98c0632b12756258f5",
+      "compliance": 65,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/config/migrations/biddingMigration.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/config/migrations/biddingMigration.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:03.086622Z",
+      "linesOfCode": 87
+    },
+    "server/src/config/migrations/catalogMigration.ts": {
+      "hash": "c406817ab762797397dff25d10b52ea56c4f9d967488e9d8af8e6d45286e14b4",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/config/migrations/catalogMigration.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:03.114255Z",
+      "linesOfCode": 52
+    },
+    "server/src/config/migrations/projectMigration.ts": {
+      "hash": "d254503ac4499d81b00015e480a4570c084e9e35835a665f32a5277b13c55d0a",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/config/migrations/projectMigration.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T23:33:48.811392Z",
+      "linesOfCode": 213
+    },
+    "server/src/controllers/adminController.ts": {
+      "hash": "a7bf485834a4dc6f9f6e18881fd18323592003aa307adc651ddcec83bed57a9e",
+      "compliance": 82,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-02",
+          "description": "API JSON definition not found - create it first",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/controllers/adminController.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/controllers/adminController.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:03.174066Z",
+      "linesOfCode": 148
+    },
+    "server/src/controllers/bidController.ts": {
+      "hash": "44d2a13d6ab4a1406c21f290ef5e852dd5a7cab75019e6869e9af2bac8602fa4",
+      "compliance": 82,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-02",
+          "description": "API JSON definition not found - create it first",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/controllers/bidController.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/controllers/bidController.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:03.223776Z",
+      "linesOfCode": 77
+    },
+    "server/src/controllers/catalogController.ts": {
+      "hash": "1fb9a6fe83ac9b2b797d11c787b325dfb67292c1eab68c318e549ef71700ac4c",
+      "compliance": 82,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-02",
+          "description": "API JSON definition not found - create it first",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/controllers/catalogController.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/controllers/catalogController.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:03.252716Z",
+      "linesOfCode": 51
+    },
+    "server/src/controllers/projectController.ts": {
+      "hash": "bad3c8c286bb6fadacbeb444dca2b033bb0d1c499a64ff73d6517a3f71bcba49",
+      "compliance": 97,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/controllers/projectController.ts"
+        }
+      ],
+      "timestamp": "2026-04-14T00:07:46.329006Z",
+      "linesOfCode": 211
+    },
+    "server/src/middleware/adminAuth.ts": {
+      "hash": "50b46ccfe0f3957b71a0cce0ec8190935c19b9d5898cbf437079116aa0409352",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:03.319639Z",
+      "linesOfCode": 21
+    },
+    "server/src/routes/adminRoutes.ts": {
+      "hash": "9d6c64784080d6dd7798fec659d5eb7c478f88b4c3c6ce43e456305e654f8eaf",
+      "compliance": 80,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/adminRoutes.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-02",
+          "description": "API JSON definition not found - create it first",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/adminRoutes.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:03.346990Z",
+      "linesOfCode": 27
+    },
+    "server/src/routes/bidRoutes.ts": {
+      "hash": "874ad9e88f70779faaf484e0adb77c1ded0fcc44338455c846cc79ce40c379e2",
+      "compliance": 80,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/bidRoutes.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-02",
+          "description": "API JSON definition not found - create it first",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/bidRoutes.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:09.476278Z",
+      "linesOfCode": 15
+    },
+    "server/src/routes/catalogRoutes.ts": {
+      "hash": "986aad93ae5a1423037332fcfa3d5ae8651fb2666e5489e81df4e30ae22356b0",
+      "compliance": 80,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/catalogRoutes.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-02",
+          "description": "API JSON definition not found - create it first",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/catalogRoutes.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:12.267317Z",
+      "linesOfCode": 13
+    },
+    "server/src/routes/projectRoutes.ts": {
+      "hash": "5798a8f18c3165f115f6a8c2cfe7d30b7016a6dd80d19a37f852b0485cf6837f",
+      "compliance": 80,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/projectRoutes.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-02",
+          "description": "API JSON definition not found - create it first",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/projectRoutes.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:14.560901Z",
+      "linesOfCode": 22
+    },
+    "server/src/services/adminService.ts": {
+      "hash": "fc74edd2e658699141120e763936cf960bb344c0bd1ab242cb786e321c04e4be",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:19.774176Z",
+      "linesOfCode": 214
+    },
+    "server/src/services/aiPipelineService.ts": {
+      "hash": "ef1451271e992431d9c88bbe8cb84c19623dc9eddf0d4b4cd647f9b297bbf6b1",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/aiPipelineService.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:19.793014Z",
+      "linesOfCode": 203
+    },
+    "server/src/services/bidService.ts": {
+      "hash": "0c9d096d459201ffb04411a301708a5669b1a2da52279bddbd15c987182cb24b",
+      "compliance": 72,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/bidService.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/bidService.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:19.811159Z",
+      "linesOfCode": 75
+    },
+    "server/src/services/catalogService.ts": {
+      "hash": "763a53abbe48cff60c528548ad09e3daca12b77b48c4cb1f191e685f86423cac",
+      "compliance": 97,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/catalogService.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:19.833349Z",
+      "linesOfCode": 62
+    },
+    "server/src/services/domainDb.ts": {
+      "hash": "62257d8c5c1d4b4ff655bdb029cf0ee5c5530df08297d5f770c94d754a286682",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/domainDb.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T21:43:19.853336Z",
+      "linesOfCode": 108
+    },
+    "server/src/services/projectService.ts": {
+      "hash": "a1a35a24c00f3a399a8df0cae8aaabeb05b8ff18c332fdfcc1f67344ba9af0d4",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/projectService.ts"
+        }
+      ],
+      "timestamp": "2026-04-14T00:07:48.245533Z",
+      "linesOfCode": 260
+    },
+    "server/src/services/questionModerationService.ts": {
+      "hash": "1e294f9ef965580cbc6b9f85bf898386226d05ba944f71a6fda05c6456cc6b71",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:19.900794Z",
+      "linesOfCode": 100
+    },
+    "server/src/types/index.ts": {
+      "hash": "882f826b03759b236e027f79877298e3eb385bffc9d17d88ef9a4ca370dc130b",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:25:32.782596Z",
+      "linesOfCode": 113
+    },
+    "tests/api_definitions/admin/admin-login.json": {
+      "hash": "8bda24a6aa327c6ec279f993925a64181ce0934fbb374e6c210fc9f578cb0c0c",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:19.937568Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/admin/analytics-contract-allocation.json": {
+      "hash": "8408eb6ca8c1a95a11fa5112377f2bfd1aebce51232e4851105998489eeebb70",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:19.959994Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/analytics-platform-usage.json": {
+      "hash": "3662e6710ac0845a415a6e47a59b30b546d5d93f866775bc9491b3cd1862f8b5",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:19.978515Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/analytics-price-variance.json": {
+      "hash": "6e385ef74febc61ecdd4ac6c1917df0d5b996a16e7da9050f0703e940dcf1ef1",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:19.997065Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/create-bid-price-rule.json": {
+      "hash": "a5f6d3e9bcfb95d0a24486cb9fb039de2434e113ba4e391afff937a131bc1a22",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.015237Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/admin/create-subscription-plan.json": {
+      "hash": "7e2e073cacc8e2452b861b44e42cb875176a1b9de884a04d85b039e89f95abd4",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.032530Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/admin/get-bid-price-rules.json": {
+      "hash": "2af7d74c454d913d80334a28cfb740804e0b79c55666d47eb2cc4afbe2bc6a6a",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.050601Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/get-subscriptions.json": {
+      "hash": "ac32ff7fee7edcbe6f2cfc1f9ce64966680d8e7211406755a15d8f4d9dc442f7",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.071820Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/get-user-stats.json": {
+      "hash": "a8b960837c34413b75c1217d6bca70cf714c30f5154596edecbfee6c70f78283",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.095741Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/get-users.json": {
+      "hash": "a5236972765051dfe3b5b6bb07fe24cdec76f58037def2f96d8637030c45c69b",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.115840Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/update-user-status.json": {
+      "hash": "f51b32391edc71a0b257ebc3d2ce17b2228ce40f25e29196ec604250bde58689",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.135684Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/answer-question.json": {
+      "hash": "462ea1edb0a5ddc99f5adcc46720fc0c8cdd4649bf9fa04663677b3ed98c0bdc",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.157318Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/get-questions.json": {
+      "hash": "e5ab0e2e6cdc4a9914be11e7b759672a887d04578ead78fc5b1df1460106d5ed",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.177875Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/bids/submit-question.json": {
+      "hash": "269bb380d44a279954108efe598a9280e9683847680c8ed7a3e2f7ce157601d3",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.194312Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/catalogs/add-catalog-item.json": {
+      "hash": "f5ae6923864fbcda6bdbeed63d18845c488a5f63dc61d9a144d02bc19ada639e",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.213065Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/catalogs/create-catalog.json": {
+      "hash": "3bf4b42e5b51fe8fa88bbf666ddf2db5bcffedf0449acb111d4e392ce0326acd",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.233248Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/catalogs/get-catalogs.json": {
+      "hash": "24fca6d045907c958317ecdba35473d41f9b74e98d9f454e397cc17c0c7ead29",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.255695Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/projects/delete-media.json": {
+      "hash": "b9e4d3b78e923263308e3f5359022c9a0b8e489bcbac5d1053cc5baeaf9dd55a",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.278150Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/projects/get-draft.json": {
+      "hash": "d8c37a1479e8c7b4315c29d728e40eb3529d339c509cace4c2dca12cc392c872",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.299147Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/projects/set-task-price.json": {
+      "hash": "6800eb0e05a507c333bd4f4a688bc65c14ab1f5a30896464cdf3e306e4ad4027",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.321487Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/projects/toggle-task-visibility.json": {
+      "hash": "4c4fd2152b09d4fd9ebb7a88dec8ed0c926d6b4fcdec73bac7e4859da44a32c3",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.341150Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/projects/update-draft.json": {
+      "hash": "0cfad1c8be04712273353f0e5f18f6e69b7c3f1c489431e0ec3c5f9d1aa695ff",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.359562Z",
+      "linesOfCode": 25
+    },
+    "tests/api_definitions/projects/update-task.json": {
+      "hash": "04af2bb0a4025d59f6b15a666edcf3d06d83be18d066beb96b648bd161e1a16a",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T21:43:20.377127Z",
+      "linesOfCode": 16
+    },
+    "client/src/App.tsx": {
+      "hash": "8ebd07aec59547e696f9c340de8ca3e0f2a961ea5a48313e1618c214138a015b",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-14T00:07:44.370603Z",
+      "linesOfCode": 72
+    },
+    "client/src/pages/dashboards/ContractorDashboard.tsx": {
+      "hash": "7d93213f2bbaacf38ae0c935cc8029c84e32fc6ae24a6644cb0885de6a08a447",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-14T00:07:45.371549Z",
+      "linesOfCode": 108
+    },
+    "client/src/pages/dashboards/HomeownerDashboard.tsx": {
+      "hash": "c3f73cb113206c4a76568ada2a87eb245080dc8f3cf6f8757794bda558d7f182",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T22:46:59.406667Z",
+      "linesOfCode": 137
+    },
+    "client/src/pages/projects/AvailableJobsPage.tsx": {
+      "hash": "56bff87bc819f3342d7e8b20b2b7efa019dd3e2b9ce49ede934cee01d3a5e20d",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T22:46:59.816360Z",
+      "linesOfCode": 178
+    },
+    "client/src/pages/projects/CatalogPage.tsx": {
+      "hash": "33a8cce54880be0d84f95996e5152219b69aa8ea2be1b69c72245e9764c38ee9",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:25:29.847171Z",
+      "linesOfCode": 172
+    },
+    "client/src/pages/projects/EditProjectPage.tsx": {
+      "hash": "079d628ad73faac03cc15776e4149715a0c574cfaf018296df8d393fc08da82b",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T22:47:00.618925Z",
+      "linesOfCode": 183
+    },
+    "client/src/pages/projects/ScopeReviewPage.tsx": {
+      "hash": "eb12e332c61cbfc49891ed62589eedd9769642a574921903596c967ad1b7b8da",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T22:47:01.034608Z",
+      "linesOfCode": 312
+    },
+    "client/src/services/projectApi.ts": {
+      "hash": "2e3e334a405858be0f675b69fb61032bfba3ce5e7b90f933890c0c4a91f5d512",
+      "compliance": 97,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "client/src/services/projectApi.ts"
+        }
+      ],
+      "timestamp": "2026-04-14T00:07:46.193247Z",
+      "linesOfCode": 145
+    },
+    "admin-client/package.json": {
+      "hash": "0c1347e3f74c3455db7b13581f86ffcd35bb04d00a772a93a195d6c02487db31",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:04:11.428895Z",
+      "linesOfCode": 23
+    },
+    "admin-client/src/App.tsx": {
+      "hash": "de27248dee79600eb6295b22c946dbc5d9175a34dbf1dd69a16cf5ad844f1a00",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:04:11.494900Z",
+      "linesOfCode": 80
+    },
+    "admin-client/src/context/AdminAuthContext.tsx": {
+      "hash": "039ec3106770889b0aecb0007c0ca8ee9f08d7c6569c5ece43ff670591d5cd58",
+      "compliance": 97,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "admin-client/src/context/AdminAuthContext.tsx"
+        }
+      ],
+      "timestamp": "2026-04-13T23:04:12.092054Z",
+      "linesOfCode": 29
+    },
+    "admin-client/src/main.tsx": {
+      "hash": "c11dd148006abf9261b5ba214d89d726e3febf6144eddd13adf2d4e78c8de1d0",
+      "compliance": 95,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "admin-client/src/main.tsx"
+        }
+      ],
+      "timestamp": "2026-04-13T23:04:12.533300Z",
+      "linesOfCode": 8
+    },
+    "admin-client/src/pages/AnalyticsPage.tsx": {
+      "hash": "2a49c8d53cc7a981bc73a9f11d43b212be81f1ed6ca59151a8a879cd93925cef",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:04:12.958545Z",
+      "linesOfCode": 81
+    },
+    "admin-client/src/pages/LoginPage.tsx": {
+      "hash": "fc312ada6efc9073dd6ecf0e5ff579b0a040a17c9925246cb173dd457f8d63eb",
+      "compliance": 95,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "admin-client/src/pages/LoginPage.tsx"
+        }
+      ],
+      "timestamp": "2026-04-13T23:04:13.382396Z",
+      "linesOfCode": 47
+    },
+    "admin-client/src/pages/RulesPage.tsx": {
+      "hash": "9cdb80112f1d1029fd765e35605983aeab9cceeee3b7855225e297b3d4de9d13",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:04:13.817540Z",
+      "linesOfCode": 93
+    },
+    "admin-client/src/pages/SubscriptionsPage.tsx": {
+      "hash": "4d4e10d3af95c8ff5b4015828b7a57ff4dcba4b1678932b1bf9d32c4bf94054d",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:04:14.237544Z",
+      "linesOfCode": 78
+    },
+    "admin-client/src/pages/UsersPage.tsx": {
+      "hash": "72ec78cf905665a61dff150c3b710183aed838edc470fd6b2a2236f23a937e71",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:04:14.656447Z",
+      "linesOfCode": 90
+    },
+    "admin-client/src/services/adminApi.ts": {
+      "hash": "525d23e97e6e407e047678fdace9c084c1fa2be902bfa7c834cff1600f10ae55",
+      "compliance": 87,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "admin-client/src/services/adminApi.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "admin-client/src/services/adminApi.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T23:04:15.067044Z",
+      "linesOfCode": 76
+    },
+    "admin-client/src/vite-env.d.ts": {
+      "hash": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+      "compliance": 95,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "admin-client/src/vite-env.d.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T23:04:15.130945Z",
+      "linesOfCode": 0
+    },
+    "admin-client/tsconfig.json": {
+      "hash": "b25bca88de67e973cefa9d549a01afc2013e9854804ea309b8ecdd15cba03a9e",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:04:15.191985Z",
+      "linesOfCode": 19
+    },
+    "admin-client/vite.config.ts": {
+      "hash": "4a3b603ec6edc1c82f22a90605c8c3f5103104c83a4b2a56e0ff29940361eb8e",
+      "compliance": 95,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "admin-client/vite.config.ts"
+        }
+      ],
+      "timestamp": "2026-04-13T23:04:15.248946Z",
+      "linesOfCode": 14
+    },
+    "tests/api_definitions/admin/delete-bid-price-rule.json": {
+      "hash": "319ed318598b9059306bbcd3a8f243c8257353d9f3d8310c526f22e8c958cfa8",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.207159Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/get-subscription-plans.json": {
+      "hash": "125b3351fd4456ca75ee60f30d79e8beb33daff9c94eb980e7b58f7dc00ed3db",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.268754Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/get-subscription-stats.json": {
+      "hash": "0785fed658cfbedb5a9ee35640b3bb5b30014bc9d35cb65fd61a76f8a944a54c",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.330711Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/get-user-by-id.json": {
+      "hash": "a05b796e653833c8cf62223b0d1a87ba5899b79a1861fb533fe637e6472a0d21",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.389733Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/update-bid-price-rule.json": {
+      "hash": "813bed063d8bb2b26e01261256d8628b51162191add8a2da0fc42ca1028a951b",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.453602Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/admin/update-subscription.json": {
+      "hash": "a0c1927126062a63c59962b3319402e26a0f4c8a3bd6b055d36c2d4b586099a9",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.510938Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/accept-bid.json": {
+      "hash": "b3baf5d04d6530ca3eca97999fb2438f55986a8827e22e0b2d0aab8b0a43943f",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.581945Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/get-my-bids.json": {
+      "hash": "9725f6b32e45ecad03beb8856d340b5d1b866c9a34c13dae88b70b6504be15b8",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.641473Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/bids/get-project-bids.json": {
+      "hash": "b58b05c5662092168e4bff2ee60db47ee453fa5a9d6108b484be58de4f4bfc37",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.704426Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/bids/reject-bid.json": {
+      "hash": "1e0105840fc5280d6f785b70bc26b91ca2b58350778ced1c1c26da003948176f",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.759169Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/submit-bid.json": {
+      "hash": "dff897012b15ada724c06a9a1948e4e2f15b339733f3fbc70a87de056922385e",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.820442Z",
+      "linesOfCode": 21
+    },
+    "tests/api_definitions/catalogs/delete-catalog-item.json": {
+      "hash": "0c928a83bdf387b0372b68963d99bec877846b4a1baa285342d52431abb0c10b",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.881908Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/catalogs/get-catalog-items.json": {
+      "hash": "8b0664e331c1d1e116dfb2328b395d1892c6b456ab36129f02823a7db15ae2e6",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.942074Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/catalogs/update-catalog-item.json": {
+      "hash": "041be66919dd853a77aad684eb34b5f435cf3a9569c48e4e3d20195554438ba1",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:34.998632Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/projects/approve-project.json": {
+      "hash": "b4279779d7ced4baa123d3d05ac35339245db69b3cc42a25a139e315f4572e26",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.065819Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/projects/confirm-media.json": {
+      "hash": "a19d2f7a8a9b0680d361d125d6043e533c3a88d47beddd4ad33720b634efae9c",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.126070Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/projects/create-project.json": {
+      "hash": "2a35f54b96a9173c48c6bb8bc33b4d428ecc2c792b1af6c6052503d27923072f",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.186217Z",
+      "linesOfCode": 26
+    },
+    "tests/api_definitions/projects/get-available.json": {
+      "hash": "07bec25611c4f01bee94e758856dfdeff5cca788d32b71eae08d302c8a09c8a0",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.243348Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/projects/get-my-projects.json": {
+      "hash": "6262f622a2ea029ea27970dfeb44f2dc3066696d6a62770c6f96fba5f0f4f5d5",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.311898Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/projects/get-project-status.json": {
+      "hash": "2f14c87447b9fc330d4bfa3e28bea7f2434e2e7c088c37f396273b5502488355",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.365150Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/projects/get-project.json": {
+      "hash": "f6223e2f5aa5f3e3afe66d6747d5dee09cd7e537a50e46ccf440dad4ce8f0c09",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.416653Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/projects/presign-upload.json": {
+      "hash": "8d56af661eb547618f423f23f846e1b110e87e7d3d6f1e38ecdfdabcaea4d266",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.477953Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/projects/retry-project.json": {
+      "hash": "32ad5d49850a3740bb893355bf1609db1f289e8bd482d5f71a84420b3b9e9640",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:10:35.542189Z",
+      "linesOfCode": 16
+    },
+    "client/src/pages/OnboardingPage.tsx": {
+      "hash": "19b48e25a565c02f23d4ab4fa2f4539c9e9916b3fb78b142f1d8d6c6da3d85b4",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:25:29.358393Z",
+      "linesOfCode": 191
+    },
+    "client/src/pages/projects/CreateProjectPage.tsx": {
+      "hash": "45e4828eeb5e1f10b2783de15293dee7d97dcdd782c4078ae251d2467b673b2b",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-14T00:07:45.778153Z",
+      "linesOfCode": 221
+    },
+    "server/src/controllers/profileController.ts": {
+      "hash": "4d60088047d9ea281fb2716f2eae6674c292744bf30d75cfc90392e7e5406d5f",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-14T00:07:46.264924Z",
+      "linesOfCode": 91
+    },
+    "server/src/routes/profileRoutes.ts": {
+      "hash": "7f8103c4fb3a53498890521edd4d9f214b740ddf52db8b35649b2ded67e9320e",
+      "compliance": 95,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/profileRoutes.ts"
+        }
+      ],
+      "timestamp": "2026-04-14T00:07:46.393822Z",
+      "linesOfCode": 11
+    },
+    "server/src/services/profileService.ts": {
+      "hash": "98a374db8e83aee26c12bcf77f4b5fc10ff45663fa84d4db2fde12031ba3bf6f",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-14T00:07:48.175841Z",
+      "linesOfCode": 114
+    },
+    "tests/api_definitions/profile/update-serving-areas.json": {
+      "hash": "ccd9e7e9d58ffd229740da28838c9009f9d988d664e6c8ddeb3f3b8240c6b774",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-13T23:25:32.856688Z",
+      "linesOfCode": 16
+    },
+    "client/src/pages/ProfilePage.tsx": {
+      "hash": "b0f03df19f3553638c2ad4365e1565d52bd28251c254b30b06d412b62175182c",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-14T00:07:44.944339Z",
+      "linesOfCode": 180
+    },
+    "tests/api_definitions/profile/update-profile.json": {
+      "hash": "069a26e8d691e15900c1a7866500136f41ac37bc0547077fe63a4a52eece0926",
+      "compliance": 100,
+      "violations": [],
+      "timestamp": "2026-04-14T00:07:48.330204Z",
+      "linesOfCode": 22
+    }
+  },
+  "registered_apis": {
+    "POST:/auth/login": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.049683Z"
+    },
+    "GET:/users": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050304Z"
+    },
+    "GET:/users/stats": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050320Z"
+    },
+    "GET:/users/:id": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050322Z"
+    },
+    "PUT:/users/:id/status": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050325Z"
+    },
+    "GET:/rules/bid-price": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050328Z"
+    },
+    "POST:/rules/bid-price": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050331Z"
+    },
+    "PUT:/rules/bid-price/:id": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050334Z"
+    },
+    "DELETE:/rules/bid-price/:id": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050336Z"
+    },
+    "GET:/subscriptions": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050338Z"
+    },
+    "GET:/subscriptions/stats": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050340Z"
+    },
+    "PUT:/subscriptions/:id": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050343Z"
+    },
+    "GET:/subscription-plans": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050345Z"
+    },
+    "POST:/subscription-plans": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050348Z"
+    },
+    "GET:/analytics/price-variance": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050351Z"
+    },
+    "GET:/analytics/platform-usage": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050354Z"
+    },
+    "GET:/analytics/contract-allocation": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050357Z"
+    },
+    "POST:/api/bids/": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050360Z"
+    },
+    "GET:/api/bids/my-bids": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050364Z"
+    },
+    "GET:/api/bids/project/:projectId": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050369Z"
+    },
+    "POST:/api/bids/:id/accept": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050372Z"
+    },
+    "POST:/api/bids/:id/reject": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050374Z"
+    },
+    "POST:/api/bids/questions": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050379Z"
+    },
+    "GET:/api/bids/questions/project/:projectId": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050381Z"
+    },
+    "PUT:/api/bids/questions/:questionId/reply": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050384Z"
+    },
+    "GET:/": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050387Z"
+    },
+    "POST:/": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050389Z"
+    },
+    "GET:/:catalogId/items": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050391Z"
+    },
+    "POST:/:catalogId/items": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050392Z"
+    },
+    "PUT:/items/:itemId": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050395Z"
+    },
+    "DELETE:/items/:itemId": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050397Z"
+    },
+    "POST:/api/projects/presign": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050400Z"
+    },
+    "POST:/api/projects/": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050402Z"
+    },
+    "POST:/api/projects/confirm-media": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050405Z"
+    },
+    "GET:/api/projects/": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050407Z"
+    },
+    "GET:/api/projects/available": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050410Z"
+    },
+    "GET:/api/projects/:id": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050412Z"
+    },
+    "GET:/api/projects/:id/draft": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050414Z"
+    },
+    "GET:/api/projects/:id/status": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050416Z"
+    },
+    "PUT:/api/projects/:id": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050418Z"
+    },
+    "PUT:/api/projects/:id/tasks/:taskId": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050420Z"
+    },
+    "PUT:/api/projects/:id/tasks/:taskId/price": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050422Z"
+    },
+    "PATCH:/api/projects/:id/tasks/:taskId/visibility": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050425Z"
+    },
+    "DELETE:/api/projects/:id/media/:mediaId": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050452Z"
+    },
+    "POST:/api/projects/:id/approve": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050455Z"
+    },
+    "POST:/api/projects/:id/retry": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-13T21:43:33.050457Z"
+    },
+    "GET:/api/profile/me": {
+      "filePath": "server/src/routes/profileRoutes.ts",
+      "timestamp": "2026-04-14T00:08:09.886707Z"
+    },
+    "POST:/api/profile/onboard": {
+      "filePath": "server/src/routes/profileRoutes.ts",
+      "timestamp": "2026-04-14T00:08:09.886714Z"
+    },
+    "GET:/api/profile/categories": {
+      "filePath": "server/src/routes/profileRoutes.ts",
+      "timestamp": "2026-04-14T00:08:09.886720Z"
+    },
+    "PUT:/api/profile/serving-areas": {
+      "filePath": "server/src/routes/profileRoutes.ts",
+      "timestamp": "2026-04-14T00:08:09.886729Z"
+    },
+    "PUT:/api/profile/update": {
+      "filePath": "server/src/routes/profileRoutes.ts",
+      "timestamp": "2026-04-14T00:08:09.886724Z"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "epic_id_mapping": {
+    "epic-selection-workflow": "cae507d5-ecfe-488e-a94a-f6a55f5932cc"
+  },
+  "features": [
+    {
+      "temp_id": "feat-payment-proof-upload-closure",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Contractor Payment Proof Upload & Project Closure",
+      "description": "Final payment moves outside BidWork's books — the contractor uses their own payment processor, bank, or method of choice to receive payment from the homeowner. To mark the project complete, the contractor must upload a transaction record (PDF or image — bank statement excerpt, processor confirmation, signed check copy, e-transfer email, etc.) plus structured metadata: payment method, transaction reference, transaction date, amount. The system stores the upload, validates that the contractor's billing profile is complete (feat-contractor-billing-profile), generates the contractor-issued final payment receipt (feat-two-tier-receipts) which embeds the transaction method and reference, transitions the project status to completed, and notifies the homeowner with the receipt + transaction record. This replaces the assumption in TK-2702/TK-2723 that BidWork is in the payment loop — we are now strictly the document and orchestration layer; only the 5% service fee touches our books.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-project-lock-on-workorder",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Project Lock & Other-Bid Pause on Workorder Approval",
+      "description": "Once the selected contractor clicks Accept Offer (selection_workflow_state moves to offer_accepted in feat-contract-generation-accept / TK-2696), the project must stop accepting new bids and all other pending bids on the project must be paused. Concretely: projects.is_listed becomes false and projects.status becomes 'in_contracting' so GET /api/projects/available excludes it; all other pending bids for the project transition to selection_workflow_state='paused' (distinct from rejected because they may be reactivated if the offer is abandoned via the 72-hour timer and the homeowner promotes the next ranked bid). If the offer is later abandoned, the project goes back to is_listed=true / status='bidding', the abandoned bid moves to 'abandoned', and shortlisted paused bids resume so the homeowner can promote the next one. When the project is finally completed (payment proof uploaded in feat-payment-proof-upload-closure), projects.status becomes 'completed' and any still-paused non-shortlisted bids transition to 'rejected' with a system reason. Implements the state machine hooks and the project-listing serializer changes.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

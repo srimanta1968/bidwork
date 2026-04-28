@@ -1,0 +1,84 @@
+{
+  "tasks": [
+    {
+      "title": "Add migration for visit-tracking table + 'scheduled' workflow state",
+      "description": "Create bidding.workorder_visits (bid_id PK, status enum: pending_first_check|reminder_sent|pending_second_check|owner_marked_abandoned, last_check_at, reminder_sent_at, reminder_count int, abandoned_at, audit JSONB). Extend selection_workflow_state values to include 'scheduled'. Idempotent migration in server/src/config/migrations/biddingMigration.ts.",
+      "task_type": "database_migration",
+      "feature_id": "781e1be1-e9b4-41b9-8adb-fdfeb3f61dba",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "Move bid to 'scheduled' on deposit conversion (server)",
+      "description": "Update server/src/services/depositService.ts convertDepositToFee to set selection_workflow_state='scheduled' (replacing 'addresses_revealed' as the new entry state for the post-payment phase). Address reveal still happens via redactors.ts ADDRESS_REVEALED_STATES — extend that list to include 'scheduled'. Insert workorder_visits row with status='pending_first_check'.",
+      "task_type": "service_layer",
+      "feature_id": "781e1be1-e9b4-41b9-8adb-fdfeb3f61dba",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "visitTrackingService: confirm/reminder/abandon state machine",
+      "description": "Create server/src/services/visitTrackingService.ts with: getStatus(bidId, ownerId) returns current row + can_confirm flag (true once now >= proposed_start_date); confirmVisit(bidId, ownerId, visited:boolean) — if true, advance bid to 'in_progress'; if false and status='pending_first_check', flip to 'reminder_sent'; sendReminder(bidId, ownerId) — queues email_outbox row for contractor + flips status to 'pending_second_check' + bumps reminder_count; abandonAsNoShow(bidId, ownerId) — only when status='pending_second_check', sets status='owner_marked_abandoned', calls existing FT-855 credit-transfer flow + increments contractor_profiles.abandonment_flag_count.",
+      "task_type": "service_layer",
+      "feature_id": "781e1be1-e9b4-41b9-8adb-fdfeb3f61dba",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "API endpoints for visit confirmation + reminder + abandon",
+      "description": "Add controllers + routes: GET /api/bids/:id/visit-status, POST /api/bids/:id/visit-confirmation {visited:bool}, POST /api/bids/:id/visit-reminder, POST /api/bids/:id/abandon-no-show. Owner-only authorization via isBidVisibleTo. Wire into server/src/controllers/bidController.ts and server/src/routes/bidRoutes.ts. Create tests/api_definitions/bids-visit-*.json.",
+      "task_type": "api_endpoint",
+      "feature_id": "781e1be1-e9b4-41b9-8adb-fdfeb3f61dba",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "VisitTrackingPanel on HomeownerDashboard",
+      "description": "Create client/src/components/common/VisitTrackingPanel.tsx that shows on owner side when bidWorkflowState='scheduled' and now>=proposed_start_date. UI: 'Has the contractor visited and discussed the work?' Yes/No buttons → if No on first check, second card 'Send a reminder to the contractor' button + tip to call them; after reminder, third card 'Did the contractor visit after the reminder?' Yes/No → if No, danger button 'Mark workorder as abandoned (deposit credits to next bidder, no refund)' with confirmation dialog. Add to HomeownerDashboard accepted-bid section.",
+      "task_type": "ui_component",
+      "feature_id": "781e1be1-e9b4-41b9-8adb-fdfeb3f61dba",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "Add no-refund + credit-to-next-winner clauses to work order document",
+      "description": "Update server/src/services/contractGenerator.ts (both generateContract draft and generateSignedContract) Terms section: add explicit clause stating that the 5% BidWork platform deposit is non-refundable in cash, and that if the contractor abandons the workorder (no-show after homeowner reminder OR explicit abandon), the deposit converts to a credit applied automatically to the next-ranked shortlisted bidder for the same project; the homeowner does not get a cash refund.",
+      "task_type": "service_layer",
+      "feature_id": "f48cd961-86d7-49c6-8e64-078b56b28e9a",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "Show contractor abandonment count + rating in bid cards",
+      "description": "Update server/src/services/bidService.ts getBidsForProject and listing endpoints to attach contractor reputation: abandonment_flag_count (already on contractor_profiles), aggregate rating avg + count, total_completed_orders (count of bids in receipt_issued state). Update client BidCard/HomeownerBidsList to render a small reputation badge: ★ 4.6 (12 ratings) · 18 jobs · 1 abandoned.",
+      "task_type": "frontend",
+      "feature_id": "35aa6d84-2323-4ba1-b7a7-f7a197b2cba6",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "Migration for bidding.contractor_ratings table",
+      "description": "Add bidding.contractor_ratings (id PK, bid_id UNIQUE, contractor_id, owner_id, rating SMALLINT CHECK 1..5, review_text TEXT NULL, status enum: requested|submitted, requested_at, rated_at). Idempotent migration in server/src/config/migrations/biddingMigration.ts.",
+      "task_type": "database_migration",
+      "feature_id": "35aa6d84-2323-4ba1-b7a7-f7a197b2cba6",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "ratingService + endpoints for rating request/submit/reputation",
+      "description": "Create server/src/services/ratingService.ts: requestRating(bidId, contractorId) — only when bid in 'receipt_issued', inserts contractor_ratings row status='requested' + emails owner; submitRating(bidId, ownerId, rating, review_text) — validates 1..5, sets status='submitted'; getContractorReputation(contractorId) returns {avg, count, completed, abandoned}. Add routes: POST /api/bids/:id/request-rating (contractor), POST /api/bids/:id/rating (owner), GET /api/contractors/:id/reputation. Create tests/api_definitions/ratings-*.json.",
+      "task_type": "api_endpoint",
+      "feature_id": "35aa6d84-2323-4ba1-b7a7-f7a197b2cba6",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "RatingPanel UI for both dashboards",
+      "description": "Create client/src/components/common/RatingPanel.tsx. Contractor side: when bidWorkflowState='receipt_issued' and no rating row exists, show 'Request a rating from the homeowner' button → POST /request-rating. Once requested, show 'Rating requested · awaiting homeowner'. Once submitted, show stars + review. Homeowner side: when ratings.status='requested', show 5-star picker + optional textarea + Submit. Mount in HomeownerDashboard + ContractorDashboard accepted-bid section.",
+      "task_type": "ui_component",
+      "feature_id": "35aa6d84-2323-4ba1-b7a7-f7a197b2cba6",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    }
+  ]
+}

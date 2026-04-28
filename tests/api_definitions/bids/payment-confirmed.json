@@ -1,0 +1,26 @@
+{
+  "endpoint": "/api/bids/:id/payment-confirmed",
+  "method": "POST",
+  "taskId": "0be54f63-6bf2-4284-9529-2d7bed7ca4b0",
+  "description": "Contractor records payment received outside BidWork; closes the project",
+  "requiresAuth": true,
+  "priority": 71,
+  "dependsOn": ["POST /api/bids", "PUT /api/profile/billing"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Record payment received",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "payment_method": "bank_transfer",
+      "transaction_reference": "WIRE-CONFIRM-12345",
+      "transaction_date": "2026-04-26",
+      "transaction_amount_cents": 250000,
+      "proof_s3_key": "bidwork/payment-proofs/sample.pdf"
+    },
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

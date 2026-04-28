@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/bids/:id/attachments/presign",
+  "method": "POST",
+  "taskId": "d2c1c6e5-4344-4fed-b960-4cc7ac0879f4",
+  "description": "Presign S3 PUT URL for bid attachment upload",
+  "requiresAuth": true,
+  "priority": 84,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testCases": [{
+    "name": "Presign attachment",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"filename": "proposal.pdf", "content_type": "application/pdf"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

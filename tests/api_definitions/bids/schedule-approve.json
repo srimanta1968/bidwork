@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:id/contract/schedule/approve",
+  "method": "PATCH",
+  "taskId": "95abb176-1902-4b25-a722-4b0d5c0236fb",
+  "description": "Homeowner approves the contractor's proposed schedule",
+  "requiresAuth": true,
+  "priority": 95,
+  "dependsOn": ["POST /api/bids/:id/contract/schedule"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Approve schedule",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"owner_signature": "Jane Homeowner"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

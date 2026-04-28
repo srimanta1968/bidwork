@@ -1,0 +1,20 @@
+{
+  "endpoint": "/api/bids/:id/messages/:messageId/read",
+  "method": "PATCH",
+  "taskId": "0f4a48cf-f217-42c1-ae76-cc491d63d9ff",
+  "description": "Recipient marks a private message as read",
+  "requiresAuth": true,
+  "priority": 90,
+  "dependsOn": ["POST /api/bids/:id/messages"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}",
+    "messageId": "{{cache:bid_messages.create.response.data.message.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Mark message read",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

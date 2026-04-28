@@ -20,10 +20,16 @@ export async function createCatalog(contractorId: string, data: { job_category: 
 
 export async function getCatalogItems(catalogId: string) {
   try {
-    return await catalogDb.queryAll(
+    const rows = await catalogDb.queryAll<any>(
       'SELECT * FROM catalog_items WHERE catalog_id = $1 ORDER BY name',
       [catalogId]
     );
+    // Resolve image_url → presigned download URL for S3 keys; pass through https URLs.
+    const { s3Service } = await import('./s3Service');
+    return await Promise.all(rows.map(async r => ({
+      ...r,
+      image_download_url: await s3Service.resolveImageUrl(r.image_url),
+    })));
   } catch (error) { console.error('Get catalog items error:', error); throw error; }
 }
 
@@ -67,6 +73,28 @@ export async function deleteCatalogItem(itemId: string) {
   } catch (error) { console.error('Delete catalog item error:', error); throw error; }
 }
 
+export async function getCatalogItem(itemId: string) {
+  try {
+    return await catalogDb.queryOne<any>('SELECT * FROM catalog_items WHERE id = $1', [itemId]);
+  } catch (error) { console.error('Get catalog item error:', error); throw error; }
+}
+
+/**
+ * Verify that the contractor owns the catalog containing this item.
+ */
+export async function isCatalogItemOwnedBy(itemId: string, contractorId: string): Promise<boolean> {
+  try {
+    const row = await catalogDb.queryOne<{ contractor_id: string }>(
+      `SELECT c.contractor_id
+         FROM catalog_items i JOIN contractor_catalogs c ON c.id = i.catalog_id
+        WHERE i.id = $1`,
+      [itemId]
+    );
+    return row?.contractor_id === contractorId;
+  } catch { return false; }
+}
+
 export const catalogService = {
   getCatalogs, createCatalog, getCatalogItems, addCatalogItem, updateCatalogItem, deleteCatalogItem,
+  getCatalogItem, isCatalogItemOwnedBy,
 };

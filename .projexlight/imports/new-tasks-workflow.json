@@ -1,0 +1,184 @@
+{
+  "tasks": [
+    {
+      "title": "Add shortlist_rank, selection_workflow_state and approval_notified_at to bids",
+      "description": "ALTER TABLE bids: add shortlist_rank SMALLINT NULL CHECK (shortlist_rank BETWEEN 1 AND 3), selection_workflow_state VARCHAR(40) NOT NULL DEFAULT 'pending', approval_notified_at TIMESTAMP NULL, approved_by_owner_at TIMESTAMP NULL, abandoned_at TIMESTAMP NULL. Add unique partial index ON bids(project_id, shortlist_rank) WHERE shortlist_rank IS NOT NULL — at most one bid per rank per project. Initialize selection_workflow_state to 'shortlisted' for any rows already in status='shortlisted' from feat-bid-status-rejection.",
+      "task_type": "database_migration",
+      "feature_id": "f61e8b56-13fa-4e4d-9d91-2b6875638547",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Shortlist endpoint and Select-and-Notify endpoint with email and alert dispatch",
+      "description": "POST /api/bids/:id/shortlist body {rank: 1|2|3} — homeowner-only; persists shortlist_rank, transitions selection_workflow_state to shortlisted; if another bid already holds that rank, swap or 409. DELETE /api/bids/:id/shortlist clears the rank. POST /api/bids/:id/select-notify — homeowner-only; only allowed if shortlist_rank IS NOT NULL and no other bid in this project is currently in approved_by_owner. Effects (atomic): set selection_workflow_state='approved_by_owner', approval_notified_at=NOW(), approved_by_owner_at=NOW(); enqueue selected_offer email to the contractor through the orchestration email service; create in-app notification; schedule 24h-business-day reminder timer and 72h-business-day abandon timer via the timer agent.",
+      "task_type": "api_endpoint",
+      "feature_id": "f61e8b56-13fa-4e4d-9d91-2b6875638547",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Bid review shortlist rank pills, Select-and-Notify button and workflow state badges",
+      "description": "On the homeowner bid review page, each bid card gets three rank pills (Top Pick / 2nd / 3rd) — clicking sets the rank via POST /api/bids/:id/shortlist with optimistic UI; clearing calls DELETE. A Select & Notify button appears only on shortlisted cards and is disabled when another bid is already approved_by_owner; clicking it opens a confirmation modal explaining 'BidWork will email this contractor and start the 72-hour acceptance window' before calling POST /api/bids/:id/select-notify. Each card shows a workflow state badge (Pending · Shortlisted · Notified · Accepted · Contract Drafted · Mutually Signed · In Progress · Complete · Receipt Issued · Abandoned).",
+      "task_type": "frontend",
+      "feature_id": "f61e8b56-13fa-4e4d-9d91-2b6875638547",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Create contracts and contract_signatures tables",
+      "description": "Create contracts table: id UUID PK, bid_id UUID FK→bids UNIQUE, version INT DEFAULT 1, draft_pdf_s3_key VARCHAR(500), signed_pdf_s3_key VARCHAR(500) NULL, status VARCHAR(40) DEFAULT 'draft', generated_at TIMESTAMP, finalized_at TIMESTAMP NULL, audit_hash VARCHAR(128). Create contract_signatures table: id UUID PK, contract_id UUID FK→contracts, signer_role ENUM('homeowner','contractor'), signer_user_id UUID FK→users, typed_name VARCHAR(255), signed_at TIMESTAMP, ip_address INET, user_agent TEXT. Unique index on (contract_id, signer_role) — one signature per role per contract version. Index on contract_id.",
+      "task_type": "database",
+      "feature_id": "e0b950f8-04a1-4875-b535-549e507c2d5b",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Legal contract PDF generation service from project, scope and bid template",
+      "description": "Build src/services/contractGenerator.ts. Input: bid_id. Steps: (1) load project + per-task scope + bid task_breakdown + materials + selected contractor profile + homeowner profile (full names only — addresses still redacted at draft stage); (2) render an MJML/Handlebars contract template (templates/contract.hbs) with sections: Parties, Scope of Work (per-task with photos), Pricing (line items + total), Timeline, BidWork Terms & Conditions, Signature blocks; (3) convert HTML→PDF via Puppeteer or wkhtmltopdf; (4) compute SHA-256 audit_hash of the PDF bytes; (5) upload to S3 under contracts/<bid_id>/v<version>/draft.pdf and persist key + hash on the contracts row. Re-running creates a new version row. Emits orchestration event contract_drafted.",
+      "task_type": "service_layer",
+      "feature_id": "e0b950f8-04a1-4875-b535-549e507c2d5b",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Accept Offer, contract retrieval and dual-party e-sign endpoints",
+      "description": "POST /api/bids/:id/accept-offer — only the contractor that owns this bid; only allowed when selection_workflow_state='approved_by_owner'. Effects: cancel any pending 24h/72h timers; transition state to offer_accepted; invoke contractGenerator.generate(bidId); transition to contract_drafted; emit contract_ready_to_review email to homeowner. GET /api/contracts/:id — returns metadata + presigned GET URL to draft PDF; access restricted to homeowner of the project and bid's contractor. POST /api/contracts/:id/sign body {typed_name} — caller's role inferred from auth; persists contract_signatures row with ip + user_agent; transitions state to contract_owner_signed or contract_contractor_signed depending on who signed; when both sides have signed, regenerate signed_pdf with countersignature page, set status='executed', finalized_at=NOW(), invoke deposit conversion + address reveal hooks.",
+      "task_type": "api_endpoint",
+      "feature_id": "e0b950f8-04a1-4875-b535-549e507c2d5b",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Contractor Accept Offer button, contract preview and dual-party e-sign UI",
+      "description": "Contractor My Bids: when a bid is in approved_by_owner state, render an Accept Offer CTA with a deadline countdown (computed business-day-aware from the timer agent) and a banner explaining the 72-hour SLA. Clicking calls POST /api/bids/:id/accept-offer and routes to a Contract Review page. Contract Review (both roles): embedded PDF preview (presigned URL), summary panel (parties, scope, total, timeline), and a Sign block with a typed-name field plus checkbox 'I have read and agree to the terms'. Submit calls POST /api/contracts/:id/sign. After own signature, page shows 'Waiting for the other party to sign'. Once both parties signed, redirect to the deposit-revealed banner.",
+      "task_type": "frontend",
+      "feature_id": "e0b950f8-04a1-4875-b535-549e507c2d5b",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Create deposits and payment_intents tables for 5 percent escrow",
+      "description": "Create deposits table: id UUID PK, project_id UUID FK, bid_id UUID FK UNIQUE, contract_id UUID FK→contracts, amount_cents BIGINT NOT NULL, percent NUMERIC(5,2) DEFAULT 5.0, status VARCHAR(30) DEFAULT 'pending' CHECK (status IN ('pending','collected','converted_to_fee','refunded','failed')), collected_at TIMESTAMP NULL, converted_at TIMESTAMP NULL, refunded_at TIMESTAMP NULL. Create payment_intents table: id UUID PK, deposit_id UUID FK, provider VARCHAR(20) DEFAULT 'stripe', provider_intent_id VARCHAR(255) UNIQUE, client_secret_last4 VARCHAR(8), amount_cents BIGINT, status VARCHAR(30), raw_event JSONB, created_at, updated_at. Index deposits(bid_id), payment_intents(deposit_id, status).",
+      "task_type": "database",
+      "feature_id": "d77bc030-e16f-4144-af81-6ece01828eaa",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Stripe deposit collection, webhook handler, dual-sign conversion and address reveal trigger",
+      "description": "Build src/integrations/stripeDepositService.ts. POST /api/contracts/:id/deposit/intent — homeowner-only; computes amount = round(bid.bid_amount * 0.05); calls Stripe PaymentIntents.create with metadata {project_id, bid_id, deposit_id}; persists payment_intents row; returns {client_secret, amount_cents}. POST /api/webhooks/stripe — verifies signature; on payment_intent.succeeded marks deposit collected and emits orchestration event deposit_collected; on payment_intent.payment_failed sets status='failed' and notifies homeowner. Add a contract-finalized listener: when contract.status transitions to 'executed', if deposit.status='collected' set status='converted_to_fee', converted_at=NOW(); if not yet collected, block the transition and re-prompt; finally call the PII redactor reveal hook from feat-bid-pii-redaction so subsequent /api/projects/:id and /api/bids/:id calls return full street_address + phone for both parties. Also implement refund on cancellation pre-mutual-sign.",
+      "task_type": "api_integration",
+      "feature_id": "d77bc030-e16f-4144-af81-6ece01828eaa",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Owner deposit checkout screen and post-mutual-sign address-revealed banner",
+      "description": "Deposit Checkout page (homeowner) shown after the homeowner signs the contract: displays bid total, calculated 5 percent deposit, BidWork admin-fee explainer ('this becomes our service fee once the contractor signs'), Stripe Elements card form, and a Pay $X Deposit button that confirms the PaymentIntent client_secret. On success, redirect to a status page: 'Waiting for contractor signature'. Once contract.status becomes executed (poll or websocket), show a green banner 'Contract executed — addresses revealed' with the contractor's full business address + phone now visible; same banner appears on the contractor side with the homeowner's street address + phone. Add a small disclaimer that BidWork retains the deposit as the admin fee.",
+      "task_type": "frontend",
+      "feature_id": "d77bc030-e16f-4144-af81-6ece01828eaa",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Create work_completions and receipts tables",
+      "description": "Create work_completions table: id UUID PK, bid_id UUID FK UNIQUE, completion_doc_s3_key VARCHAR(500), contractor_submitted_at TIMESTAMP, owner_acknowledged_at TIMESTAMP NULL, owner_signature_typed_name VARCHAR(255) NULL, owner_signed_at TIMESTAMP NULL, payment_received_at TIMESTAMP NULL, status VARCHAR(30) DEFAULT 'submitted' CHECK (status IN ('submitted','acknowledged','payment_confirmed')). Create receipts table: id UUID PK, bid_id UUID FK UNIQUE, amount_cents BIGINT, paid_at TIMESTAMP, receipt_pdf_s3_key VARCHAR(500), receipt_number VARCHAR(40) UNIQUE, emailed_at TIMESTAMP NULL, created_at TIMESTAMP. Index on bid_id for both.",
+      "task_type": "database",
+      "feature_id": "b5aaa912-e82e-4727-8ef6-e9d6097befe1",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Completion upload, owner acknowledgment, payment confirmation and receipt generation API",
+      "description": "POST /api/bids/:id/completion — contractor-only; multipart upload of completed workorder PDF to S3; creates work_completions row in status=submitted; emits completion_submitted email to homeowner. POST /api/bids/:id/completion/acknowledge body {typed_name} — homeowner-only; only allowed when state=in_progress and completion exists; records owner_acknowledged_at, owner_signature_typed_name, owner_signed_at; transitions state to completion_acknowledged; emits completion_acknowledged_pay_now email to contractor with 'Once you receive payment, click Mark Payment Received'. POST /api/bids/:id/payment-confirmed body {amount_cents, paid_at} — contractor-only; validates amount matches bid total; sets work_completions.payment_received_at; triggers receipt generation: render receipt PDF (templates/receipt.hbs), assign receipt_number (R-YYYYMMDD-NNNN), upload to S3, persist receipts row, emit receipt_issued email with PDF attachment to homeowner. Returns receipt download URL to contractor.",
+      "task_type": "api_endpoint",
+      "feature_id": "b5aaa912-e82e-4727-8ef6-e9d6097befe1",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Contractor Mark Complete and Mark Payment Received UI; homeowner Acknowledge and Sign UI",
+      "description": "Contractor Job Detail (post addresses-revealed): Mark Job Complete CTA opens an upload modal accepting a PDF Completed Workorder document; on success state advances to completion_submitted. After homeowner acknowledges, the same screen shows Mark Payment Received CTA with amount field pre-filled; clicking calls payment-confirmed and surfaces a Download Receipt link plus a 'Receipt sent to homeowner' confirmation. Homeowner Job Detail: when completion is submitted, render an Acknowledge & Sign panel embedding the contractor's completion PDF preview and a typed-name signature field; submit calls completion/acknowledge and shows 'Pay your contractor directly. We will issue a receipt once they confirm payment'. Receipt download visible to homeowner once issued.",
+      "task_type": "frontend",
+      "feature_id": "b5aaa912-e82e-4727-8ef6-e9d6097befe1",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Create workflow_timers table and configurable holidays seed",
+      "description": "Create workflow_timers table: id UUID PK, entity_type VARCHAR(40) DEFAULT 'bid', entity_id UUID, timer_type VARCHAR(40) CHECK (timer_type IN ('select_notify_reminder_24h','select_notify_abandon_72h')), scheduled_for TIMESTAMP NOT NULL, fired_at TIMESTAMP NULL, status VARCHAR(20) DEFAULT 'scheduled' CHECK (status IN ('scheduled','fired','cancelled')), payload JSONB, created_at TIMESTAMP. Index (status, scheduled_for) for the worker. Create business_holidays table seeded with US federal holidays for the next 3 years (date, name, country_code default 'US'). Add config flag for holiday set selection.",
+      "task_type": "database",
+      "feature_id": "b5751930-589d-4146-9f02-06e6d63fa4c3",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Business-day calculator and cron worker firing 24h reminders and 72h auto-abandon",
+      "description": "src/services/businessDay.ts: addBusinessHours(start, hours) — iterates skipping Saturdays, Sundays, and rows from business_holidays table; defines a 9-hour business day window (configurable). isBusinessDay(date) helper. src/workers/timerAgent.ts: cron-style worker (runs every 60s) that SELECTs workflow_timers WHERE status='scheduled' AND scheduled_for <= NOW() FOR UPDATE SKIP LOCKED, fires the corresponding action, sets status='fired'. select_notify_reminder_24h fires acceptance_reminder email to contractor + in-app nudge if bid still in approved_by_owner. select_notify_abandon_72h: if still in approved_by_owner, transition to abandoned, set abandoned_at, cancel sibling timers, emit abandoned_promote_next email + alert to homeowner with the next-ranked shortlisted bid id. Idempotent: re-firing a fired timer is a no-op. Bid acceptance must call timerAgent.cancelForBid(bidId) to cancel pending timers atomically.",
+      "task_type": "service_layer",
+      "feature_id": "b5751930-589d-4146-9f02-06e6d63fa4c3",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Auto-promote-next-ranked-bid endpoint and homeowner abandonment alert UI",
+      "description": "POST /api/projects/:projectId/promote-next-shortlisted — homeowner-only; finds the next shortlisted bid by ascending shortlist_rank that is not already abandoned/rejected/withdrawn; runs the same effects as POST /api/bids/:id/select-notify on it (state transition, email, alert, schedule timers). Returns 404 if no eligible next-rank bid remains. Frontend: when the timer agent abandons a bid, the homeowner receives an in-app alert + email with a one-click Promote Next Ranked Bid button on the bid review page. Abandoned bids show a grey badge with timestamp. If no shortlisted bids remain, the alert prompts the homeowner to shortlist additional bids.",
+      "task_type": "api_endpoint",
+      "feature_id": "b5751930-589d-4146-9f02-06e6d63fa4c3",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Selection workflow state machine with transition guards and audit log table",
+      "description": "Create workflow_audit_log table: id UUID PK, entity_type VARCHAR(40) DEFAULT 'bid', entity_id UUID, state_from VARCHAR(40), state_to VARCHAR(40), actor_user_id UUID FK→users NULL, actor_role VARCHAR(20), reason VARCHAR(255) NULL, payload JSONB, created_at TIMESTAMP DEFAULT NOW(). Implement src/services/workflow/selectionStateMachine.ts defining the allowed transitions: pending→shortlisted→approved_by_owner→offer_accepted→contract_drafted→contract_owner_signed→contract_contractor_signed→deposit_collected→addresses_revealed→in_progress→completion_submitted→completion_acknowledged→payment_received→receipt_issued; plus terminal forks abandoned and cancelled at appropriate states. Each transition runs a guard (precondition checks), executes side-effects via emitters (email, alert, schedule timers, S3 ops), and writes a workflow_audit_log row atomically in the same DB transaction as the state change. All API endpoints in this epic must go through this machine — never set selection_workflow_state by hand.",
+      "task_type": "service_layer",
+      "feature_id": "cb820142-a8b8-4021-bc36-fa50cc665b38",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Email templates table and email send queue table",
+      "description": "Create email_templates table: id UUID PK, template_key VARCHAR(80) UNIQUE, subject_template TEXT, html_template TEXT, text_template TEXT, version INT DEFAULT 1, updated_at TIMESTAMP. Seed with the eight workflow templates: selected_offer, acceptance_reminder, abandoned_promote_next, contract_ready_to_review, mutual_signed_addresses_revealed, completion_submitted, completion_acknowledged_pay_now, receipt_issued. Create email_outbox table: id UUID PK, template_key VARCHAR(80), to_email VARCHAR(320), to_user_id UUID FK→users NULL, subject TEXT, html TEXT, text TEXT, status VARCHAR(20) DEFAULT 'queued' CHECK (status IN ('queued','sent','failed','dead_lettered')), attempts INT DEFAULT 0, last_error TEXT, provider_message_id VARCHAR(255) NULL, queued_at TIMESTAMP DEFAULT NOW(), sent_at TIMESTAMP NULL. Index (status, queued_at).",
+      "task_type": "database",
+      "feature_id": "cb820142-a8b8-4021-bc36-fa50cc665b38",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Templated email service with SES adapter and outbox dispatcher",
+      "description": "src/services/email/emailService.ts: queue(templateKey, toEmail, vars, opts) renders Handlebars subject + html + text from email_templates and inserts a row in email_outbox status=queued. src/services/email/sesAdapter.ts: thin wrapper around AWS SES SendEmail with retry + exponential backoff. src/workers/emailDispatcher.ts: cron-style worker (every 30s) selects up to 50 queued rows, sends via SES, marks sent / failed; after 5 failed attempts moves to dead_lettered. All of the workflow API endpoints (select-notify, accept-offer, contract sign, deposit collected, completion ack, receipt) call emailService.queue with the appropriate template_key and a typed payload (homeowner_name, contractor_name, project_title, bid_amount, deadline_business_days, deeplink_url, etc.). Receipt email attaches the receipt PDF.",
+      "task_type": "service_layer",
+      "feature_id": "cb820142-a8b8-4021-bc36-fa50cc665b38",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "End-to-end integration tests for happy path and auto-abandon path",
+      "description": "Playwright/Jest integration tests covering two scenarios. HAPPY PATH: register homeowner H + contractor A; H creates project; A submits bid; H shortlists A as rank 1 and clicks Select & Notify; assert email queued + bid state=approved_by_owner; A clicks Accept Offer → contract generated; both sign; assert deposit Stripe intent created (use Stripe test clock or mock); confirm payment_intent.succeeded webhook → state addresses_revealed; assert /api/bids/:id now exposes both parties' addresses; A submits completion; H acknowledges & signs; A marks payment received; assert receipt PDF generated and email queued to H; final state=receipt_issued; workflow_audit_log contains every transition. AUTO-ABANDON PATH: register H + A + B (B shortlisted rank 2); H notifies A; advance the timer agent's clock by 24 working hours and assert acceptance_reminder email queued; advance to 72 working hours and assert state=abandoned for A's bid + abandoned_promote_next email + alert queued for H; H clicks Promote Next; assert state=approved_by_owner for B's bid and timers re-scheduled. Both scenarios assert the business-day calculator skips a fabricated weekend in the test clock.",
+      "task_type": "integration_testing",
+      "feature_id": "cb820142-a8b8-4021-bc36-fa50cc665b38",
+      "epic_id": "cae507d5-ecfe-488e-a94a-f6a55f5932cc",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/bids/:id",
+  "method": "GET",
+  "taskId": "8007e969-6aeb-43d6-8e2c-8ec60e26881c",
+  "description": "Fetch a bid by id with per-task breakdown and nested materials",
+  "requiresAuth": true,
+  "priority": 65,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testCases": [{
+    "name": "Get bid with breakdown",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

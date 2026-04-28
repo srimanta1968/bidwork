@@ -1,0 +1,24 @@
+{
+  "endpoint": "/api/bids/:bidId/additional-work",
+  "method": "POST",
+  "taskId": "049fa826-1642-43f3-829a-50725e7aedc2",
+  "description": "Contractor submits an additional work order (pending owner acceptance)",
+  "requiresAuth": true,
+  "priority": 73,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {
+    "bidId": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Submit additional work",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "title": "Replace damaged shutoff valve",
+      "description": "Found a corroded shutoff during demo; recommend replacing.",
+      "amount_cents": 18500
+    },
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

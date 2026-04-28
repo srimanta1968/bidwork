@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/profile/billing",
+  "method": "GET",
+  "taskId": "09becd27-196d-457c-ad38-0d1788dba844",
+  "description": "Get the contractor's billing/tax profile (issuer details for receipts)",
+  "requiresAuth": true,
+  "priority": 30,
+  "dependsOn": ["POST /api/profile/onboard"],
+  "testCases": [{
+    "name": "Get billing profile",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

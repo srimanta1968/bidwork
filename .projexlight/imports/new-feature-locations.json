@@ -1,0 +1,15 @@
+{
+  "epic_id_mapping": {
+    "epic-homeowner-contractor-features": "65d365d6-c552-46ca-80f4-ca311941fb1b"
+  },
+  "features": [
+    {
+      "temp_id": "feat-locations-reference-and-picker",
+      "epic_temp_id": "epic-homeowner-contractor-features",
+      "title": "Locations Reference Table & Service-Area Autocomplete Picker",
+      "description": "Replace free-text serving_cities/serving_zipcodes arrays on contractor profiles with a normalized projects.locations reference table covering states, metros (CBSAs), counties, cities, and zip codes for the United States. Contractors pick service areas from an autocomplete and the system stores location UUIDs; matching expands a chosen state/metro/county/city to its underlying zip set so a contractor who selects 'San Francisco-Oakland-Berkeley, CA' sees jobs in Danville, Oakland, Palo Alto, etc. without typing each one. Ships a curated US seed dataset (states + top metros + top cities + representative zips) loaded automatically on first server boot via runMigrations — idempotent so subsequent boots are no-ops. Keeps serving_cities[] / serving_zipcodes[] populated in parallel during rollout for backward compatibility, and includes a one-time backfill that maps existing free-text city strings to best-match location rows so existing contractors don't need to re-onboard. Resolves the 'Sara can't see Danville Kitchen Remodeling because she put Bay Area in serving_cities' class of bug.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

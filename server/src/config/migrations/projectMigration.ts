@@ -119,6 +119,59 @@ export async function runProjectMigration(pool: Pool): Promise<void> {
     WHERE is_listed = true
   `);
 
+  // ── Locations reference (states · metros · counties · cities · zips) ──
+  // Seeded once on first server boot from server/src/data/locations-seed.json.
+  // Idempotent re-seed via the unique index below + ON CONFLICT DO NOTHING in the loader.
+  await pool.query(`CREATE EXTENSION IF NOT EXISTS pg_trgm`);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS projects.locations (
+      id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      country_code  CHAR(2)      NOT NULL DEFAULT 'US',
+      state_code    VARCHAR(8),
+      state_name    VARCHAR(120),
+      county_name   VARCHAR(120),
+      city_name     VARCHAR(120),
+      zip_code      VARCHAR(12),
+      metro_code    VARCHAR(20),
+      metro_name    VARCHAR(180),
+      latitude      NUMERIC(9, 6),
+      longitude     NUMERIC(9, 6),
+      level         VARCHAR(20)  NOT NULL,
+      display_label VARCHAR(220) NOT NULL,
+      search_text   TEXT         NOT NULL,
+      created_at    TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE projects.locations
+        DROP CONSTRAINT IF EXISTS chk_location_level;
+      ALTER TABLE projects.locations
+        ADD CONSTRAINT chk_location_level CHECK (level IN ('state','metro','county','city','zip'));
+    END $$
+  `);
+  // Natural key — re-seeding the same JSON is a no-op. metro_code is part of
+  // the key so distinct metros that share a state (e.g. all the California
+  // CBSAs: SF, San Jose, San Diego, LA, etc.) don't collide into one row.
+  await pool.query(`DROP INDEX IF EXISTS projects.idx_locations_natural_key`);
+  await pool.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_locations_natural_key
+      ON projects.locations (
+        country_code,
+        COALESCE(state_code, ''),
+        COALESCE(metro_code, ''),
+        COALESCE(county_name, ''),
+        COALESCE(city_name, ''),
+        COALESCE(zip_code, ''),
+        level
+      )
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_locations_search ON projects.locations USING gin (search_text gin_trgm_ops)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_locations_state_city ON projects.locations (state_code, city_name)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_locations_zip ON projects.locations (zip_code)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_locations_metro ON projects.locations (metro_code)`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_locations_level ON projects.locations (level)`);
+
   // ── v2: Photo support & draft resume enhancements ──
 
   // Add default 'video' to media_type for existing column (idempotent)

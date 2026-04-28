@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/bids/:id/request-rating",
+  "method": "POST",
+  "taskId": "de5c095c-762d-47b1-ad71-98e85421c7fd",
+  "description": "Contractor requests a 1-5 rating from the homeowner after the receipt is issued",
+  "requiresAuth": true,
+  "priority": 80,
+  "dependsOn": ["POST /api/bids/:id/payment-confirmed"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Request rating",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

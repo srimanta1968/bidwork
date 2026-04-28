@@ -168,3 +168,30 @@ export async function getContractAllocation(req: AuthenticatedRequest, res: Resp
     res.status(200).json({ success: true, data: { allocation } });
   } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
 }
+
+// ── Platform Service Fee ──
+
+export async function getCurrentServiceFee(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const current = await adminService.getCurrentServiceFee();
+    res.status(200).json({ success: true, data: { current } });
+  } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
+}
+
+export async function getServiceFeeHistory(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const limit = parseInt(req.query.limit as string) || 50;
+    const history = await adminService.getServiceFeeHistory(limit);
+    res.status(200).json({ success: true, data: { history } });
+  } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
+}
+
+export async function setServiceFee(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
+    const { percent, effective_from, notes } = req.body;
+    if (typeof percent !== 'number') { res.status(400).json({ success: false, error: 'percent (decimal between 0 and 0.5) is required' }); return; }
+    const config = await adminService.setServiceFee({ percent, effective_from, notes, set_by_admin_id: req.user.userId });
+    res.status(201).json({ success: true, data: { config } });
+  } catch (error: any) { res.status(400).json({ success: false, error: error.message }); }
+}

@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/admin/service-fee",
+  "method": "POST",
+  "taskId": "cd38f213-aae1-492f-a5fa-d0eee3947788",
+  "description": "Set a new platform service fee percent (append-only)",
+  "requiresAuth": true,
+  "priority": 24,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Set new service fee",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {
+      "percent": 0.05,
+      "notes": "{{dynamic:text}}"
+    },
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

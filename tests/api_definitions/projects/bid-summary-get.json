@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/projects/:id/bid-summary",
+  "method": "GET",
+  "taskId": "0897d5f1-e6da-49b2-bb5f-2b72d350707e",
+  "description": "Homeowner Bids Overview: AI start price total, owner override total, effective total, and submitted bid range",
+  "requiresAuth": true,
+  "priority": 50,
+  "dependsOn": ["POST /api/projects"],
+  "pathParams": {
+    "id": "{{cache:projects.create.response.data.project_id}}"
+  },
+  "testCases": [{
+    "name": "Get bid summary",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

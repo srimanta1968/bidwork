@@ -1,7 +1,31 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAvailableProjects, submitBid, submitQuestion, getProjectQuestions } from '../../services/projectApi';
+import { getAvailableProjects, submitBid, submitQuestion, getProjectQuestions, getProject, getCatalogs, getCatalogItems } from '../../services/projectApi';
 import { useAuth } from '../../context/AuthContext';
+
+interface ScopeTaskLite {
+  id: string;
+  title: string;
+  description?: string;
+  effective_start_price?: number | string | null;
+  cost_min?: number | string | null;
+  photo_evidence_keys?: string[] | null;
+}
+
+interface BreakdownLine {
+  task_id: string;
+  labor_cost: string;
+  notes: string;
+}
+
+interface MaterialLine {
+  task_id: string;
+  catalog_item_id: string;
+  item_name: string;
+  brand?: string;
+  unit_price: number;
+  quantity: number;
+}
 
 export default function AvailableJobsPage() {
   const { user } = useAuth();
@@ -9,7 +33,6 @@ export default function AvailableJobsPage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState<any>(null);
-  const [bidAmount, setBidAmount] = useState('');
   const [estimatedDays, setEstimatedDays] = useState('');
   const [proposalNotes, setProposalNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -18,8 +41,61 @@ export default function AvailableJobsPage() {
   const [questions, setQuestions] = useState<any[]>([]);
   const [newQuestion, setNewQuestion] = useState('');
   const [askingQuestion, setAskingQuestion] = useState(false);
+  const [scopeTasks, setScopeTasks] = useState<ScopeTaskLite[]>([]);
+  const [breakdown, setBreakdown] = useState<Record<string, BreakdownLine>>({});
+  const [materials, setMaterials] = useState<MaterialLine[]>([]);
+  const [pickerForTask, setPickerForTask] = useState<string | null>(null);
+  const [catalogs, setCatalogs] = useState<any[]>([]);
+  const [itemsByCatalog, setItemsByCatalog] = useState<Record<string, any[]>>({});
 
-  useEffect(() => { loadJobs(); }, []);
+  useEffect(() => { loadJobs(); loadCatalogs(); }, []);
+
+  const loadCatalogs = async () => {
+    try {
+      const r = await getCatalogs();
+      if (r.success) setCatalogs(r.data.catalogs || []);
+    } catch { /* silent */ }
+  };
+
+  const loadCatalogItemsLazy = async (catalogId: string) => {
+    if (itemsByCatalog[catalogId]) return;
+    try {
+      const r = await getCatalogItems(catalogId);
+      if (r.success) setItemsByCatalog(prev => ({ ...prev, [catalogId]: r.data.items || [] }));
+    } catch { /* silent */ }
+  };
+
+  const addMaterial = (taskId: string, item: any) => {
+    setMaterials(prev => {
+      const existing = prev.find(m => m.task_id === taskId && m.catalog_item_id === item.id);
+      if (existing) {
+        return prev.map(m => m === existing ? { ...m, quantity: m.quantity + 1 } : m);
+      }
+      return [...prev, {
+        task_id: taskId,
+        catalog_item_id: item.id,
+        item_name: item.name,
+        brand: item.brand,
+        unit_price: Number(item.unit_price || 0),
+        quantity: 1,
+      }];
+    });
+  };
+
+  const updateMaterialQty = (idx: number, qty: number) => {
+    if (qty <= 0) { setMaterials(prev => prev.filter((_, i) => i !== idx)); return; }
+    setMaterials(prev => prev.map((m, i) => i === idx ? { ...m, quantity: qty } : m));
+  };
+
+  const updateMaterialPrice = (idx: number, price: number) => {
+    setMaterials(prev => prev.map((m, i) => i === idx ? { ...m, unit_price: Math.max(0, price) } : m));
+  };
+
+  const removeMaterial = (idx: number) => setMaterials(prev => prev.filter((_, i) => i !== idx));
+
+  const materialsForTask = (taskId: string) => materials.filter(m => m.task_id === taskId);
+  const materialsTotalForTask = (taskId: string) =>
+    materialsForTask(taskId).reduce((s, m) => s + m.unit_price * m.quantity, 0);
 
   const loadJobs = async () => {
     try {
@@ -29,29 +105,93 @@ export default function AvailableJobsPage() {
     finally { setLoading(false); }
   };
 
-  const handleSubmitBid = async () => {
-    if (!selectedProject || !bidAmount || !estimatedDays) { setError('Bid amount and estimated days are required'); return; }
-    const amount = parseFloat(bidAmount);
-    if (amount < selectedProject.bid_floor || amount > selectedProject.bid_ceiling) {
-      setError(`Bid must be between $${Number(selectedProject.bid_floor).toLocaleString()} and $${Number(selectedProject.bid_ceiling).toLocaleString()}`);
-      return;
+  const loadScopeTasks = async (projectId: string) => {
+    try {
+      const result = await getProject(projectId);
+      if (result.success) {
+        const tasks = (result.data.tasks || []) as ScopeTaskLite[];
+        setScopeTasks(tasks);
+        const initial: Record<string, BreakdownLine> = {};
+        tasks.forEach(t => { initial[t.id] = { task_id: t.id, labor_cost: '', notes: '' }; });
+        setBreakdown(initial);
+      } else {
+        setScopeTasks([]);
+        setBreakdown({});
+      }
+    } catch {
+      setScopeTasks([]);
+      setBreakdown({});
     }
+  };
+
+  const totalBidAmount = (): number =>
+    Object.values(breakdown).reduce((sum, l) => sum + (parseFloat(l.labor_cost) || 0), 0);
+
+  const floorFor = (t: ScopeTaskLite): number =>
+    Number(t.effective_start_price ?? t.cost_min ?? 0) || 0;
+
+  const handleSubmitBid = async () => {
+    if (!selectedProject || !estimatedDays) { setError('Estimated days is required'); return; }
+
+    let payload: any = {
+      project_id: selectedProject.id,
+      estimated_days: parseInt(estimatedDays),
+      proposal_notes: proposalNotes,
+      contractor_name: `${user?.first_name} ${user?.last_name}`,
+    };
+
+    if (scopeTasks.length > 0) {
+      const lines = Object.values(breakdown).filter(l => l.labor_cost !== '');
+      if (lines.length === 0) { setError('Enter labor cost for at least one task'); return; }
+      // Per-task floor validation client-side
+      for (const t of scopeTasks) {
+        const line = breakdown[t.id];
+        if (!line || line.labor_cost === '') continue;
+        const labor = parseFloat(line.labor_cost);
+        if (isNaN(labor) || labor < 0) { setError(`Invalid labor cost for "${t.title}"`); return; }
+        const floor = floorFor(t);
+        if (labor < floor) { setError(`"${t.title}" labor must be at least $${floor.toLocaleString()}`); return; }
+      }
+      payload.task_breakdown = lines.map(l => ({
+        task_id: l.task_id,
+        labor_cost: parseFloat(l.labor_cost),
+        notes: l.notes || undefined,
+      }));
+      if (materials.length > 0) {
+        const bad = materials.find(m => !(m.quantity > 0) || !(m.unit_price > 0));
+        if (bad) {
+          setError(`Set a quantity and unit price for "${bad.item_name}" before submitting.`);
+          return;
+        }
+        payload.material_list = materials.map(m => ({
+          task_id: m.task_id,
+          catalog_item_id: m.catalog_item_id,
+          quantity: m.quantity,
+          unit_price: m.unit_price,
+        }));
+      }
+    } else {
+      // Legacy fallback: single bid_amount when no scope tasks loaded
+      const amt = totalBidAmount();
+      if (amt < selectedProject.bid_floor || amt > selectedProject.bid_ceiling) {
+        setError(`Bid must be between $${Number(selectedProject.bid_floor).toLocaleString()} and $${Number(selectedProject.bid_ceiling).toLocaleString()}`);
+        return;
+      }
+      payload.bid_amount = amt;
+    }
+
     setError('');
     setSubmitting(true);
     try {
-      const result = await submitBid({
-        project_id: selectedProject.id,
-        bid_amount: amount,
-        estimated_days: parseInt(estimatedDays),
-        proposal_notes: proposalNotes,
-        contractor_name: `${user?.first_name} ${user?.last_name}`,
-      });
+      const result = await submitBid(payload);
       if (result.success) {
         setSuccess('Bid submitted successfully!');
         setSelectedProject(null);
-        setBidAmount('');
         setEstimatedDays('');
         setProposalNotes('');
+        setBreakdown({});
+        setScopeTasks([]);
+        setMaterials([]);
         setTimeout(() => setSuccess(''), 3000);
       } else setError(result.error || 'Failed to submit bid');
     } catch { setError('Network error'); }
@@ -103,7 +243,12 @@ export default function AvailableJobsPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {projects.map((p: any) => (
               <div key={p.id} style={{ background: 'white', borderRadius: 16, padding: 28, border: selectedProject?.id === p.id ? '2px solid #2563eb' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.2s' }}
-                onClick={() => { const isExpand = selectedProject?.id !== p.id; setSelectedProject(isExpand ? p : null); if (isExpand) loadQuestions(p.id); }}>
+                onClick={() => {
+                  const isExpand = selectedProject?.id !== p.id;
+                  setSelectedProject(isExpand ? p : null);
+                  if (isExpand) { loadQuestions(p.id); loadScopeTasks(p.id); }
+                  else { setScopeTasks([]); setBreakdown({}); }
+                }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
@@ -128,17 +273,104 @@ export default function AvailableJobsPage() {
                 {selectedProject?.id === p.id && (
                   <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f1f5f9' }} onClick={e => e.stopPropagation()}>
                     <h4 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>Submit Your Bid</h4>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
-                      <div>
-                        <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 4 }}>Bid Amount ($) *</label>
-                        <input type="number" value={bidAmount} onChange={e => setBidAmount(e.target.value)}
-                          min={p.bid_floor} max={p.bid_ceiling} step="0.01"
-                          placeholder={`${p.bid_floor} - ${p.bid_ceiling}`} style={inputStyle} />
+
+                    {scopeTasks.length > 0 ? (
+                      <div style={{ marginBottom: 16 }}>
+                        <p style={{ fontSize: 13, color: '#475569', marginBottom: 12 }}>
+                          Enter your labor cost per task. Each line must meet or exceed the start price floor for that task. Materials added later from your catalog will roll into the bid total automatically.
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                          {scopeTasks.map(t => {
+                            const line = breakdown[t.id] || { task_id: t.id, labor_cost: '', notes: '' };
+                            const floor = floorFor(t);
+                            const labor = parseFloat(line.labor_cost) || 0;
+                            const belowFloor = line.labor_cost !== '' && labor < floor;
+                            return (
+                              <div key={t.id} style={{ background: '#f8fafc', border: belowFloor ? '1px solid #fca5a5' : '1px solid #e2e8f0', borderRadius: 10, padding: 12 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                                  <div style={{ flex: 1 }}>
+                                    <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>{t.title}</p>
+                                    {t.description && <p style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>{t.description.slice(0, 140)}{t.description.length > 140 ? '...' : ''}</p>}
+                                  </div>
+                                  <div style={{ marginLeft: 12, textAlign: 'right' }}>
+                                    <p style={{ fontSize: 11, fontWeight: 600, color: '#64748b' }}>START PRICE</p>
+                                    <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>${floor.toLocaleString()}</p>
+                                  </div>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 8 }}>
+                                  <div>
+                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 4 }}>Labor cost ($)</label>
+                                    <input type="number" min={0} step="0.01" value={line.labor_cost}
+                                      onChange={e => setBreakdown(prev => ({ ...prev, [t.id]: { ...line, labor_cost: e.target.value } }))}
+                                      placeholder={`min ${floor}`} style={{ ...inputStyle, padding: '8px 12px', fontSize: 14 }} />
+                                  </div>
+                                  <div>
+                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 4 }}>Notes (optional)</label>
+                                    <input type="text" value={line.notes}
+                                      onChange={e => setBreakdown(prev => ({ ...prev, [t.id]: { ...line, notes: e.target.value } }))}
+                                      placeholder="Approach, materials, timing..." style={{ ...inputStyle, padding: '8px 12px', fontSize: 14 }} />
+                                  </div>
+                                </div>
+                                {belowFloor && <p style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>Labor must be at least ${floor.toLocaleString()}</p>}
+
+                                {/* Attached materials for this task */}
+                                <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px dashed #e2e8f0' }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                                    <span style={{ fontSize: 12, fontWeight: 600, color: '#475569' }}>
+                                      Materials {materialsForTask(t.id).length > 0 && <>· ${materialsTotalForTask(t.id).toFixed(2)}</>}
+                                    </span>
+                                    <button type="button" onClick={() => setPickerForTask(t.id)}
+                                      style={{ fontSize: 11, fontWeight: 600, color: '#7c3aed', background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: 6, padding: '4px 10px', cursor: 'pointer' }}>
+                                      + Attach Materials
+                                    </button>
+                                  </div>
+                                  {materialsForTask(t.id).length === 0 ? (
+                                    <p style={{ fontSize: 12, color: '#94a3b8' }}>Labor only — no materials attached.</p>
+                                  ) : (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                      {materials.map((m, idx) => {
+                                        if (m.task_id !== t.id) return null;
+                                        const lineTotal = m.quantity * m.unit_price;
+                                        const priceMissing = m.unit_price <= 0;
+                                        return (
+                                          <div key={`${m.catalog_item_id}-${idx}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#1e3a8a', background: '#eff6ff', border: priceMissing ? '1px solid #fca5a5' : '1px solid #bfdbfe', borderRadius: 8, padding: '6px 10px' }}>
+                                            <span style={{ fontWeight: 700, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.item_name}</span>
+                                            <label style={{ fontSize: 10, color: '#64748b' }}>qty</label>
+                                            <input type="number" min={1} value={m.quantity}
+                                              onChange={e => updateMaterialQty(idx, parseInt(e.target.value) || 0)}
+                                              style={{ width: 48, padding: '3px 6px', fontSize: 12, border: '1px solid #bfdbfe', borderRadius: 4, textAlign: 'center' }} />
+                                            <label style={{ fontSize: 10, color: '#64748b' }}>$/unit</label>
+                                            <input type="number" min={0} step="0.01" value={m.unit_price || ''}
+                                              placeholder="0.00"
+                                              onChange={e => updateMaterialPrice(idx, parseFloat(e.target.value) || 0)}
+                                              style={{ width: 72, padding: '3px 6px', fontSize: 12, border: priceMissing ? '1px solid #fca5a5' : '1px solid #bfdbfe', borderRadius: 4, textAlign: 'right' }} />
+                                            <span style={{ fontWeight: 700 }}>= ${lineTotal.toFixed(2)}</span>
+                                            <button type="button" onClick={() => removeMaterial(idx)} style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: 14, cursor: 'pointer', padding: '0 4px' }}>×</button>
+                                          </div>
+                                        );
+                                      })}
+                                      {materialsForTask(t.id).some(m => m.unit_price <= 0) && (
+                                        <p style={{ fontSize: 11, color: '#dc2626' }}>Set a unit price for highlighted items before submitting — your bid total depends on it.</p>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div style={{ marginTop: 12, padding: 12, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: '#1e3a8a' }}>Calculated bid total (labor)</span>
+                          <span style={{ fontSize: 18, fontWeight: 800, color: '#1e3a8a' }}>${totalBidAmount().toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        </div>
                       </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 4 }}>Estimated Days *</label>
-                        <input type="number" value={estimatedDays} onChange={e => setEstimatedDays(e.target.value)} min="1" placeholder="e.g. 5" style={inputStyle} />
-                      </div>
+                    ) : (
+                      <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12 }}>Loading task breakdown...</p>
+                    )}
+
+                    <div style={{ marginBottom: 12 }}>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 4 }}>Estimated Days *</label>
+                      <input type="number" value={estimatedDays} onChange={e => setEstimatedDays(e.target.value)} min="1" placeholder="e.g. 5" style={inputStyle} />
                     </div>
                     <div style={{ marginBottom: 16 }}>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 4 }}>Proposal Notes</label>
@@ -188,6 +420,66 @@ export default function AvailableJobsPage() {
           </div>
         )}
       </div>
+
+      {/* Materials picker drawer */}
+      {pickerForTask && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.5)', zIndex: 60, display: 'flex', justifyContent: 'flex-end' }}
+          onClick={() => setPickerForTask(null)}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ width: 'min(420px, 95vw)', height: '100%', background: 'white', overflow: 'auto', boxShadow: '-8px 0 24px rgba(0,0,0,0.1)' }}>
+            <div style={{ padding: '18px 20px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Attach materials</p>
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginTop: 2 }}>
+                  {scopeTasks.find(t => t.id === pickerForTask)?.title}
+                </p>
+              </div>
+              <button onClick={() => setPickerForTask(null)} style={{ fontSize: 22, color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer' }}>×</button>
+            </div>
+            <div style={{ padding: 16 }}>
+              {catalogs.length === 0 ? (
+                <p style={{ fontSize: 13, color: '#94a3b8', textAlign: 'center', padding: 24 }}>
+                  You haven't created any catalogs yet. <a href="/catalogs" style={{ color: '#2563eb' }}>Build one</a> with photos, brands, and prices, then attach items here.
+                </p>
+              ) : catalogs.map(c => (
+                <details key={c.id} open style={{ marginBottom: 12 }}>
+                  <summary onClick={() => loadCatalogItemsLazy(c.id)} style={{ cursor: 'pointer', fontSize: 13, fontWeight: 700, color: '#0f172a', padding: '8px 0' }}>
+                    {c.name} <span style={{ color: '#94a3b8', fontWeight: 500 }}>· {c.job_category}</span>
+                  </summary>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 6 }}>
+                    {!itemsByCatalog[c.id] && <p style={{ fontSize: 12, color: '#94a3b8', padding: 8 }}>Loading items...</p>}
+                    {itemsByCatalog[c.id]?.length === 0 && <p style={{ fontSize: 12, color: '#94a3b8', padding: 8 }}>No items in this catalog yet.</p>}
+                    {itemsByCatalog[c.id]?.map((item: any) => (
+                      <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: 8, background: '#f8fafc', borderRadius: 8, border: '1px solid #f1f5f9' }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 6, background: '#e2e8f0', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: 14 }}>
+                          {(() => {
+                            const isExternal = item.image_url && /^https?:\/\//i.test(item.image_url);
+                            const thumb = item.image_download_url || (isExternal ? item.image_url : null);
+                            return thumb ? <img src={thumb} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : '📦';
+                          })()}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</p>
+                          <p style={{ fontSize: 11, color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {item.brand}{item.model ? ` · ${item.model}` : ''}
+                            {item.unit_price ? ` · $${Number(item.unit_price).toFixed(2)}` : (
+                              <span style={{ color: '#dc2626', fontWeight: 600 }}> · set price after adding</span>
+                            )}
+                          </p>
+                        </div>
+                        <button onClick={() => addMaterial(pickerForTask, item)}
+                          style={{ fontSize: 11, fontWeight: 700, color: 'white', background: '#7c3aed', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer' }}>
+                          + Add
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

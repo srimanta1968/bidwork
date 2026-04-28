@@ -1,0 +1,15 @@
+{
+  "epic_id_mapping": {
+    "epic-contractor-catalog": "c48f4894-4449-49d1-907f-b9ec4ef80b01"
+  },
+  "features": [
+    {
+      "temp_id": "feat-catalog-image-upload-and-bid-picker",
+      "epic_temp_id": "epic-contractor-catalog",
+      "title": "Catalog Item S3 Image Upload, Bid Material Picker & Owner Item Review",
+      "description": "Closes the loop on the contractor catalog → bid → owner-review workflow. (1) Adds true S3 image upload for catalog items (presign + finalize, png/jpg/jpeg/webp ≤5 MB) plus an uploader on the catalog UI with thumbnail rendering. (2) Adds a per-task material picker on the bid submission form so contractors can select items from any of their catalogs, set quantity, and bind them to a specific task in the bid. The materials_subtotal column on bid_task_breakdown is recomputed from these selections. (3) Adds an owner-side item review on the bid comparison page: each task line shows attached material cards with thumbnail + brand + line total, and clicking any item opens a modal popup with full image, manufacturer, model, specifications, and unit price — so the homeowner can vet the actual products before approving the bid.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

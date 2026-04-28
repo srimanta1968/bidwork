@@ -1,0 +1,22 @@
+{
+  "endpoint": "/api/bids/:id",
+  "method": "PUT",
+  "taskId": "8007e969-6aeb-43d6-8e2c-8ec60e26881c",
+  "description": "Edit a pending bid (estimated_days, proposal_notes, task_breakdown)",
+  "requiresAuth": true,
+  "priority": 66,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testCases": [{
+    "name": "Update pending bid notes",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "estimated_days": 21,
+      "proposal_notes": "{{dynamic:text}}"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

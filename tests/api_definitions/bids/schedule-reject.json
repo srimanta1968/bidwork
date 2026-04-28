@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:id/contract/schedule/reject",
+  "method": "PATCH",
+  "taskId": "95abb176-1902-4b25-a722-4b0d5c0236fb",
+  "description": "Homeowner rejects the proposed schedule with required notes",
+  "requiresAuth": true,
+  "priority": 96,
+  "dependsOn": ["POST /api/bids/:id/contract/schedule"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Reject schedule",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"response_notes": "Need an earlier start date"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

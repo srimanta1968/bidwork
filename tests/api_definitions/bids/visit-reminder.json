@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/bids/:id/visit-reminder",
+  "method": "POST",
+  "taskId": "e14be908-5219-44c0-b187-3874892b53ce",
+  "description": "Owner sends a reminder email to the contractor for a no-show workorder",
+  "requiresAuth": true,
+  "priority": 72,
+  "dependsOn": ["POST /api/bids/:id/visit-confirmation"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Send reminder",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

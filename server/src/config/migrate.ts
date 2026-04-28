@@ -5,6 +5,7 @@ import { runProjectMigration } from './migrations/projectMigration';
 import { runBiddingMigration } from './migrations/biddingMigration';
 import { runCatalogMigration } from './migrations/catalogMigration';
 import { runAdminMigration } from './migrations/adminMigration';
+import { seedLocations } from '../services/locationsSeeder';
 
 /**
  * Master migration runner.
@@ -34,6 +35,8 @@ export async function runMigrations(): Promise<void> {
     await runBiddingMigration(pool);
     await runCatalogMigration(pool);
     await runAdminMigration(pool);
+    // One-shot seed of the locations reference table — idempotent on re-runs.
+    await seedLocations(pool);
 
     // ── Legacy: migrate data from public schema if exists ──
     // Check if old public.users exists and auth.users is empty

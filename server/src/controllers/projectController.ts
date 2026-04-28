@@ -3,6 +3,7 @@ import { AuthenticatedRequest } from '../types';
 import { projectService } from '../services/projectService';
 import { s3Service } from '../services/s3Service';
 import { profileService } from '../services/profileService';
+import { redactProjectForContractor } from '../services/redactors';
 
 export async function presignUpload(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
@@ -90,7 +91,9 @@ export async function getProject(req: AuthenticatedRequest, res: Response): Prom
 
     // Apply address privacy for non-owner users (contractors)
     const isWinner = isContractor && await projectService.isAcceptedBidder(req.params.id, req.user.userId);
-    const sanitizedProject = isOwner ? project : projectService.sanitizeProjectForContractor(project, isWinner);
+    const sanitizedProject = isOwner
+      ? project
+      : redactProjectForContractor(project, { bidStatus: isWinner ? 'accepted' : 'pending' });
 
     res.status(200).json({ success: true, data: { project: sanitizedProject, media: mediaWithUrls, tasks } });
   } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
@@ -132,11 +135,13 @@ export async function getAvailableProjects(req: AuthenticatedRequest, res: Respo
     const profile = await profileService.getProfileByUserId(req.user.userId);
     const servingCities = (profile as any)?.serving_cities || [];
     const servingZipcodes = (profile as any)?.serving_zipcodes || [];
+    const servingLocationIds = (profile as any)?.serving_location_ids || [];
     const userRole = req.user.role;
     const city = req.query.city as string | undefined;
 
     const projects = await projectService.getAvailableProjects({
       category, city, page, limit, userRole,
+      servingLocationIds: servingLocationIds.length > 0 ? servingLocationIds : undefined,
       servingCities: servingCities.length > 0 ? servingCities : undefined,
       servingZipcodes: servingZipcodes.length > 0 ? servingZipcodes : undefined,
     });
@@ -251,6 +256,51 @@ export async function toggleTaskVisibility(req: AuthenticatedRequest, res: Respo
     const updated = await projectService.toggleTaskVisibility(req.params.id, req.params.taskId, is_hidden);
     if (!updated) { res.status(404).json({ success: false, error: 'Task not found' }); return; }
     res.status(200).json({ success: true, data: { task: updated } });
+  } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
+}
+
+/**
+ * POST /api/projects/:id/promote-next-shortlisted
+ * Homeowner promotes the next shortlisted bid by ascending rank to approved_by_owner.
+ */
+export async function promoteNextShortlisted(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
+    const project = await projectService.getProject(req.params.id);
+    if (!project) { res.status(404).json({ success: false, error: 'Project not found' }); return; }
+    if (project.homeowner_id !== req.user.userId) { res.status(403).json({ success: false, error: 'Not your project' }); return; }
+    const { biddingDb } = await import('../services/domainDb');
+    const next = await biddingDb.queryOne<{ id: string; shortlist_rank: number }>(
+      `SELECT id, shortlist_rank FROM bids
+        WHERE project_id = $1
+          AND shortlist_rank IS NOT NULL
+          AND status = 'pending'
+          AND selection_workflow_state IN ('pending','shortlisted')
+        ORDER BY shortlist_rank ASC LIMIT 1`,
+      [req.params.id]
+    );
+    if (!next) { res.status(404).json({ success: false, error: 'No eligible shortlisted bid remaining' }); return; }
+    const { bidService } = await import('../services/bidService');
+    const promoted = await bidService.selectAndNotify(next.id, req.user.userId);
+    res.status(200).json({ success: true, data: { bid: promoted } });
+  } catch (error: any) {
+    const code = error.message?.includes('Not authorized') ? 403 : 400;
+    res.status(code).json({ success: false, error: error.message });
+  }
+}
+
+/**
+ * GET /api/projects/:id/bid-summary
+ * Homeowner-only summary of starting prices and submitted bid range.
+ */
+export async function getProjectBidSummary(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
+    const project = await projectService.getProject(req.params.id);
+    if (!project) { res.status(404).json({ success: false, error: 'Project not found' }); return; }
+    if (project.homeowner_id !== req.user.userId) { res.status(403).json({ success: false, error: 'Not your project' }); return; }
+    const summary = await projectService.getProjectBidSummary(req.params.id);
+    res.status(200).json({ success: true, data: { summary } });
   } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
 }
 

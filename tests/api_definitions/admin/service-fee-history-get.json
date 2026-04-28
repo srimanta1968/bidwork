@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/service-fee/history",
+  "method": "GET",
+  "taskId": "cd38f213-aae1-492f-a5fa-d0eee3947788",
+  "description": "Get full history of platform service fee changes",
+  "requiresAuth": true,
+  "priority": 23,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get service fee history",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

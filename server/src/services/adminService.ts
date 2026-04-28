@@ -245,9 +245,56 @@ export async function getContractAllocationAnalytics() {
   } catch (error) { console.error('Get contract allocation error:', error); throw error; }
 }
 
+// ── Platform Service Fee (admin-configurable, append-only versioned) ──
+
+export interface ServiceFeeConfigRow {
+  id: string;
+  percent: string | number;
+  effective_from: string;
+  set_by_admin_id: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export async function getCurrentServiceFee() {
+  try {
+    return await adminDb.queryOne<ServiceFeeConfigRow>(
+      `SELECT * FROM service_fee_config
+       WHERE effective_from <= NOW()
+       ORDER BY effective_from DESC LIMIT 1`
+    );
+  } catch (error) { console.error('Get current service fee error:', error); throw error; }
+}
+
+export async function getServiceFeeHistory(limit: number = 50) {
+  try {
+    return await adminDb.queryAll<ServiceFeeConfigRow & { admin_email: string | null }>(
+      `SELECT sfc.*, u.email AS admin_email
+         FROM service_fee_config sfc
+         LEFT JOIN auth.users u ON u.id = sfc.set_by_admin_id
+        ORDER BY effective_from DESC LIMIT $1`,
+      [limit]
+    );
+  } catch (error) { console.error('Get service fee history error:', error); throw error; }
+}
+
+export async function setServiceFee(data: { percent: number; effective_from?: string; notes?: string; set_by_admin_id: string }) {
+  try {
+    if (typeof data.percent !== 'number' || data.percent < 0 || data.percent > 0.5) {
+      throw new Error('percent must be a decimal between 0 and 0.5 (50% safety cap)');
+    }
+    return await adminDb.queryOne<ServiceFeeConfigRow>(
+      `INSERT INTO service_fee_config (percent, effective_from, set_by_admin_id, notes)
+       VALUES ($1, COALESCE($2, NOW()), $3, $4) RETURNING *`,
+      [data.percent, data.effective_from || null, data.set_by_admin_id, data.notes || null]
+    );
+  } catch (error) { console.error('Set service fee error:', error); throw error; }
+}
+
 export const adminService = {
   getUsers, getUserStats, getUserById, updateUserStatus,
   getBidPriceRules, createBidPriceRule, updateBidPriceRule, deleteBidPriceRule,
   getPriceVarianceAnalytics, getPlatformUsageAnalytics, getContractAllocationAnalytics,
   getSubscriptions, getSubscriptionStats, updateSubscription, getSubscriptionPlans, createSubscriptionPlan,
+  getCurrentServiceFee, getServiceFeeHistory, setServiceFee,
 };

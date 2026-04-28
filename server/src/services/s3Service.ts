@@ -73,4 +73,56 @@ export function getPublicUrl(s3Key: string): string {
   return `https://${config.s3.bucket}.s3.${config.s3.region}.amazonaws.com/${s3Key}`;
 }
 
-export const s3Service = { generateS3Key, getPresignedUploadUrl, getPresignedDownloadUrl, objectExists, getPublicUrl };
+/**
+ * Generate an S3 key for a contractor signature image (used on receipts)
+ */
+export function generateSignatureKey(userId: string, filename: string): string {
+  const ext = (filename.split('.').pop() || 'png').toLowerCase();
+  const uniqueId = randomUUID().slice(0, 8);
+  return `${config.s3.prefix}/signatures/${userId}/${uniqueId}.${ext}`;
+}
+
+/**
+ * Generate an S3 key for a contractor-uploaded payment proof document
+ */
+export function generatePaymentProofKey(bidId: string, filename: string): string {
+  const ext = (filename.split('.').pop() || 'pdf').toLowerCase();
+  const uniqueId = randomUUID().slice(0, 8);
+  return `${config.s3.prefix}/payment-proofs/${bidId}/${uniqueId}.${ext}`;
+}
+
+/**
+ * Generate an S3 key for a bid attachment (contractor proposal docs).
+ */
+export function generateBidAttachmentKey(bidId: string, filename: string): string {
+  const ext = (filename.split('.').pop() || 'pdf').toLowerCase();
+  const uniqueId = randomUUID().slice(0, 8);
+  return `${config.s3.prefix}/bid-attachments/${bidId}/${uniqueId}.${ext}`;
+}
+
+/**
+ * Generate an S3 key for a catalog item image (contractor product photo).
+ */
+export function generateCatalogItemKey(itemId: string, filename: string): string {
+  const ext = (filename.split('.').pop() || 'png').toLowerCase();
+  const uniqueId = randomUUID().slice(0, 8);
+  return `${config.s3.prefix}/catalog-items/${itemId}/${uniqueId}.${ext}`;
+}
+
+/**
+ * Resolve image_url to a usable URL: external https URLs pass through, S3 keys
+ * (no scheme) get a fresh presigned download URL.
+ */
+export async function resolveImageUrl(imageUrl: string | null | undefined): Promise<string | null> {
+  if (!imageUrl) return null;
+  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+  try {
+    return await getPresignedDownloadUrl(imageUrl);
+  } catch { return null; }
+}
+
+export const s3Service = {
+  generateS3Key, getPresignedUploadUrl, getPresignedDownloadUrl, objectExists, getPublicUrl,
+  generateSignatureKey, generatePaymentProofKey, generateBidAttachmentKey,
+  generateCatalogItemKey, resolveImageUrl,
+};

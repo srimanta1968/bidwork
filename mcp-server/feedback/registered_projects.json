@@ -1,0 +1,52 @@
+{
+  "e6977b8c-5931-4182-8fec-db277e187f8e": {
+    "projectId": "e6977b8c-5931-4182-8fec-db277e187f8e",
+    "projectName": "bidwork",
+    "projectPath": "/c/Users/srima/projex_verticals/bidwork",
+    "workspacePath": "/c/Users/srima/projex_verticals/bidwork",
+    "containerPath": "/workspace",
+    "databaseName": "bidwork_db",
+    "databaseType": "postgresql",
+    "databaseConfig": {
+      "enabled": true,
+      "type": "postgresql",
+      "host": "host.docker.internal",
+      "port": 5432,
+      "database": "bidwork_db",
+      "username": "postgres",
+      "password": "postgres"
+    },
+    "apiKey": "+DfXGfFmWPLIHHJcwxrE0Y2AKlQDdi5zojzIhrtKCna+Jeqae1R1u8VPbsA6uvAv1kZeWHDReMSgDmGjkRMZCUQjyQ0bsAEPXWimNjUpU4rNFVTziY21fiD7iqQSMxyaAHGAuw+TTLwBpEg0UA1Lyw7hz+c6vyEP0uMrWCXHkFLH8Lp+gDYgMlqTM3rJoD14bxM5ekHJZFnWI/NGRg==",
+    "sprintId": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+    "registeredAt": "2026-04-13T19:51:41.940781Z",
+    "lastSeen": "2026-04-27T00:45:07.971237Z",
+    "status": "active",
+    "isOwner": true,
+    "schemaSyncEnabled": true
+  },
+  "5addacc7-f183-4163-831b-420d31f13572": {
+    "projectId": "5addacc7-f183-4163-831b-420d31f13572",
+    "projectName": "test_projex2",
+    "projectPath": "/c/Users/srima/test_projex2",
+    "workspacePath": "/c/Users/srima/test_projex2",
+    "containerPath": "/projects/additional2",
+    "databaseName": "financial_technology_platform_with_account_management_db",
+    "databaseType": "postgresql",
+    "databaseConfig": {
+      "enabled": true,
+      "type": "postgresql",
+      "host": "host.docker.internal",
+      "port": 5432,
+      "database": "financial_technology_platform_with_account_management_db",
+      "username": "postgres",
+      "password": "postgres"
+    },
+    "apiKey": "R/sa4iTSyh7Uv/Kqm05VlQupjfTMIXywKGv4F/MOF9+lsFT0QuyipWg2K5AbJ6SX71TGbUoVC5KVY8tqKBIKDazR+PfgDI4swuZ+xX0Lp2s/umne0Gol5pKqrTqL1seZam5uOUC6QRkiCyod7Y5YVMOO5UEOQOcBSs/oiho/GPYEm6L43snypgd05xhdUYb0XE7tIN5q+V70USwmlA==",
+    "sprintId": "08b7e1b5-ff6f-4192-996e-2dc220043a11",
+    "registeredAt": "2026-04-13T20:40:22.857264Z",
+    "lastSeen": "2026-04-13T20:44:16.602981Z",
+    "status": "active",
+    "isOwner": false,
+    "schemaSyncEnabled": false
+  }
+}

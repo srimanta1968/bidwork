@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/locations/search",
+  "method": "GET",
+  "taskId": "9af46ec4-b625-4004-a18e-c323d9187c96",
+  "description": "Fuzzy autocomplete over the locations reference table (pg_trgm)",
+  "requiresAuth": true,
+  "priority": 30,
+  "dependsOn": ["POST /api/auth/register"],
+  "queryParams": {"q": "san"},
+  "testCases": [{
+    "name": "Search locations",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/bids/:id/rating",
+  "method": "GET",
+  "taskId": "de5c095c-762d-47b1-ad71-98e85421c7fd",
+  "description": "Either party reads the rating row attached to a completed bid",
+  "requiresAuth": true,
+  "priority": 82,
+  "dependsOn": ["POST /api/bids/:id/request-rating"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Get rating",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

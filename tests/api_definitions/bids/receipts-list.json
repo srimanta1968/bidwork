@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/bids/:id/receipts",
+  "method": "GET",
+  "taskId": "3f0e24f6-6489-4d0c-8c9e-86011080c99b",
+  "description": "Owner panel: BidWork service-fee receipt + contractor-issued payment receipt with download URLs",
+  "requiresAuth": true,
+  "priority": 95,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testCases": [{
+    "name": "List receipts",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

@@ -1,11 +1,31 @@
 import { biddingDb } from './domainDb';
 
 /**
- * Regex patterns for detecting personal contact information
+ * Regex patterns for detecting personal contact information.
+ *
+ * Email handling has two passes: the obfuscated form runs first because it
+ * detects "name at domain dot com" and similar word-substituted variants that
+ * the strict `@` regex would miss. After replacement those substrings become
+ * "[email removed]" and the strict regex skips over them.
+ *
+ * Phone uses `[\s.-]*` (zero or more separators) instead of the previous
+ * `[\s.-]?` so multi-space, NBSP, tab, and "408 . 560 . 7890" style numbers
+ * all match.
  */
 const CONTACT_PATTERNS = {
-  phone: /(\+?1?\s*[-.]?\s*\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4})/g,
+  // 10-digit US/CA numbers with arbitrary separators between groups, plus
+  // an optional country-code prefix.
+  phone: /(\+?\d{1,2}[\s.-]*)?\(?\d{3}\)?[\s.-]*\d{3}[\s.-]*\d{4}/g,
+
+  // Obfuscated emails: "user at domain dot com", "user [at] domain.com",
+  // "user (at) domain (dot) com", "user AT domain DOT com" etc.
+  // Runs BEFORE the strict @-email pattern so "[email removed]" placeholders
+  // don't get re-matched.
+  emailObfuscated: /[a-z0-9._%+-]{2,}\s*(?:\[\s*at\s*\]|\(\s*at\s*\)|\bat\b)\s*[a-z0-9.-]{2,}\s*(?:\[\s*dot\s*\]|\(\s*dot\s*\)|\bdot\b|\.)\s*[a-z]{2,}/gi,
+
+  // Strict email with @
   email: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
+
   url: /https?:\/\/[^\s<>"{}|\\^`[\]]+/gi,
   wwwUrl: /www\.[^\s<>"{}|\\^`[\]]+/gi,
   socialHandle: /@[a-zA-Z0-9_]{3,}/g,
@@ -18,8 +38,11 @@ const CONTACT_PATTERNS = {
 export function stripContactInfo(text: string): string {
   try {
     let sanitized = text;
-    sanitized = sanitized.replace(CONTACT_PATTERNS.phone, '[phone removed]');
+    // Order matters — obfuscated email before strict email; both before phone
+    // so "(408) 560-7890" doesn't get mistaken for "(at)" anywhere.
+    sanitized = sanitized.replace(CONTACT_PATTERNS.emailObfuscated, '[email removed]');
     sanitized = sanitized.replace(CONTACT_PATTERNS.email, '[email removed]');
+    sanitized = sanitized.replace(CONTACT_PATTERNS.phone, '[phone removed]');
     sanitized = sanitized.replace(CONTACT_PATTERNS.url, '[link removed]');
     sanitized = sanitized.replace(CONTACT_PATTERNS.wwwUrl, '[link removed]');
     sanitized = sanitized.replace(CONTACT_PATTERNS.socialHandle, '[handle removed]');

@@ -60,14 +60,33 @@ export async function onboardProfile(userId: string, payload: OnboardingPayload)
 }
 
 /**
- * Update contractor/skilled labor serving areas
+ * Update contractor/skilled labor serving areas. When `serving_location_ids`
+ * is provided, the server also derives the legacy `serving_cities` and
+ * `serving_zipcodes` arrays from the resolved zip set so the older filter
+ * path keeps working until cutover is complete.
  */
-export async function updateServingAreas(userId: string, data: { serving_cities?: string[]; serving_zipcodes?: string[] }): Promise<ContractorProfile | null> {
+export async function updateServingAreas(userId: string, data: { serving_cities?: string[]; serving_zipcodes?: string[]; serving_location_ids?: string[] }): Promise<ContractorProfile | null> {
   try {
     const fields: string[] = [];
     const values: any[] = [];
     let idx = 1;
 
+    if (data.serving_location_ids !== undefined) {
+      fields.push(`serving_location_ids = $${idx++}::uuid[]`); values.push(data.serving_location_ids);
+      // Derive legacy arrays from the chosen locations so backward-compat path keeps working.
+      try {
+        const { locationService } = await import('./locationService');
+        const expanded = await locationService.expandLocationsForFilter(data.serving_location_ids);
+        if (data.serving_cities === undefined) {
+          fields.push(`serving_cities = $${idx++}`); values.push(expanded.cities);
+        }
+        if (data.serving_zipcodes === undefined) {
+          fields.push(`serving_zipcodes = $${idx++}`); values.push(expanded.zips);
+        }
+      } catch (err) {
+        console.error('Could not derive legacy serving arrays from location ids:', err);
+      }
+    }
     if (data.serving_cities !== undefined) { fields.push(`serving_cities = $${idx++}`); values.push(data.serving_cities); }
     if (data.serving_zipcodes !== undefined) { fields.push(`serving_zipcodes = $${idx++}`); values.push(data.serving_zipcodes); }
 
@@ -122,9 +141,114 @@ export async function updateProfile(userId: string, payload: OnboardingPayload &
   }
 }
 
+// ── Billing & Tax Profile (issuer details for contractor-issued receipts) ──
+
+export interface BillingProfileInput {
+  legal_company_name?: string;
+  ein?: string;
+  billing_address_line1?: string;
+  billing_address_line2?: string;
+  billing_city?: string;
+  billing_state?: string;
+  billing_zip?: string;
+  billing_phone?: string;
+  signature_s3_key?: string;
+}
+
+const BILLING_REQUIRED_FIELDS: (keyof BillingProfileInput)[] = [
+  'legal_company_name', 'ein', 'billing_address_line1',
+  'billing_city', 'billing_state', 'billing_zip', 'billing_phone',
+];
+
+const EIN_REGEX = /^(\d{2}-?\d{7}|\d{9})$/;
+
+export function isBillingProfileComplete(profile: any): boolean {
+  if (!profile) return false;
+  return BILLING_REQUIRED_FIELDS.every(f => {
+    const v = profile[f];
+    return typeof v === 'string' && v.trim().length > 0;
+  });
+}
+
+export async function getBillingProfile(userId: string): Promise<{
+  legal_company_name: string | null;
+  ein: string | null;
+  billing_address_line1: string | null;
+  billing_address_line2: string | null;
+  billing_city: string | null;
+  billing_state: string | null;
+  billing_zip: string | null;
+  billing_phone: string | null;
+  signature_s3_key: string | null;
+  billing_profile_completed_at: string | null;
+  billing_profile_complete: boolean;
+} | null> {
+  try {
+    const row = await authDb.queryOne<any>(
+      `SELECT legal_company_name, ein, billing_address_line1, billing_address_line2,
+              billing_city, billing_state, billing_zip, billing_phone,
+              signature_s3_key, billing_profile_completed_at
+         FROM contractor_profiles WHERE user_id = $1`,
+      [userId]
+    );
+    if (!row) return null;
+    return { ...row, billing_profile_complete: row.billing_profile_completed_at !== null };
+  } catch (error) { console.error('Get billing profile error:', error); throw error; }
+}
+
+export async function updateBillingProfile(userId: string, payload: BillingProfileInput) {
+  try {
+    if (payload.ein !== undefined && payload.ein !== null && payload.ein !== '' && !EIN_REGEX.test(payload.ein)) {
+      throw new Error('EIN must be in the format XX-XXXXXXX or 9 digits');
+    }
+
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+    const setIfDefined = (key: keyof BillingProfileInput) => {
+      if (payload[key] !== undefined) {
+        fields.push(`${key} = $${idx++}`);
+        values.push(payload[key] === '' ? null : payload[key]);
+      }
+    };
+    BILLING_REQUIRED_FIELDS.forEach(setIfDefined);
+    setIfDefined('billing_address_line2');
+    setIfDefined('signature_s3_key');
+
+    if (fields.length === 0) return await getBillingProfile(userId);
+
+    fields.push(`updated_at = NOW()`);
+    values.push(userId);
+
+    await authDb.query(
+      `UPDATE contractor_profiles SET ${fields.join(', ')} WHERE user_id = $${idx}`,
+      values
+    );
+
+    // Recompute completeness flag from the current row
+    const fresh = await authDb.queryOne<any>(
+      `SELECT legal_company_name, ein, billing_address_line1, billing_city, billing_state, billing_zip, billing_phone
+         FROM contractor_profiles WHERE user_id = $1`,
+      [userId]
+    );
+    const complete = isBillingProfileComplete(fresh);
+    await authDb.query(
+      `UPDATE contractor_profiles
+         SET billing_profile_completed_at = CASE WHEN $2::boolean THEN COALESCE(billing_profile_completed_at, NOW()) ELSE NULL END
+       WHERE user_id = $1`,
+      [userId, complete]
+    );
+
+    return await getBillingProfile(userId);
+  } catch (error) { console.error('Update billing profile error:', error); throw error; }
+}
+
 export const profileService = {
   getProfileByUserId,
   onboardProfile,
   updateServingAreas,
   updateProfile,
+  getBillingProfile,
+  updateBillingProfile,
+  isBillingProfileComplete,
 };

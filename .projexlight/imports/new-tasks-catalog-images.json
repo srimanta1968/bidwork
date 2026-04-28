@@ -1,0 +1,49 @@
+{
+  "tasks": [
+    {
+      "title": "Catalog item S3 image upload presign + finalize endpoints",
+      "description": "Add S3 presign helper s3Service.generateCatalogItemKey(itemId, filename) writing to <S3_PREFIX>/catalog-items/<item_id>/<uuid>.<ext>. Add POST /api/catalogs/items/:itemId/image/presign returning a presigned PUT URL — caller must own the catalog containing the item; reject mime types outside image/png, image/jpeg, image/jpg, image/webp; size cap enforced client-side at 5 MB. After upload, the existing PUT /api/catalogs/items/:itemId is used to persist the new image_url (S3 key). Add a thin GET helper that returns a fresh presigned download URL when the image_url is an S3 key (vs an external https URL).",
+      "task_type": "api_endpoint",
+      "feature_id": "403083df-9a30-4848-9b3e-11a639121fb1",
+      "epic_id": "c48f4894-4449-49d1-907f-b9ec4ef80b01",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Catalog UI image uploader + thumbnail in item cards",
+      "description": "On CatalogPage, the new-item form gets a drag-drop image uploader (image/png, image/jpeg, image/webp, ≤5 MB) using the presign → S3 PUT → save flow. After upload, the form shows the uploaded thumbnail and saves the S3 key as image_url when the item is created. Existing item cards in the list render a 64×64 thumbnail on the left when image_url is present (resolved via the new presigned-download helper), with a graceful placeholder when missing. Add an Edit affordance on each card that opens an inline edit form with the same image-uploader UX so contractors can update the picture later.",
+      "task_type": "frontend",
+      "feature_id": "403083df-9a30-4848-9b3e-11a639121fb1",
+      "epic_id": "c48f4894-4449-49d1-907f-b9ec4ef80b01",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Bid materials API enriched with catalog item snapshot",
+      "description": "Extend bidService.getBidMaterials and bidService.getBidWithBreakdown so each bid_materials row is returned alongside a snapshot of the catalog item it references — name, brand, model, specifications, unit_price, image_url plus a presigned download_url when image_url is an S3 key. The owner-facing bid review (and the contractor's own bid view) should be able to render the materials without a second round-trip per item. Keep the existing bid_materials rows untouched — the snapshot is computed at read time so item edits in the catalog don't retroactively change historical bid contents (we still join by catalog_item_id but expose the join inline).",
+      "task_type": "api_endpoint",
+      "feature_id": "403083df-9a30-4848-9b3e-11a639121fb1",
+      "epic_id": "c48f4894-4449-49d1-907f-b9ec4ef80b01",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Bid form per-task Attach Materials picker",
+      "description": "On the contractor's bid form (AvailableJobsPage), each task row in the per-task accordion gains an Attach Materials button. Clicking opens a side panel listing the contractor's catalogs grouped by job_category; expand a catalog to show item cards (thumbnail + name + brand + unit price + +Add button). Selecting an item asks for quantity and adds a bid_materials line bound to that task. Selected items appear as a chip row under the task labor input with quantity, line total, and remove button. On bid submit, the materials list flows through the existing POST /api/bids material_list array; the server's recomputeMaterialsSubtotalForBid then updates the per-task materials_subtotal automatically.",
+      "task_type": "frontend",
+      "feature_id": "403083df-9a30-4848-9b3e-11a639121fb1",
+      "epic_id": "c48f4894-4449-49d1-907f-b9ec4ef80b01",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    },
+    {
+      "title": "Owner Bid Review: materials list per task with item details popup",
+      "description": "On BidComparisonPage, when the owner expands a bid card it now shows the bid's task_breakdown — one row per task — and under each task lists the materials the contractor attached as item cards (thumbnail + name + brand + qty × unit price = line total). Clicking any item card opens a modal with the full image, manufacturer, model, specifications, unit price, and the contractor's notes (if any). The modal has a clear Close button and an external link to the contractor's product image (download URL). When no materials are attached to a task the row shows a muted 'Labor only' label so the owner sees that gap explicitly. This is the surface the owner uses to vet a bid before clicking Select & Notify.",
+      "task_type": "frontend",
+      "feature_id": "403083df-9a30-4848-9b3e-11a639121fb1",
+      "epic_id": "c48f4894-4449-49d1-907f-b9ec4ef80b01",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+      "priority": "high"
+    }
+  ]
+}

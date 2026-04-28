@@ -1,0 +1,14 @@
+{
+  "endpoint": "/api/webhooks/stripe",
+  "method": "POST",
+  "taskId": "abcaf79c-bdb1-4d87-b8af-8ef71f6cdfd0",
+  "description": "Stripe webhook handler — payment_intent.succeeded marks deposit collected and applies credits",
+  "requiresAuth": false,
+  "priority": 96,
+  "testability": "manual",
+  "testCases": [{
+    "name": "Webhook ping",
+    "payload": {"type": "noop", "data": {"object": {}}},
+    "expectedStatus": 200
+  }]
+}

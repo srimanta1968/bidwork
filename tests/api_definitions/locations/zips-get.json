@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/locations/:id/zips",
+  "method": "GET",
+  "taskId": "9af46ec4-b625-4004-a18e-c323d9187c96",
+  "description": "Expand a chosen location id (any level) to its underlying zip set",
+  "requiresAuth": true,
+  "priority": 31,
+  "dependsOn": ["GET /api/locations/search"],
+  "pathParams": {"id": "{{cache:locations.search.response.data.results.0.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Expand location",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

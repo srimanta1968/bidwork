@@ -1,0 +1,55 @@
+{
+  "epic_id_mapping": {
+    "epic-selection-workflow": "cae507d5-ecfe-488e-a94a-f6a55f5932cc"
+  },
+  "features": [
+    {
+      "temp_id": "feat-shortlist-select-notify",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Shortlist Bids by Rank & Select-and-Notify Action",
+      "description": "Homeowner ranks 1–3 of the received bids on the bid review screen using rank slots (1 = top pick). Each ranked bid shows a Select & Notify button. Clicking it sends a BidWork-branded email to that contractor, posts an in-app alert, and transitions the bid to selection state 'approved_by_owner'. Reuses the bid status enum extension from feat-bid-status-rejection (shortlisted) and adds an explicit shortlist_rank value plus the selection_workflow_state machine entry. Only one bid per project may be in approved_by_owner at a time; promoting a different shortlisted bid (after abandonment) reuses this action.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-contract-generation-accept",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Contractor Acceptance & Legal Contract Document Generation",
+      "description": "When the notified contractor clicks Accept Offer on the approved_by_owner bid, the system auto-generates a legal work order/contract PDF rendered from a template populated with project scope, per-task line items, total bid amount, estimated timeline, jurisdiction, and BidWork's terms. The contract is presented to both parties for e-signature (typed name + IP/timestamp + audit hash). Each signature is recorded with timestamp and stored as an immutable signed PDF artifact on S3. Until both have signed, the contract is in draft state and either party can request edits.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-deposit-escrow-reveal",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "5% Deposit Escrow & Address Reveal on Mutual Signature",
+      "description": "BidWork collects a 5% deposit (computed from the accepted bid total) from the homeowner before contract execution can complete. Deposit is collected via a payment processor (Stripe Payment Intent) and held by BidWork. When both the homeowner and contractor have signed the contract, the deposit is recognized as BidWork's admin fee and at that exact moment full street addresses and contact details for both parties are released through the PII redactor (extending feat-bid-pii-redaction's address-reveal trigger). If the contract is cancelled before mutual signature, the deposit is automatically refunded back to the homeowner. Deposit lifecycle: pending → collected → converted_to_fee | refunded.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-completion-payment-receipt",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Completion Acknowledgment, Direct Payment & BidWork Receipt",
+      "description": "On job completion, the contractor uploads a Completed Workorder document via the system. The homeowner reviews, acknowledges, and e-signs the completion. The homeowner then pays the contractor directly outside BidWork (per business model — BidWork already collected its admin fee at the deposit stage). When the contractor confirms payment received, BidWork generates an itemized receipt PDF (project + per-task line items + total + completion + payment dates + BidWork branding + tax-relevant fields), stores it on S3, and emails it to both parties. Receipt lifecycle: not_issued → issued → emailed.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-businessday-reminder-abandon-agent",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Business-Day Reminder & Auto-Abandon Workflow Agent",
+      "description": "Background agent enforcing the 24/72 working-hour SLAs after a Select & Notify action. Time arithmetic is business-day-aware: only Mon–Fri counted, weekends and a configurable US-holidays list are skipped. On select-notify the agent schedules two timers for the bid: a 24-working-hour reminder (admin email to contractor + in-app nudge) and a 72-working-hour auto-abandon. If the contractor accepts the offer before the timers fire, both timers are cancelled. If the 72h timer fires first, the bid moves to abandoned, the homeowner receives an email + alert with a one-click Promote Next Ranked Bid action that restarts the entire flow for the next-ranked shortlisted bid. The agent is idempotent and safe to retry. A cron worker scans due timers every minute.",
+      "feature_type": "api",
+      "priority": "high"
+    },
+    {
+      "temp_id": "feat-workflow-orchestration-emails",
+      "epic_temp_id": "epic-selection-workflow",
+      "title": "Selection Workflow State Machine, Email Templates & Audit Trail",
+      "description": "Cross-cutting orchestration layer the rest of the epic depends on. Defines the selection_workflow_state machine — pending → shortlisted → approved_by_owner → offer_accepted → contract_drafted → contract_owner_signed → contract_contractor_signed → deposit_collected → addresses_revealed → in_progress → completion_submitted → completion_acknowledged → payment_received → receipt_issued; plus terminal branches abandoned and cancelled. Includes guard checks for each transition, an idempotent transition handler that emits notifications + emails, and an immutable workflow_audit_log capturing every state change (who, when, payload). Provides a templated email service (Handlebars/MJML) with the eight workflow emails (selected_offer, acceptance_reminder, abandoned_promote_next, contract_ready_to_review, mutual_signed_addresses_revealed, completion_submitted, completion_acknowledged_pay_now, receipt_issued) and a thin notification API the rest of the system calls. Email provider: SES via configurable adapter.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

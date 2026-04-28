@@ -1,0 +1,83 @@
+{
+  "timestamp": "2026-04-13T23:04:27.203736Z",
+  "summary": {
+    "totalViolations": 7,
+    "critical": 0,
+    "major": 0,
+    "minor": 7,
+    "filesAffected": 6,
+    "filesScanned": 13,
+    "avgCompliance": 97.23
+  },
+  "violationsByFile": {
+    "admin-client/src/context/AdminAuthContext.tsx": [
+      {
+        "line": 0,
+        "severity": "minor",
+        "rule": "SC-07",
+        "message": "",
+        "codeSnippet": "",
+        "suggestedFix": ""
+      }
+    ],
+    "admin-client/src/main.tsx": [
+      {
+        "line": 0,
+        "severity": "minor",
+        "rule": "SC-05",
+        "message": "",
+        "codeSnippet": "",
+        "suggestedFix": ""
+      }
+    ],
+    "admin-client/src/pages/LoginPage.tsx": [
+      {
+        "line": 0,
+        "severity": "minor",
+        "rule": "SC-05",
+        "message": "",
+        "codeSnippet": "",
+        "suggestedFix": ""
+      }
+    ],
+    "admin-client/src/services/adminApi.ts": [
+      {
+        "line": 0,
+        "severity": "minor",
+        "rule": "SC-06",
+        "message": "",
+        "codeSnippet": "",
+        "suggestedFix": ""
+      },
+      {
+        "line": 0,
+        "severity": "minor",
+        "rule": "SC-07",
+        "message": "",
+        "codeSnippet": "",
+        "suggestedFix": ""
+      }
+    ],
+    "admin-client/src/vite-env.d.ts": [
+      {
+        "line": 0,
+        "severity": "minor",
+        "rule": "SC-05",
+        "message": "",
+        "codeSnippet": "",
+        "suggestedFix": ""
+      }
+    ],
+    "admin-client/vite.config.ts": [
+      {
+        "line": 0,
+        "severity": "minor",
+        "rule": "SC-05",
+        "message": "",
+        "codeSnippet": "",
+        "suggestedFix": ""
+      }
+    ]
+  },
+  "llmFixPrompt": "\nPlease fix the following 7 coding standard violation(s) in my codebase:\n\n\n\ud83d\udcc1 File: admin-client/src/context/AdminAuthContext.tsx\n   - Line 0: SC-07 - \n\n\ud83d\udcc1 File: admin-client/src/main.tsx\n   - Line 0: SC-05 - \n\n\ud83d\udcc1 File: admin-client/src/pages/LoginPage.tsx\n   - Line 0: SC-05 - \n\n\ud83d\udcc1 File: admin-client/src/services/adminApi.ts\n   - Line 0: SC-06 - \n   - Line 0: SC-07 - \n\n\ud83d\udcc1 File: admin-client/src/vite-env.d.ts\n   - Line 0: SC-05 - \n\n\ud83d\udcc1 File: admin-client/vite.config.ts\n   - Line 0: SC-05 - \n\nPlease:\n1. Open each file and navigate to the specified line numbers\n2. Apply the suggested fixes or refactor the code to comply with the coding standards\n3. Ensure the fixes don't break existing functionality\n4. Run tests after making changes\n"
+}

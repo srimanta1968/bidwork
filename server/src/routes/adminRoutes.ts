@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { authenticate } from '../middleware/auth';
 import { requireAdmin } from '../middleware/adminAuth';
 import { AuthenticatedRequest } from '../types';
-import { adminLogin, getUsers, getUserStats, getUserById, updateUserStatus, getBidPriceRules, createBidPriceRule, updateBidPriceRule, deleteBidPriceRule, getPriceVarianceAnalytics, getSubscriptions, getSubscriptionStats, updateSubscription, getSubscriptionPlans, createSubscriptionPlan, getPlatformUsage, getContractAllocation } from '../controllers/adminController';
+import { adminLogin, getUsers, getUserStats, getUserById, updateUserStatus, getBidPriceRules, createBidPriceRule, updateBidPriceRule, deleteBidPriceRule, getPriceVarianceAnalytics, getSubscriptions, getSubscriptionStats, updateSubscription, getSubscriptionPlans, createSubscriptionPlan, getPlatformUsage, getContractAllocation, getCurrentServiceFee, getServiceFeeHistory, setServiceFee } from '../controllers/adminController';
 
 const router: Router = Router();
 const wrap = (fn: Function) => (req: Request, res: Response) => fn(req as AuthenticatedRequest, res);
@@ -37,5 +37,10 @@ router.post('/subscription-plans', wrap(createSubscriptionPlan));
 router.get('/analytics/price-variance', wrap(getPriceVarianceAnalytics));
 router.get('/analytics/platform-usage', wrap(getPlatformUsage));
 router.get('/analytics/contract-allocation', wrap(getContractAllocation));
+
+// Platform service fee
+router.get('/service-fee/current', wrap(getCurrentServiceFee));
+router.get('/service-fee/history', wrap(getServiceFeeHistory));
+router.post('/service-fee', wrap(setServiceFee));
 
 export default router;

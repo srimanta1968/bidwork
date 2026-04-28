@@ -1,0 +1,20 @@
+{
+  "endpoint": "/api/bids/:id/shortlist",
+  "method": "POST",
+  "taskId": "08beb681-b04a-4650-a681-99db8ab1054c",
+  "description": "Homeowner shortlists a bid into a rank slot (1, 2, or 3)",
+  "requiresAuth": true,
+  "priority": 80,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {
+    "id": "{{cache:bids.create.response.data.bid.id}}"
+  },
+  "testability": "manual",
+  "testCases": [{
+    "name": "Shortlist rank 1",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"rank": 1},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/bids/:id/messages",
+  "method": "POST",
+  "taskId": "0f4a48cf-f217-42c1-ae76-cc491d63d9ff",
+  "description": "Owner or bid's contractor posts to the private thread; PII stripped via questionModerationService",
+  "requiresAuth": true,
+  "priority": 89,
+  "dependsOn": ["POST /api/bids"],
+  "pathParams": {"id": "{{cache:bids.create.response.data.bid.id}}"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Post a private message",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"message": "Quick question about scope"},
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

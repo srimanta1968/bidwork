@@ -1,0 +1,24 @@
+{
+  "endpoint": "/api/profile/billing",
+  "method": "PUT",
+  "taskId": "09becd27-196d-457c-ad38-0d1788dba844",
+  "description": "Update contractor billing/tax fields; sets billing_profile_completed_at when fully populated",
+  "requiresAuth": true,
+  "priority": 31,
+  "dependsOn": ["POST /api/profile/onboard"],
+  "testCases": [{
+    "name": "Update billing profile",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {
+      "legal_company_name": "Acme Plumbing LLC",
+      "ein": "12-3456789",
+      "billing_address_line1": "123 Main St",
+      "billing_city": "Austin",
+      "billing_state": "TX",
+      "billing_zip": "78701",
+      "billing_phone": "555-555-5555"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

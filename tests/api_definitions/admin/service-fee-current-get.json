@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/service-fee/current",
+  "method": "GET",
+  "taskId": "cd38f213-aae1-492f-a5fa-d0eee3947788",
+  "description": "Get the currently effective platform service fee config",
+  "requiresAuth": true,
+  "priority": 22,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get current service fee",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}
