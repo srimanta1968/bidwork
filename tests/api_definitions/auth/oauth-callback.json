@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/auth/oauth/:provider/callback",
+  "method": "GET",
+  "taskId": "e4c57565-15e2-4d21-96e4-0e0346a918e4",
+  "description": "OAuth provider redirects here with code+state; we exchange code, fetch profile, find-or-create user, then 302 to client app with JWT",
+  "requiresAuth": false,
+  "priority": 61,
+  "pathParams": {"provider": "google"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Missing code/state returns redirect with error",
+    "queryParams": {"state": ""},
+    "expectedStatus": 302
+  }]
+}

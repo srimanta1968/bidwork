@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
 import PasswordStrengthIndicator from '../components/common/PasswordStrengthIndicator';
+import OAuthButtons from '../components/auth/OAuthButtons';
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState('');
@@ -52,6 +53,27 @@ export default function RegisterPage() {
         <div style={{ background: 'white', borderRadius: 16, padding: 36, border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
           {error && <div style={{ padding: 12, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, color: '#dc2626', fontSize: 14, marginBottom: 20 }}>{error}</div>}
 
+          {/* Role tabs are rendered above the form so the user picks role BEFORE
+              clicking Continue with Google / LinkedIn (role rides through OAuth state). */}
+          <div style={{ marginBottom: 18 }}>
+            <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 8 }}>I am a</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+              {roles.map((r) => (
+                <button key={r.value} type="button" onClick={() => setRole(r.value)}
+                  style={{ padding: '14px 8px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'center',
+                    background: role === r.value ? '#eff6ff' : '#f8fafc',
+                    border: `2px solid ${role === r.value ? '#2563eb' : '#e2e8f0'}`,
+                    color: role === r.value ? '#2563eb' : '#64748b' }}>
+                  <div style={{ fontSize: 22, marginBottom: 4 }}>{r.icon}</div>
+                  <div>{r.label}</div>
+                  <div style={{ fontSize: 11, fontWeight: 400, color: '#94a3b8', marginTop: 2 }}>{r.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <OAuthButtons intent="signup" role={role as 'homeowner' | 'contractor' | 'skilled_labor'} disabled={loading} />
+
           <form onSubmit={handleSubmit}>
             {/* Name fields - side by side */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
@@ -78,23 +100,6 @@ export default function RegisterPage() {
               <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Create a strong password" style={inputStyle}
                 onFocus={(e) => (e.currentTarget.style.borderColor = '#2563eb')} onBlur={(e) => (e.currentTarget.style.borderColor = '#e2e8f0')} />
               <PasswordStrengthIndicator password={password} />
-            </div>
-
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 8 }}>I am a</label>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-                {roles.map((r) => (
-                  <button key={r.value} type="button" onClick={() => setRole(r.value)}
-                    style={{ padding: '14px 8px', borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'center',
-                      background: role === r.value ? '#eff6ff' : '#f8fafc',
-                      border: `2px solid ${role === r.value ? '#2563eb' : '#e2e8f0'}`,
-                      color: role === r.value ? '#2563eb' : '#64748b' }}>
-                    <div style={{ fontSize: 22, marginBottom: 4 }}>{r.icon}</div>
-                    <div>{r.label}</div>
-                    <div style={{ fontSize: 11, fontWeight: 400, color: '#94a3b8', marginTop: 2 }}>{r.desc}</div>
-                  </button>
-                ))}
-              </div>
             </div>
 
             <button type="submit" disabled={loading}

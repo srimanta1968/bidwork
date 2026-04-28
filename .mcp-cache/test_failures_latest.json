@@ -1,0 +1,5246 @@
+{
+  "timestamp": "2026-04-28T02:23:12.987173Z",
+  "triggeredBy": "git_push",
+  "summary": {
+    "totalAPIs": 100,
+    "totalDiscovered": 99,
+    "newAPIs": 0,
+    "modifiedAPIs": 0,
+    "passedAPIs": 30,
+    "failedAPIs": 12,
+    "skippedAPIs": 58,
+    "duplicateAPIs": 0,
+    "blockingConflicts": 0,
+    "duplicateWarnings": 0,
+    "testDurationMs": 1968
+  },
+  "failures": [
+    {
+      "apiId": null,
+      "endpoint": "/api/auth/register",
+      "method": "POST",
+      "status": "failed",
+      "statusCode": 400,
+      "responseTimeMs": 11,
+      "requestBody": {
+        "email": "default_test_user@example.com",
+        "password": "DefaultTestPass123!",
+        "role": "homeowner"
+      },
+      "responseBody": {
+        "success": false,
+        "error": "First name, last name, email, password, and role are required"
+      },
+      "responseData": {
+        "success": false,
+        "error": "First name, last name, email, password, and role are required"
+      },
+      "errorMessage": "Status 400 - Error: First name, last name, email, password, and role are required",
+      "fullUrl": "http://localhost:3000/api/auth/register",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -d '{\n  \"email\": \"default_test_user@example.com\",\n  \"password\": \"DefaultTestPass123!\",\n  \"role\": \"homeowner\"\n}' \\\n  \"http://localhost:3000/api/auth/register\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "validation",
+        "subcategory": "bad_request",
+        "severity": "warning",
+        "title": "Validation Error",
+        "description": "Server rejected the request as invalid. Response: Status 400 - Error: First name, last name, email, password, and role are required",
+        "guidance": "**Actual server response:** Status 400 - Error: First name, last name, email, password, and role are required\n\nFix the request payload to match whatever the server says is missing/invalid above. Common patterns:\n- If the server names specific required fields, add them to `testCases[0].payload` in this endpoint's api_definition JSON.\n- If the server says a field format is wrong, replace the literal with a `{{{{dynamic:<type>}}}}` placeholder (email, uuid, phone, date_future, etc.).\n- If a field must reference another endpoint's output, use `{{{{cache:<resource>.create.response.data.<field>}}}}` and add that endpoint to `dependsOn`.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "email": "default_test_user@example.com",
+        "password": "DefaultTestPass123!",
+        "role": "homeowner"
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "First name, last name, email, password, and role are required"
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Register a new user successfully",
+          "payload": {
+            "email": "default_test_user@example.com",
+            "password": "DefaultTestPass123!",
+            "role": "{{static:homeowner}}"
+          },
+          "expectedStatus": 201,
+          "expectedResponse": {
+            "success": true,
+            "data": {
+              "token": "string",
+              "user": {
+                "id": "string",
+                "email": "string",
+                "role": "string"
+              }
+            }
+          }
+        }
+      ],
+      "captureResponse": {
+        "auth.register.response.data.token": "data.token",
+        "auth.register.response.data.user.id": "data.user.id",
+        "auth.register.response.data.user.email": "data.user.email"
+      },
+      "dependsOn": [],
+      "dependencies": [],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "First name, last name, email, password, and role are required"
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/admin/auth/login",
+      "method": "POST",
+      "status": "failed",
+      "statusCode": 401,
+      "responseTimeMs": 11,
+      "requestBody": {
+        "email": "default_test_user@example.com",
+        "password": "DefaultTestPass123!"
+      },
+      "responseBody": {
+        "success": false,
+        "error": "Invalid credentials"
+      },
+      "responseData": {
+        "success": false,
+        "error": "Invalid credentials"
+      },
+      "errorMessage": "Status 401 - Error: Invalid credentials",
+      "fullUrl": "http://localhost:3000/api/admin/auth/login",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"email\": \"default_test_user@example.com\",\n  \"password\": \"DefaultTestPass123!\"\n}' \\\n  \"http://localhost:3000/api/admin/auth/login\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "authentication",
+        "subcategory": "unauthorized",
+        "severity": "error",
+        "title": "Authentication Required",
+        "description": "Server returned 401. Response body: Status 401 - Error: Invalid credentials",
+        "guidance": "**Actual server response:** Status 401 - Error: Invalid credentials\n\n**Likely cause:** The server rejected the email/password pair. This is NOT a token problem \u2014 the user either doesn't exist with that email, or the password doesn't match.\n\n**Check:**\n1. Did a prior test (register) create this exact email+password?\n2. Is the login test's payload email field using the SAME email as register? (Dev MCP patches this automatically via _patch_login_payloads_with_cached_creds \u2014 if you see this on POST /api/auth/login, verify that patch fired.)\n3. Are email and password both populated (not {{{{dynamic:\u2026}}}} left as a literal)?",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "email": "default_test_user@example.com",
+        "password": "DefaultTestPass123!"
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "Invalid credentials"
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Admin login",
+          "payload": {
+            "email": "default_test_user@example.com",
+            "password": "DefaultTestPass123!"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true,
+            "data": {
+              "token": "string"
+            }
+          }
+        }
+      ],
+      "captureResponse": {
+        "admin.login.response.data.token": "data.token",
+        "admin.login.response.data.user.id": "data.user.id"
+      },
+      "dependsOn": null,
+      "dependencies": [],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "Invalid credentials"
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/auth/login",
+      "method": "POST",
+      "status": "failed",
+      "statusCode": 401,
+      "responseTimeMs": 9,
+      "requestBody": {
+        "email": "default_test_user@example.com",
+        "password": "DefaultTestPass123!"
+      },
+      "responseBody": {
+        "success": false,
+        "error": "Invalid email or password"
+      },
+      "responseData": {
+        "success": false,
+        "error": "Invalid email or password"
+      },
+      "errorMessage": "Status 401 - Error: Invalid email or password",
+      "fullUrl": "http://localhost:3000/api/auth/login",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"email\": \"default_test_user@example.com\",\n  \"password\": \"DefaultTestPass123!\"\n}' \\\n  \"http://localhost:3000/api/auth/login\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "authentication",
+        "subcategory": "unauthorized",
+        "severity": "error",
+        "title": "Authentication Required",
+        "description": "Server returned 401. Response body: Status 401 - Error: Invalid email or password",
+        "guidance": "**Actual server response:** Status 401 - Error: Invalid email or password\n\n**Likely cause:** Server returned 401 without a specific token/credentials message. Possible causes:\n- Request routed to the wrong host/port\n- Endpoint requires a scope or role the test user doesn't have\n- Server rejected the request before any auth check ran\n\nInspect the server logs directly for context.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "email": "default_test_user@example.com",
+        "password": "DefaultTestPass123!"
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "Invalid email or password"
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Login with registered user credentials",
+          "payload": {
+            "email": "default_test_user@example.com",
+            "password": "DefaultTestPass123!"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true,
+            "data": {
+              "token": "string",
+              "user": {
+                "id": "string",
+                "email": "string",
+                "role": "string"
+              }
+            }
+          }
+        }
+      ],
+      "captureResponse": {
+        "auth.login.response.data.token": "data.token",
+        "auth.login.response.data.user.id": "data.user.id"
+      },
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "Invalid email or password"
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/profile/onboard",
+      "method": "POST",
+      "status": "failed",
+      "statusCode": 500,
+      "responseTimeMs": 113,
+      "requestBody": {
+        "phone": "+336123453823",
+        "business_name": "Test User_993823",
+        "office_address": "123 Main St, Austin TX 78701",
+        "license_number": "CSLB-123456",
+        "license_type": "General B",
+        "category": "General Contractor",
+        "years_experience": 5,
+        "bio": "Experienced general contractor"
+      },
+      "responseBody": {
+        "success": false,
+        "error": "Internal server error"
+      },
+      "responseData": {
+        "success": false,
+        "error": "Internal server error"
+      },
+      "errorMessage": "Status 500 - Error: Internal server error",
+      "fullUrl": "http://localhost:3000/api/profile/onboard",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"phone\": \"+336123453823\",\n  \"business_name\": \"Test User_993823\",\n  \"office_address\": \"123 Main St, Austin TX 78701\",\n  \"license_number\": \"CSLB-123456\",\n  \"license_type\": \"General B\",\n  \"category\": \"General Contractor\",\n  \"years_experience\": 5,\n  \"bio\": \"Experienced general contractor\"\n}' \\\n  \"http://localhost:3000/api/profile/onboard\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "server_error",
+        "subcategory": "error_500",
+        "severity": "error",
+        "title": "Server Error (500)",
+        "description": "Server returned 500. Response: Status 500 - Error: Internal server error",
+        "guidance": "**Actual server response:** Status 500 - Error: Internal server error\n\nThis is a problem on the server side, not in the test. Read the message above for the specific cause (e.g. 'Stripe is not configured', 'plan does not support X', 'Database query failed: <sql error>'). Fix the server or mark the test as environment-dependent if the cause is missing infrastructure (Stripe keys, feature flags).",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "phone": "+336123453823",
+        "business_name": "Test User_993823",
+        "office_address": "123 Main St, Austin TX 78701",
+        "license_number": "CSLB-123456",
+        "license_type": "General B",
+        "category": "General Contractor",
+        "years_experience": 5,
+        "bio": "Experienced general contractor"
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "Internal server error"
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Complete contractor onboarding",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "phone": "{{dynamic:phone}}",
+            "business_name": "{{dynamic:name}}",
+            "office_address": "{{static:123 Main St, Austin TX 78701}}",
+            "license_number": "{{static:CSLB-123456}}",
+            "license_type": "{{static:General B}}",
+            "category": "{{static:General Contractor}}",
+            "years_experience": 5,
+            "bio": "{{static:Experienced general contractor}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true,
+            "data": {
+              "profile": {
+                "id": "string",
+                "user_id": "string",
+                "category": "string"
+              }
+            }
+          }
+        }
+      ],
+      "captureResponse": {
+        "profile.onboard.response.data.profile.id": "data.profile.id"
+      },
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "Internal server error"
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/projects",
+      "method": "POST",
+      "status": "failed",
+      "statusCode": 202,
+      "responseTimeMs": 44,
+      "requestBody": {
+        "title": "Test User_993940",
+        "description": "text_993940",
+        "location_address": "934 Test Street",
+        "urgency": "medium",
+        "quality_tier": "standard"
+      },
+      "responseBody": {
+        "success": true,
+        "data": {
+          "project_id": "ef373863-d134-4a3f-a4c9-977e450656e0",
+          "status": "uploading"
+        }
+      },
+      "responseData": {
+        "success": true,
+        "data": {
+          "project_id": "ef373863-d134-4a3f-a4c9-977e450656e0",
+          "status": "uploading"
+        }
+      },
+      "errorMessage": "Status 202 - {'success': True, 'data': {'project_id': 'ef373863-d134-4a3f-a4c9-977e450656e0', 'status': 'uploading'}}",
+      "fullUrl": "http://localhost:3000/api/projects",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"title\": \"Test User_993940\",\n  \"description\": \"text_993940\",\n  \"location_address\": \"934 Test Street\",\n  \"urgency\": \"medium\",\n  \"quality_tier\": \"standard\"\n}' \\\n  \"http://localhost:3000/api/projects\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "other",
+        "subcategory": "status_202",
+        "severity": "info",
+        "title": "HTTP 202",
+        "description": "Server returned 202. Response: Status 202 - {'success': True, 'data': {'project_id': 'ef373863-d134-4a3f-a4c9-977e450656e0', 'status': 'uploading'}}",
+        "guidance": "**Actual server response:** Status 202 - {'success': True, 'data': {'project_id': 'ef373863-d134-4a3f-a4c9-977e450656e0', 'status': 'uploading'}}\n\nHTTP 202 on POST /api/projects. The server message above should explain what it wants. If not, check server logs directly.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "title": "Test User_993940",
+        "description": "text_993940",
+        "location_address": "934 Test Street",
+        "urgency": "medium",
+        "quality_tier": "standard"
+      },
+      "sampleOutput": {
+        "success": true,
+        "data": {
+          "project_id": "ef373863-d134-4a3f-a4c9-977e450656e0",
+          "status": "uploading"
+        }
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Create a project successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "title": "{{dynamic:name}}",
+            "description": "{{dynamic:text}}",
+            "location_address": "{{dynamic:address}}",
+            "urgency": "{{static:medium}}",
+            "quality_tier": "{{static:standard}}"
+          },
+          "expectedStatus": 201,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {
+        "projects.create.response.data.project_id": "data.project_id",
+        "projects.create.response.data.id": "data.id"
+      },
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": true,
+        "data": {
+          "project_id": "ef373863-d134-4a3f-a4c9-977e450656e0",
+          "status": "uploading"
+        }
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/projects/presign",
+      "method": "POST",
+      "status": "failed",
+      "statusCode": 400,
+      "responseTimeMs": 13,
+      "requestBody": {
+        "project_id": "9bf643ed-ac3c-42ab-9e31-b2eda960ff93",
+        "files": [
+          {
+            "name": "test-photo.jpg",
+            "type": "image/jpeg"
+          }
+        ]
+      },
+      "responseBody": {
+        "success": false,
+        "error": "Unsupported file type: undefined. Allowed: JPEG, PNG, WebP, HEIC, MP4, MOV, WebM"
+      },
+      "responseData": {
+        "success": false,
+        "error": "Unsupported file type: undefined. Allowed: JPEG, PNG, WebP, HEIC, MP4, MOV, WebM"
+      },
+      "errorMessage": "Status 400 - Error: Unsupported file type: undefined. Allowed: JPEG, PNG, WebP, HEIC, MP4, MOV, WebM",
+      "fullUrl": "http://localhost:3000/api/projects/presign",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"project_id\": \"9bf643ed-ac3c-42ab-9e31-b2eda960ff93\",\n  \"files\": [\n    {\n      \"name\": \"test-photo.jpg\",\n      \"type\": \"image/jpeg\"\n    }\n  ]\n}' \\\n  \"http://localhost:3000/api/projects/presign\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "validation",
+        "subcategory": "bad_request",
+        "severity": "warning",
+        "title": "Validation Error",
+        "description": "Server rejected the request as invalid. Response: Status 400 - Error: Unsupported file type: undefined. Allowed: JPEG, PNG, WebP, HEIC, MP4, MOV, WebM",
+        "guidance": "**Actual server response:** Status 400 - Error: Unsupported file type: undefined. Allowed: JPEG, PNG, WebP, HEIC, MP4, MOV, WebM\n\nFix the request payload to match whatever the server says is missing/invalid above. Common patterns:\n- If the server names specific required fields, add them to `testCases[0].payload` in this endpoint's api_definition JSON.\n- If the server says a field format is wrong, replace the literal with a `{{{{dynamic:<type>}}}}` placeholder (email, uuid, phone, date_future, etc.).\n- If a field must reference another endpoint's output, use `{{{{cache:<resource>.create.response.data.<field>}}}}` and add that endpoint to `dependsOn`.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "project_id": "9bf643ed-ac3c-42ab-9e31-b2eda960ff93",
+        "files": [
+          {
+            "name": "test-photo.jpg",
+            "type": "image/jpeg"
+          }
+        ]
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "Unsupported file type: undefined. Allowed: JPEG, PNG, WebP, HEIC, MP4, MOV, WebM"
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Get presigned upload URLs successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "project_id": "{{cache:projects.create.response.data.project_id}}",
+            "files": [
+              {
+                "name": "{{static:test-photo.jpg}}",
+                "type": "{{static:image/jpeg}}"
+              }
+            ]
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "projects",
+          "cacheKey": "projects.create.response.data.project_id",
+          "variable": "projects.create.response.data.project_id",
+          "injectInto": "project_id",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "Unsupported file type: undefined. Allowed: JPEG, PNG, WebP, HEIC, MP4, MOV, WebM"
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/projects/confirm-media",
+      "method": "POST",
+      "status": "failed",
+      "statusCode": 400,
+      "responseTimeMs": 12,
+      "requestBody": {
+        "project_id": "a5b104bb-c28b-406d-a2d8-fb4e9470ded0"
+      },
+      "responseBody": {
+        "success": false,
+        "error": "project_id and media required"
+      },
+      "responseData": {
+        "success": false,
+        "error": "project_id and media required"
+      },
+      "errorMessage": "Status 400 - Error: project_id and media required",
+      "fullUrl": "http://localhost:3000/api/projects/confirm-media",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"project_id\": \"a5b104bb-c28b-406d-a2d8-fb4e9470ded0\"\n}' \\\n  \"http://localhost:3000/api/projects/confirm-media\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "validation",
+        "subcategory": "bad_request",
+        "severity": "warning",
+        "title": "Validation Error",
+        "description": "Server rejected the request as invalid. Response: Status 400 - Error: project_id and media required",
+        "guidance": "**Actual server response:** Status 400 - Error: project_id and media required\n\nFix the request payload to match whatever the server says is missing/invalid above. Common patterns:\n- If the server names specific required fields, add them to `testCases[0].payload` in this endpoint's api_definition JSON.\n- If the server says a field format is wrong, replace the literal with a `{{{{dynamic:<type>}}}}` placeholder (email, uuid, phone, date_future, etc.).\n- If a field must reference another endpoint's output, use `{{{{cache:<resource>.create.response.data.<field>}}}}` and add that endpoint to `dependsOn`.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "project_id": "a5b104bb-c28b-406d-a2d8-fb4e9470ded0"
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "project_id and media required"
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Confirm media upload successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "project_id": "{{cache:projects.create.response.data.project_id}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "projects",
+          "cacheKey": "projects.create.response.data.project_id",
+          "variable": "projects.create.response.data.project_id",
+          "injectInto": "project_id",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "project_id and media required"
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/bids",
+      "method": "POST",
+      "status": "failed",
+      "statusCode": 400,
+      "responseTimeMs": 18,
+      "requestBody": {
+        "project_id": "2cd38670-01c2-4bb1-a8ae-649e291295ee",
+        "bid_amount": 2500.0,
+        "estimated_days": 14,
+        "proposal_notes": "text_994334"
+      },
+      "responseBody": {
+        "success": false,
+        "error": "Project not found"
+      },
+      "responseData": {
+        "success": false,
+        "error": "Project not found"
+      },
+      "errorMessage": "Status 400 - Error: Project not found",
+      "fullUrl": "http://localhost:3000/api/bids",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"project_id\": \"2cd38670-01c2-4bb1-a8ae-649e291295ee\",\n  \"bid_amount\": 2500.0,\n  \"estimated_days\": 14,\n  \"proposal_notes\": \"text_994334\"\n}' \\\n  \"http://localhost:3000/api/bids\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "validation",
+        "subcategory": "bad_request",
+        "severity": "warning",
+        "title": "Validation Error",
+        "description": "Server rejected the request as invalid. Response: Status 400 - Error: Project not found",
+        "guidance": "**Actual server response:** Status 400 - Error: Project not found\n\nFix the request payload to match whatever the server says is missing/invalid above. Common patterns:\n- If the server names specific required fields, add them to `testCases[0].payload` in this endpoint's api_definition JSON.\n- If the server says a field format is wrong, replace the literal with a `{{{{dynamic:<type>}}}}` placeholder (email, uuid, phone, date_future, etc.).\n- If a field must reference another endpoint's output, use `{{{{cache:<resource>.create.response.data.<field>}}}}` and add that endpoint to `dependsOn`.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "project_id": "2cd38670-01c2-4bb1-a8ae-649e291295ee",
+        "bid_amount": 2500.0,
+        "estimated_days": 14,
+        "proposal_notes": "text_994334"
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "Project not found"
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Submit a bid successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "project_id": "{{cache:projects.create.response.data.project_id}}",
+            "bid_amount": 2500.0,
+            "estimated_days": 14,
+            "proposal_notes": "{{dynamic:text}}"
+          },
+          "expectedStatus": 201,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "projects",
+          "cacheKey": "projects.create.response.data.project_id",
+          "variable": "projects.create.response.data.project_id",
+          "injectInto": "project_id",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "Project not found"
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/profile/billing",
+      "method": "GET",
+      "status": "failed",
+      "statusCode": 404,
+      "responseTimeMs": 12,
+      "requestBody": null,
+      "responseBody": {
+        "success": false,
+        "error": "Profile not found. Complete onboarding first."
+      },
+      "responseData": {
+        "success": false,
+        "error": "Profile not found. Complete onboarding first."
+      },
+      "errorMessage": "Status 404 - Error: Profile not found. Complete onboarding first.",
+      "fullUrl": "http://localhost:3000/api/profile/billing",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  \"http://localhost:3000/api/profile/billing\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "not_found",
+        "subcategory": "resource_missing",
+        "severity": "warning",
+        "title": "Resource Not Found",
+        "description": "Server returned 404. Response: Status 404 - Error: Profile not found. Complete onboarding first.",
+        "guidance": "**Actual server response:** Status 404 - Error: Profile not found. Complete onboarding first.\n\n**Request:** GET /api/profile/billing\n\nThe server says the resource or route doesn't exist. Interpret based on what the message actually says:\n- 'Document/User/Workflow not found' \u2192 a path-param id points to a record that doesn't exist in the DB. Check that the POST which creates this resource ran first and its id got captured via `captureResponse`.\n- 'Cannot GET /foo' (Express-style) \u2192 the route itself doesn't exist on the server. Check the endpoint path and the method are correct for the current code.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": false,
+        "error": "Profile not found. Complete onboarding first."
+      },
+      "dataSource": "partial",
+      "testCases": [
+        {
+          "name": "Get billing profile",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/profile/onboard"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/profile/onboard",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/bids/:bidId/additional-work",
+      "method": "GET",
+      "status": "failed",
+      "statusCode": 404,
+      "responseTimeMs": 41,
+      "requestBody": null,
+      "responseBody": {
+        "success": false,
+        "error": "Bid not found"
+      },
+      "responseData": {
+        "success": false,
+        "error": "Bid not found"
+      },
+      "errorMessage": "Status 404 - Error: Bid not found",
+      "fullUrl": "http://localhost:3000/api/bids/229d8cca-907c-48dc-bdc8-d5606d7a5fd7/additional-work",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  \"http://localhost:3000/api/bids/229d8cca-907c-48dc-bdc8-d5606d7a5fd7/additional-work\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "not_found",
+        "subcategory": "resource_missing",
+        "severity": "warning",
+        "title": "Resource Not Found",
+        "description": "Server returned 404. Response: Status 404 - Error: Bid not found",
+        "guidance": "**Actual server response:** Status 404 - Error: Bid not found\n\n**Request:** GET /api/bids/:bidId/additional-work\n\nThe server says the resource or route doesn't exist. Interpret based on what the message actually says:\n- 'Document/User/Workflow not found' \u2192 a path-param id points to a record that doesn't exist in the DB. Check that the POST which creates this resource ran first and its id got captured via `captureResponse`.\n- 'Cannot GET /foo' (Express-style) \u2192 the route itself doesn't exist on the server. Check the endpoint path and the method are correct for the current code.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": false,
+        "error": "Bid not found"
+      },
+      "dataSource": "partial",
+      "testCases": [
+        {
+          "name": "List additional work",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/profile/serving-areas",
+      "method": "PUT",
+      "status": "failed",
+      "statusCode": 404,
+      "responseTimeMs": 12,
+      "requestBody": {
+        "serving_cities": [
+          "Springfield",
+          "Columbus"
+        ],
+        "serving_zipcodes": [
+          "62701",
+          "43215"
+        ]
+      },
+      "responseBody": {
+        "success": false,
+        "error": "Profile not found"
+      },
+      "responseData": {
+        "success": false,
+        "error": "Profile not found"
+      },
+      "errorMessage": "Status 404 - Error: Profile not found",
+      "fullUrl": "http://localhost:3000/api/profile/serving-areas",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  PUT \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"serving_cities\": [\n    \"Springfield\",\n    \"Columbus\"\n  ],\n  \"serving_zipcodes\": [\n    \"62701\",\n    \"43215\"\n  ]\n}' \\\n  \"http://localhost:3000/api/profile/serving-areas\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "not_found",
+        "subcategory": "resource_missing",
+        "severity": "warning",
+        "title": "Resource Not Found",
+        "description": "Server returned 404. Response: Status 404 - Error: Profile not found",
+        "guidance": "**Actual server response:** Status 404 - Error: Profile not found\n\n**Request:** PUT /api/profile/serving-areas\n\nThe server says the resource or route doesn't exist. Interpret based on what the message actually says:\n- 'Document/User/Workflow not found' \u2192 a path-param id points to a record that doesn't exist in the DB. Check that the POST which creates this resource ran first and its id got captured via `captureResponse`.\n- 'Cannot GET /foo' (Express-style) \u2192 the route itself doesn't exist on the server. Check the endpoint path and the method are correct for the current code.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "serving_cities": [
+          "Springfield",
+          "Columbus"
+        ],
+        "serving_zipcodes": [
+          "62701",
+          "43215"
+        ]
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "Profile not found"
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Update serving areas",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "serving_cities": [
+              "Springfield",
+              "Columbus"
+            ],
+            "serving_zipcodes": [
+              "62701",
+              "43215"
+            ]
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "Profile not found"
+      },
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "apiId": null,
+      "endpoint": "/api/profile/update",
+      "method": "PUT",
+      "status": "failed",
+      "statusCode": 404,
+      "responseTimeMs": 19,
+      "requestBody": {
+        "business_name": "Test User_994888",
+        "phone": "+336123454888",
+        "category": "Plumbing",
+        "serving_cities": [
+          "Springfield",
+          "Columbus"
+        ],
+        "serving_zipcodes": [
+          "62701",
+          "43215"
+        ]
+      },
+      "responseBody": {
+        "success": false,
+        "error": "Profile not found. Complete onboarding first."
+      },
+      "responseData": {
+        "success": false,
+        "error": "Profile not found. Complete onboarding first."
+      },
+      "errorMessage": "Status 404 - Error: Profile not found. Complete onboarding first.",
+      "fullUrl": "http://localhost:3000/api/profile/update",
+      "requestHeaders": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U"
+      },
+      "curlCommand": "curl \\\n  -X \\\n  PUT \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkZTViOWJlLTU5Y2QtNGE1MS04ZjJlLTliYTkxZTI1YTUzNiIsInVzZXJfaWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ1c2VySWQiOiIyZGU1YjliZS01OWNkLTRhNTEtOGYyZS05YmE5MWUyNWE1MzYiLCJ0ZW5hbnRfaWQiOiI5MWM1M2NkNS1iY2M1LTQwYzYtOGMyZC03NDM3NWY4MTQ3ZTEiLCJ0ZW5hbnRJZCI6IjkxYzUzY2Q1LWJjYzUtNDBjNi04YzJkLTc0Mzc1ZjgxNDdlMSIsImVtYWlsIjoiZGVmYXVsdF90ZXN0X3VzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc3MzQyOTkzLCJleHAiOjE3Nzc5NDc3OTN9.jZ726C5GYk3JbZJ1unslc2u5ygfGDvAyw4oNxMr538U\" \\\n  -d '{\n  \"business_name\": \"Test User_994888\",\n  \"phone\": \"+336123454888\",\n  \"category\": \"Plumbing\",\n  \"serving_cities\": [\n    \"Springfield\",\n    \"Columbus\"\n  ],\n  \"serving_zipcodes\": [\n    \"62701\",\n    \"43215\"\n  ]\n}' \\\n  \"http://localhost:3000/api/profile/update\"",
+      "constraintInfo": null,
+      "testability": "auto",
+      "setupScript": null,
+      "setupScriptStatus": null,
+      "setupScriptError": null,
+      "errorCategory": {
+        "category": "not_found",
+        "subcategory": "resource_missing",
+        "severity": "warning",
+        "title": "Resource Not Found",
+        "description": "Server returned 404. Response: Status 404 - Error: Profile not found. Complete onboarding first.",
+        "guidance": "**Actual server response:** Status 404 - Error: Profile not found. Complete onboarding first.\n\n**Request:** PUT /api/profile/update\n\nThe server says the resource or route doesn't exist. Interpret based on what the message actually says:\n- 'Document/User/Workflow not found' \u2192 a path-param id points to a record that doesn't exist in the DB. Check that the POST which creates this resource ran first and its id got captured via `captureResponse`.\n- 'Cannot GET /foo' (Express-style) \u2192 the route itself doesn't exist on the server. Check the endpoint path and the method are correct for the current code.",
+        "isExpected": false
+      },
+      "requiresRole": [],
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "business_name": "Test User_994888",
+        "phone": "+336123454888",
+        "category": "Plumbing",
+        "serving_cities": [
+          "Springfield",
+          "Columbus"
+        ],
+        "serving_zipcodes": [
+          "62701",
+          "43215"
+        ]
+      },
+      "sampleOutput": {
+        "success": false,
+        "error": "Profile not found. Complete onboarding first."
+      },
+      "dataSource": "verified",
+      "testCases": [
+        {
+          "name": "Update profile with serving areas",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "business_name": "{{dynamic:name}}",
+            "phone": "{{dynamic:phone}}",
+            "category": "{{static:Plumbing}}",
+            "serving_cities": [
+              "Springfield",
+              "Columbus"
+            ],
+            "serving_zipcodes": [
+              "62701",
+              "43215"
+            ]
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": {
+        "success": false,
+        "error": "Profile not found. Complete onboarding first."
+      },
+      "testAssertions": [],
+      "parameters": {}
+    }
+  ],
+  "skippedTests": [
+    {
+      "endpoint": "/api/projects/:id/approve",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {},
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Approve project successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {},
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/retry",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {},
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Retry project processing successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {},
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/catalogs/items/:itemId/image/presign",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "filename": "product.png",
+        "content_type": "image/png"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Presign catalog item image",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "filename": "product.png",
+            "content_type": "image/png"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/catalogs/:catalogId/items"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/catalogs/:catalogId/items",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/accept",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {},
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Accept a bid successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {},
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/reject",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {},
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Reject a bid successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {},
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/payment-proof/presign",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "filename": "payment-confirmation.pdf",
+        "content_type": "application/pdf"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Presign payment proof",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "filename": "payment-confirmation.pdf",
+            "content_type": "application/pdf"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:bidId/additional-work",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "title": "Replace damaged shutoff valve",
+        "description": "Found a corroded shutoff during demo; recommend replacing.",
+        "amount_cents": 18500
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Submit additional work",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "title": "Replace damaged shutoff valve",
+            "description": "Found a corroded shutoff during demo; recommend replacing.",
+            "amount_cents": 18500
+          },
+          "expectedStatus": 201,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:bidId/additional-work/:awoId/accept",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "owner_signature_typed_name": "Jane Homeowner"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Accept additional work",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "owner_signature_typed_name": "Jane Homeowner"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:bidId/additional-work"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:bidId/additional-work",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:bidId/additional-work/:awoId/reject",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "owner_response_notes": "Out of scope; not needed for this project."
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Reject additional work",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "owner_response_notes": "Out of scope; not needed for this project."
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:bidId/additional-work"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:bidId/additional-work",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/shortlist",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "rank": 1
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Shortlist rank 1",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "rank": 1
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/select-notify",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Send select-and-notify",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/shortlist"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/shortlist",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/attachments/presign",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "filename": "proposal.pdf",
+        "content_type": "application/pdf"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Presign attachment",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "filename": "proposal.pdf",
+            "content_type": "application/pdf"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/attachments",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "file_name": "proposal.pdf",
+        "s3_key": "bidwork/bid-attachments/sample.pdf",
+        "mime_type": "application/pdf",
+        "size_bytes": 12345
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Finalize attachment",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "file_name": "proposal.pdf",
+            "s3_key": "bidwork/bid-attachments/sample.pdf",
+            "mime_type": "application/pdf",
+            "size_bytes": 12345
+          },
+          "expectedStatus": 201,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/attachments/presign"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/attachments/presign",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/messages",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "message": "Quick question about scope"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Post a private message",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "message": "Quick question about scope"
+          },
+          "expectedStatus": 201,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/accept-offer",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Accept offer",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/select-notify"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/select-notify",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/contract/sign",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "typed_name": "Jane Homeowner"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Sign contract",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "typed_name": "Jane Homeowner"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/accept-offer"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/accept-offer",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/deposit/intent",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Create deposit intent",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/accept-offer"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/accept-offer",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/contract/schedule",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "proposed_start_date": "2026-05-15",
+        "proposed_end_date": "2026-05-25"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Propose schedule",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "proposed_start_date": "2026-05-15",
+            "proposed_end_date": "2026-05-25"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/contract/sign"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/contract/sign",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/webhooks/stripe",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "type": "noop",
+        "data": {
+          "object": {}
+        }
+      },
+      "sampleOutput": null,
+      "testCases": [
+        {
+          "name": "Webhook ping",
+          "payload": {
+            "type": "noop",
+            "data": {
+              "object": {}
+            }
+          },
+          "expectedStatus": 200
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": null,
+      "dependencies": [],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/promote-next-shortlisted",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Promote next bid",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get project by ID successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/status",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get project status successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/admin/users/:id",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get user by ID successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:admin.login.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/admin/auth/login"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/admin/auth/login",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "admin",
+          "cacheKey": "admin.login.response.data.token",
+          "variable": "admin.login.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/draft",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get draft project for editing",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register",
+        "POST /api/projects"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "explicit",
+          "source": "POST /api/projects",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/locations/:id/zips",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Expand location",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "GET /api/locations/search"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "GET /api/locations/search",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/questions/project/:projectId",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['projectId']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get project questions",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register",
+        "POST /api/bids/questions"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/questions",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/bid-summary",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get bid summary",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/projects"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/projects",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {},
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get bid with breakdown",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {},
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/visit-status",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get visit status",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/deposit/intent"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/deposit/intent",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/visit-confirmation",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "visited": true
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Confirm visit",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "visited": true
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "GET /api/bids/:id/visit-status"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "GET /api/bids/:id/visit-status",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/visit-reminder",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Send reminder",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/visit-confirmation"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/visit-confirmation",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/abandon-no-show",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "note": "Contractor stopped responding"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Abandon no-show",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "note": "Contractor stopped responding"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/visit-reminder"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/visit-reminder",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/contractor/:contractorId/reputation",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get reputation",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": null,
+      "dependencies": [
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/attachments",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "List attachments",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/messages",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "List messages",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/project/:projectId",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['projectId']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "List project bids (PII redacted)",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/contract",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get contract",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/accept-offer"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/accept-offer",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/receipts",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "List receipts",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/admin/users/:id/status",
+      "method": "PUT",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "is_active": false
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Deactivate user",
+          "headers": {
+            "Authorization": "Bearer {{cache:admin.login.response.data.token}}"
+          },
+          "payload": {
+            "is_active": false
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/admin/auth/login"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/admin/auth/login",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "admin",
+          "cacheKey": "admin.login.response.data.token",
+          "variable": "admin.login.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/admin/rules/bid-price/:id",
+      "method": "PUT",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "min_price": 100,
+        "max_price": 10000
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Update bid price rule successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:admin.login.response.data.token}}"
+          },
+          "payload": {
+            "min_price": 100,
+            "max_price": 10000
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/admin/auth/login"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/admin/auth/login",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "admin",
+          "cacheKey": "admin.login.response.data.token",
+          "variable": "admin.login.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/payment-confirmed",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "payment_method": "bank_transfer",
+        "transaction_reference": "WIRE-CONFIRM-12345",
+        "transaction_date": "2026-04-26",
+        "transaction_amount_cents": 250000,
+        "proof_s3_key": "bidwork/payment-proofs/sample.pdf"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Record payment received",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "payment_method": "bank_transfer",
+            "transaction_reference": "WIRE-CONFIRM-12345",
+            "transaction_date": "2026-04-26",
+            "transaction_amount_cents": 250000,
+            "proof_s3_key": "bidwork/payment-proofs/sample.pdf"
+          },
+          "expectedStatus": 201,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids",
+        "PUT /api/profile/billing"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "explicit",
+          "source": "PUT /api/profile/billing",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/request-rating",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Request rating",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/payment-confirmed"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/payment-confirmed",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/rating",
+      "method": "POST",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "rating": 5,
+        "review_text": "Great work, on time"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Submit rating",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "rating": 5,
+            "review_text": "Great work, on time"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/request-rating"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/request-rating",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/rating",
+      "method": "GET",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Get rating",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/request-rating"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/request-rating",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id",
+      "method": "PUT",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "title": "{{dynamic:name}}",
+        "description": "{{dynamic:text}}",
+        "location_address": "{{dynamic:text}}",
+        "urgency": "{{static:urgent}}",
+        "quality_tier": "{{static:premium}}"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Update draft project",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "title": "{{dynamic:name}}",
+            "description": "{{dynamic:text}}",
+            "location_address": "{{dynamic:text}}",
+            "urgency": "{{static:urgent}}",
+            "quality_tier": "{{static:premium}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register",
+        "POST /api/projects"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "explicit",
+          "source": "POST /api/projects",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/tasks/:taskId/price",
+      "method": "PUT",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id', 'taskId']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "owner_start_price": 500
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Set task price override",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "owner_start_price": 500
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register",
+        "POST /api/projects"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "explicit",
+          "source": "POST /api/projects",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/tasks/:taskId",
+      "method": "PUT",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id', 'taskId']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "homeowner_notes": "{{dynamic:text}}",
+        "dimensions": "{{dynamic:text}}"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Update task with notes and dimensions",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "homeowner_notes": "{{dynamic:text}}",
+            "dimensions": "{{dynamic:text}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register",
+        "POST /api/projects"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "explicit",
+          "source": "POST /api/projects",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/admin/subscriptions/:id",
+      "method": "PUT",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "status": "{{static:active}}"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Update subscription successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:admin.login.response.data.token}}"
+          },
+          "payload": {
+            "status": "{{static:active}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/admin/auth/login"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/admin/auth/login",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "admin",
+          "cacheKey": "admin.login.response.data.token",
+          "variable": "admin.login.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id",
+      "method": "PUT",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "estimated_days": 21,
+        "proposal_notes": "{{dynamic:text}}"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Update pending bid notes",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "estimated_days": 21,
+            "proposal_notes": "{{dynamic:text}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/tasks/:taskId/visibility",
+      "method": "PATCH",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id', 'taskId']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "is_hidden": true
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Hide a task",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "is_hidden": true
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register",
+        "POST /api/projects"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "explicit",
+          "source": "POST /api/projects",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/status",
+      "method": "PATCH",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "status": "shortlisted"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Move bid under_review",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "status": "shortlisted"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/messages/:messageId/read",
+      "method": "PATCH",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Mark message read",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/messages"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/messages",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/contract/schedule/approve",
+      "method": "PATCH",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "owner_signature": "Jane Homeowner"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Approve schedule",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "owner_signature": "Jane Homeowner"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/contract/schedule"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/contract/schedule",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/contract/schedule/reject",
+      "method": "PATCH",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": {
+        "response_notes": "Need an earlier start date"
+      },
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Reject schedule",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "payload": {
+            "response_notes": "Need an earlier start date"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/contract/schedule"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/contract/schedule",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/admin/rules/bid-price/:id",
+      "method": "DELETE",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Delete bid price rule successfully",
+          "headers": {
+            "Authorization": "Bearer {{cache:admin.login.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/admin/auth/login"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/admin/auth/login",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "admin",
+          "cacheKey": "admin.login.response.data.token",
+          "variable": "admin.login.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/projects/:id/media/:mediaId",
+      "method": "DELETE",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Skipped - no captured values for path params: ['id', 'mediaId']",
+      "dataSource": "seed",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Delete media item",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/auth/register",
+        "POST /api/projects"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/auth/register",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "explicit",
+          "source": "POST /api/projects",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/shortlist",
+      "method": "DELETE",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Clear shortlist rank",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/shortlist"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/shortlist",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    },
+    {
+      "endpoint": "/api/bids/:id/attachments/:attachmentId",
+      "method": "DELETE",
+      "status": "skipped",
+      "statusCode": null,
+      "responseTimeMs": 0,
+      "requestBody": null,
+      "responseBody": null,
+      "responseData": null,
+      "errorMessage": "Endpoint marked as 'manual' - requires manual testing",
+      "dataSource": "seed",
+      "skipReason": "",
+      "testability": "manual",
+      "routeFilePath": null,
+      "lineNumber": null,
+      "purpose": null,
+      "sprintId": null,
+      "cliExportId": null,
+      "classification": null,
+      "existingApiId": null,
+      "requestBodyTemplate": null,
+      "responseSchema": null,
+      "sampleInput": null,
+      "sampleOutput": {
+        "success": true
+      },
+      "testCases": [
+        {
+          "name": "Delete attachment",
+          "headers": {
+            "Authorization": "Bearer {{cache:auth.register.response.data.token}}"
+          },
+          "expectedStatus": 200,
+          "expectedResponse": {
+            "success": true
+          }
+        }
+      ],
+      "captureResponse": {},
+      "dependsOn": [
+        "POST /api/bids/:id/attachments"
+      ],
+      "dependencies": [
+        {
+          "type": "explicit",
+          "source": "POST /api/bids/:id/attachments",
+          "variable": "",
+          "injectInto": "",
+          "captureFrom": ""
+        },
+        {
+          "type": "cache_reference",
+          "source": "auth",
+          "cacheKey": "auth.register.response.data.token",
+          "variable": "auth.register.response.data.token",
+          "injectInto": "Authorization",
+          "captureFrom": ""
+        }
+      ],
+      "actualResponse": null,
+      "lastSuccessfulResponse": null,
+      "testAssertions": [],
+      "parameters": {}
+    }
+  ]
+}

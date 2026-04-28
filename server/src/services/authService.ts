@@ -117,6 +117,11 @@ export async function authenticateUser(email: string, password: string): Promise
     if (!user) {
       return null;
     }
+    if (!user.password_hash) {
+      // OAuth-only account — no local password set. Surface a clearer error
+      // than a generic "invalid password".
+      throw new Error('This account was created via Google or LinkedIn — please sign in with the same provider.');
+    }
 
     const isValid = await comparePassword(password, user.password_hash);
     if (!isValid) {
@@ -212,6 +217,74 @@ export async function getUnverifiedUser(email: string): Promise<{ id: string; fi
   }
 }
 
+/**
+ * OAuth login/signup. Looks up an existing oauth_accounts row first (silent
+ * login), then falls back to email-match (link to existing user), then to
+ * fresh-account creation when intent='signup'. Returns user + JWT in the
+ * same shape as authenticateUser.
+ */
+export async function findOrCreateFromOAuth(opts: {
+  provider: 'google' | 'linkedin';
+  profile: { provider_user_id: string; email: string | null; first_name: string | null; last_name: string | null; display_name: string | null; raw: any };
+  role?: 'homeowner' | 'contractor' | 'skilled_labor';
+  intent: 'signup' | 'login';
+}): Promise<{ user: UserResponse; token: string }> {
+  const { provider, profile, role, intent } = opts;
+
+  const existingLink = await authDb.queryOne<{ user_id: string }>(
+    'SELECT user_id FROM oauth_accounts WHERE provider = $1 AND provider_user_id = $2',
+    [provider, profile.provider_user_id]
+  );
+  let userRow: User | null = null;
+  if (existingLink) {
+    userRow = await findUserById(existingLink.user_id);
+  } else if (profile.email) {
+    const byEmail = await findUserByEmail(profile.email);
+    if (byEmail) {
+      userRow = byEmail;
+      await authDb.query(
+        `INSERT INTO oauth_accounts (user_id, provider, provider_user_id, email, display_name, profile_json)
+         VALUES ($1, $2, $3, $4, $5, $6::jsonb)
+         ON CONFLICT (provider, provider_user_id) DO NOTHING`,
+        [byEmail.id, provider, profile.provider_user_id, profile.email, profile.display_name, JSON.stringify(profile.raw || {})]
+      );
+    }
+  }
+
+  if (!userRow) {
+    if (intent !== 'signup') throw new Error('No account found for this identity — please sign up first');
+    if (!profile.email) throw new Error('OAuth provider did not return an email — cannot create account');
+    if (!role || !VALID_ROLES.includes(role)) throw new Error('Invalid role for signup');
+    const needsOnboarding = role === 'homeowner';
+    const created = await authDb.queryOne<User>(
+      `INSERT INTO users (first_name, last_name, email, password_hash, role, is_onboarded, is_email_verified)
+       VALUES ($1, $2, $3, NULL, $4, $5, true)
+       RETURNING id, first_name, last_name, email, role, is_onboarded, created_at`,
+      [profile.first_name || '', profile.last_name || '', profile.email, role, needsOnboarding]
+    );
+    if (!created) throw new Error('Failed to create user from OAuth profile');
+    await authDb.query(
+      `INSERT INTO oauth_accounts (user_id, provider, provider_user_id, email, display_name, profile_json)
+       VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
+      [created.id, provider, profile.provider_user_id, profile.email, profile.display_name, JSON.stringify(profile.raw || {})]
+    );
+    userRow = created;
+  }
+
+  const token = generateToken({ userId: userRow.id, email: userRow.email, role: userRow.role });
+  return {
+    user: {
+      id: userRow.id,
+      first_name: userRow.first_name,
+      last_name: userRow.last_name,
+      email: userRow.email,
+      role: userRow.role,
+      is_onboarded: userRow.is_onboarded,
+    },
+    token,
+  };
+}
+
 export const authService = {
   hashPassword,
   comparePassword,
@@ -225,4 +298,5 @@ export const authService = {
   storeVerificationCode,
   verifyEmailCode,
   getUnverifiedUser,
+  findOrCreateFromOAuth,
 };

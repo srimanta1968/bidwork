@@ -1,0 +1,60 @@
+{
+  "tasks": [
+    {
+      "title": "Migration: nullable password_hash + auth.oauth_accounts table",
+      "description": "Idempotent change in server/src/config/migrations/authMigration.ts: ALTER auth.users.password_hash DROP NOT NULL (OAuth-only users have no local password). CREATE TABLE auth.oauth_accounts (id PK, user_id FK auth.users.id, provider VARCHAR(20), provider_user_id VARCHAR(200), email VARCHAR(320), display_name VARCHAR(200), profile_json JSONB, linked_at TIMESTAMPTZ DEFAULT NOW(), UNIQUE(provider, provider_user_id), INDEX(user_id)).",
+      "task_type": "database_migration",
+      "feature_id": "42e1e584-243d-43d9-a526-4baa691256ce",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "OAuth state HMAC + provider config helper",
+      "description": "Create server/src/services/oauthService.ts with: signState({role, intent, nonce, ts}) → base64url(JSON + HMAC-SHA256 using OAUTH_STATE_SECRET); verifyState(s) returns the parsed payload or throws (rejects state older than 10 min). PROVIDER_CONFIG map for google + linkedin (authorize_url, token_url, userinfo_url, scopes). buildAuthorizeUrl(provider, role, intent, redirectBase). exchangeCode(provider, code, redirectUri) → access token. fetchProfile(provider, accessToken) → {provider_user_id, email, first_name, last_name, display_name, raw}.",
+      "task_type": "service_layer",
+      "feature_id": "42e1e584-243d-43d9-a526-4baa691256ce",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "Auth service: findOrCreateFromOAuth + linkOAuth",
+      "description": "Extend server/src/services/authService.ts with findOrCreateFromOAuth({provider, profile, role, intent}). Logic: 1) lookup auth.oauth_accounts by (provider, provider_user_id) — if found, return its user; 2) else if profile.email matches an existing auth.users row, INSERT oauth_accounts linking it to that user (email already verified by the IDP) and return that user; 3) else if intent='signup', create auth.users (password_hash NULL, role from state, is_email_verified=true) + insert oauth_accounts; 4) else throw NotFound (login attempt without an existing account). Issue the same JWT used by password login.",
+      "task_type": "service_layer",
+      "feature_id": "42e1e584-243d-43d9-a526-4baa691256ce",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "Auth controller + routes: /oauth/:provider/start and /callback",
+      "description": "Add to authController.ts: oauthStart (validates provider + role + intent, returns 302 to provider authorize URL with signed state) and oauthCallback (validates state, exchanges code, fetches profile, calls findOrCreateFromOAuth, redirects to client /oauth/callback?token=<jwt>&role=<role>). Wire routes GET /api/auth/oauth/:provider/start and GET /api/auth/oauth/:provider/callback in authRoutes.ts. Add tests/api_definitions/auth-oauth-*.json definitions.",
+      "task_type": "api_endpoint",
+      "feature_id": "42e1e584-243d-43d9-a526-4baa691256ce",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "OAuthButtons component + provider availability gate",
+      "description": "Create client/src/components/auth/OAuthButtons.tsx with two buttons (Google + LinkedIn) using brand-correct icons. Props: intent ('signup'|'login'), role? ('homeowner'|'contractor'|'skilled'). On click, navigate to /api/auth/oauth/<provider>/start?intent=...&role=... (server returns 302). Buttons hide individually if VITE_OAUTH_GOOGLE_ENABLED/VITE_OAUTH_LINKEDIN_ENABLED is not 'true'. Match the existing form styling.",
+      "task_type": "ui_component",
+      "feature_id": "42e1e584-243d-43d9-a526-4baa691256ce",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "OAuthCallbackPage that consumes ?token=&role= and routes to dashboard",
+      "description": "Create client/src/pages/OAuthCallbackPage.tsx mounted at /oauth/callback. Parses token and role from query string; if token present, stores it via authService.setToken, fetches /api/auth/me to populate user, then routes to /dashboard/<role>. If error param present, shows the error and links back to /login. Add the route to client/src/App.tsx.",
+      "task_type": "ui_component",
+      "feature_id": "42e1e584-243d-43d9-a526-4baa691256ce",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    },
+    {
+      "title": "Wire OAuthButtons onto RegisterPage + LoginPage",
+      "description": "On RegisterPage, render OAuthButtons (intent='signup', role=current role-tab selection) above the email/password form, with a horizontal 'or' divider. On LoginPage, render OAuthButtons (intent='login', no role) above the email/password form. Both pages: if URL has ?error=<msg>, show it as a banner.",
+      "task_type": "frontend",
+      "feature_id": "42e1e584-243d-43d9-a526-4baa691256ce",
+      "epic_id": "65d365d6-c552-46ca-80f4-ca311941fb1b",
+      "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0"
+    }
+  ]
+}

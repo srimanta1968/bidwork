@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/auth/oauth/:provider/start",
+  "method": "GET",
+  "taskId": "e4c57565-15e2-4d21-96e4-0e0346a918e4",
+  "description": "Begin OAuth flow with Google or LinkedIn; 302 redirects to provider authorize URL with signed state",
+  "requiresAuth": false,
+  "priority": 60,
+  "pathParams": {"provider": "google"},
+  "testability": "manual",
+  "testCases": [{
+    "name": "Start signup with role=homeowner",
+    "queryParams": {"intent": "signup", "role": "homeowner"},
+    "expectedStatus": 302
+  }]
+}

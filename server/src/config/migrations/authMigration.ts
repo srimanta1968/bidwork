@@ -145,7 +145,30 @@ export async function runAuthMigration(pool: Pool): Promise<void> {
     WHERE NOT EXISTS (SELECT 1 FROM auth.users WHERE email = 'admin@bidwork.com')
   `);
 
-  console.log('[migrate:auth] Auth domain ready (v3: billing/tax fields).');
+  // ── v4: OAuth (Google + LinkedIn) signup/login ──
+  // password_hash becomes nullable so OAuth-only users don't need a local password.
+  await pool.query(`
+    DO $$ BEGIN
+      ALTER TABLE auth.users ALTER COLUMN password_hash DROP NOT NULL;
+    EXCEPTION WHEN others THEN NULL;
+    END $$
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS auth.oauth_accounts (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+      provider VARCHAR(20) NOT NULL,
+      provider_user_id VARCHAR(200) NOT NULL,
+      email VARCHAR(320),
+      display_name VARCHAR(200),
+      profile_json JSONB,
+      linked_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(provider, provider_user_id)
+    )
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_oauth_accounts_user ON auth.oauth_accounts (user_id)`);
+
+  console.log('[migrate:auth] Auth domain ready (v4: oauth_accounts + nullable password_hash).');
   } catch (error) {
     console.error('[migrate:auth] Migration failed:', error);
     throw error;

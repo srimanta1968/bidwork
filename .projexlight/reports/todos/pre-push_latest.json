@@ -1,0 +1,30 @@
+{
+  "reportType": "todos",
+  "source": "pre-push",
+  "timestamp": "2026-04-28T02:22:14Z",
+  "priority": "end-of-sprint",
+  "description": "TODO items found during pre-push hook. These should be addressed before sprint end.",
+  "summary": {
+    "total": 2,
+    "api_related": 1,
+    "general": 1
+  },
+  "items": [{
+      "file": "client/src/pages/ProfilePage.tsx",
+      "line": 318,
+      "content": "                   <input value={billing.ein || \'\'} onChange={e => setBillingField(\'ein\', e.target.value)} style={inputStyle} placeholder=\"XX-XXXXXXX\" />",
+      "category": "api_related",
+      "priority": "high"
+    },{
+      "file": "server/src/services/profileService.ts",
+      "line": 202,
+      "content": "       throw new Error(\'EIN must be in the format XX-XXXXXXX or 9 digits\');",
+      "category": "general",
+      "priority": "normal"
+    }],
+  "llm_prompt": "Please review and fix the TODO items in this pre-push report. Focus on API-related TODOs first (priority: high) as they may indicate incomplete API integrations or temporary mocks. For each TODO: 1) Search api_library for available APIs that might fulfill the requirement, 2) Replace mocks with actual API calls if APIs exist, 3) If API is not available, coordinate with team or mark for later sprint.",
+  "actionable_commands": {
+    "search_apis": "curl -X POST http://localhost:8766/api/search-apis -H 'Content-Type: application/json' -d '{\"pattern\": \"your-search-term\"}'",
+    "find_all_todos": "grep -rn 'TODO\|FIXME' . --include='*.ts' --include='*.tsx' --include='*.js' --include='*.py'"
+  }
+}

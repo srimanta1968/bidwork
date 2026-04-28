@@ -1,0 +1,401 @@
+{
+  "last_test_run": "2026-04-28T02:23:17.115339",
+  "tested_apis": {
+    "POST:/api/auth/register": {
+      "lastTested": "2026-04-28T02:23:17.115357",
+      "fileHash": null
+    },
+    "POST:/api/admin/auth/login": {
+      "lastTested": "2026-04-28T02:23:17.115364",
+      "fileHash": null
+    },
+    "GET:/api/profile/categories": {
+      "lastTested": "2026-04-28T02:23:17.115366",
+      "fileHash": null
+    },
+    "POST:/api/projects": {
+      "lastTested": "2026-04-28T02:23:17.115369",
+      "fileHash": null
+    },
+    "GET:/api/admin/users": {
+      "lastTested": "2026-04-28T02:23:17.115371",
+      "fileHash": null
+    },
+    "POST:/api/profile/onboard": {
+      "lastTested": "2026-04-28T02:23:17.115372",
+      "fileHash": null
+    },
+    "GET:/api/admin/users/stats": {
+      "lastTested": "2026-04-28T02:23:17.115374",
+      "fileHash": null
+    },
+    "GET:/api/projects": {
+      "lastTested": "2026-04-28T02:23:17.115376",
+      "fileHash": null
+    },
+    "GET:/api/profile/me": {
+      "lastTested": "2026-04-28T02:23:17.115378",
+      "fileHash": null
+    },
+    "GET:/api/projects/:id": {
+      "lastTested": "2026-04-28T02:23:17.115379",
+      "fileHash": null
+    },
+    "PUT:/api/admin/users/:id/status": {
+      "lastTested": "2026-04-28T02:23:17.115380",
+      "fileHash": null
+    },
+    "GET:/api/projects/:id/status": {
+      "lastTested": "2026-04-28T02:23:17.115382",
+      "fileHash": null
+    },
+    "GET:/api/admin/users/:id": {
+      "lastTested": "2026-04-28T02:23:17.115383",
+      "fileHash": null
+    },
+    "POST:/api/projects/presign": {
+      "lastTested": "2026-04-28T02:23:17.115385",
+      "fileHash": null
+    },
+    "POST:/api/projects/confirm-media": {
+      "lastTested": "2026-04-28T02:23:17.115387",
+      "fileHash": null
+    },
+    "POST:/api/projects/:id/approve": {
+      "lastTested": "2026-04-28T02:23:17.115388",
+      "fileHash": null
+    },
+    "POST:/api/projects/:id/retry": {
+      "lastTested": "2026-04-28T02:23:17.115389",
+      "fileHash": null
+    },
+    "GET:/api/projects/available": {
+      "lastTested": "2026-04-28T02:23:17.115390",
+      "fileHash": null
+    },
+    "GET:/api/admin/rules/bid-price": {
+      "lastTested": "2026-04-28T02:23:17.115392",
+      "fileHash": null
+    },
+    "POST:/api/admin/rules/bid-price": {
+      "lastTested": "2026-04-28T02:23:17.115393",
+      "fileHash": null
+    },
+    "GET:/api/admin/service-fee/current": {
+      "lastTested": "2026-04-28T02:23:17.115395",
+      "fileHash": null
+    },
+    "PUT:/api/admin/rules/bid-price/:id": {
+      "lastTested": "2026-04-28T02:23:17.115396",
+      "fileHash": null
+    },
+    "GET:/api/admin/service-fee/history": {
+      "lastTested": "2026-04-28T02:23:17.115398",
+      "fileHash": null
+    },
+    "DELETE:/api/admin/rules/bid-price/:id": {
+      "lastTested": "2026-04-28T02:23:17.115399",
+      "fileHash": null
+    },
+    "POST:/api/admin/service-fee": {
+      "lastTested": "2026-04-28T02:23:17.115400",
+      "fileHash": null
+    },
+    "GET:/api/locations/search": {
+      "lastTested": "2026-04-28T02:23:17.115402",
+      "fileHash": null
+    },
+    "GET:/api/admin/analytics/price-variance": {
+      "lastTested": "2026-04-28T02:23:17.115403",
+      "fileHash": null
+    },
+    "GET:/api/projects/:id/draft": {
+      "lastTested": "2026-04-28T02:23:17.115404",
+      "fileHash": null
+    },
+    "GET:/api/profile/billing": {
+      "lastTested": "2026-04-28T02:23:17.115406",
+      "fileHash": null
+    },
+    "GET:/api/admin/analytics/platform-usage": {
+      "lastTested": "2026-04-28T02:23:17.115407",
+      "fileHash": null
+    },
+    "GET:/api/locations/:id/zips": {
+      "lastTested": "2026-04-28T02:23:17.115408",
+      "fileHash": null
+    },
+    "PUT:/api/profile/billing": {
+      "lastTested": "2026-04-28T02:23:17.115410",
+      "fileHash": null
+    },
+    "PUT:/api/projects/:id": {
+      "lastTested": "2026-04-28T02:23:17.115411",
+      "fileHash": null
+    },
+    "POST:/api/profile/billing/signature/presign": {
+      "lastTested": "2026-04-28T02:23:17.115412",
+      "fileHash": null
+    },
+    "PUT:/api/projects/:id/tasks/:taskId/price": {
+      "lastTested": "2026-04-28T02:23:17.115414",
+      "fileHash": null
+    },
+    "GET:/api/admin/analytics/contract-allocation": {
+      "lastTested": "2026-04-28T02:23:17.115415",
+      "fileHash": null
+    },
+    "PUT:/api/projects/:id/tasks/:taskId": {
+      "lastTested": "2026-04-28T02:23:17.115417",
+      "fileHash": null
+    },
+    "PATCH:/api/projects/:id/tasks/:taskId/visibility": {
+      "lastTested": "2026-04-28T02:23:17.115418",
+      "fileHash": null
+    },
+    "DELETE:/api/projects/:id/media/:mediaId": {
+      "lastTested": "2026-04-28T02:23:17.115420",
+      "fileHash": null
+    },
+    "POST:/api/bids/questions": {
+      "lastTested": "2026-04-28T02:23:17.115421",
+      "fileHash": null
+    },
+    "GET:/api/admin/subscriptions": {
+      "lastTested": "2026-04-28T02:23:17.115422",
+      "fileHash": null
+    },
+    "GET:/api/bids/questions/project/:projectId": {
+      "lastTested": "2026-04-28T02:23:17.115424",
+      "fileHash": null
+    },
+    "POST:/api/admin/subscription-plans": {
+      "lastTested": "2026-04-28T02:23:17.115425",
+      "fileHash": null
+    },
+    "PUT:/api/bids/questions/:questionId/reply": {
+      "lastTested": "2026-04-28T02:23:17.115629",
+      "fileHash": null
+    },
+    "GET:/api/admin/subscriptions/stats": {
+      "lastTested": "2026-04-28T02:23:17.115631",
+      "fileHash": null
+    },
+    "PUT:/api/admin/subscriptions/:id": {
+      "lastTested": "2026-04-28T02:23:17.115633",
+      "fileHash": null
+    },
+    "GET:/api/admin/subscription-plans": {
+      "lastTested": "2026-04-28T02:23:17.115634",
+      "fileHash": null
+    },
+    "POST:/api/catalogs": {
+      "lastTested": "2026-04-28T02:23:17.115636",
+      "fileHash": null
+    },
+    "GET:/api/projects/:id/bid-summary": {
+      "lastTested": "2026-04-28T02:23:17.115638",
+      "fileHash": null
+    },
+    "GET:/api/catalogs": {
+      "lastTested": "2026-04-28T02:23:17.115639",
+      "fileHash": null
+    },
+    "POST:/api/catalogs/:catalogId/items": {
+      "lastTested": "2026-04-28T02:23:17.115641",
+      "fileHash": null
+    },
+    "GET:/api/catalogs/:catalogId/items": {
+      "lastTested": "2026-04-28T02:23:17.115642",
+      "fileHash": null
+    },
+    "PUT:/api/catalogs/items/:itemId": {
+      "lastTested": "2026-04-28T02:23:17.115645",
+      "fileHash": null
+    },
+    "DELETE:/api/catalogs/items/:itemId": {
+      "lastTested": "2026-04-28T02:23:17.115646",
+      "fileHash": null
+    },
+    "POST:/api/bids": {
+      "lastTested": "2026-04-28T02:23:17.115648",
+      "fileHash": null
+    },
+    "POST:/api/catalogs/items/:itemId/image/presign": {
+      "lastTested": "2026-04-28T02:23:17.115649",
+      "fileHash": null
+    },
+    "GET:/api/bids/my-bids": {
+      "lastTested": "2026-04-28T02:23:17.115650",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/accept": {
+      "lastTested": "2026-04-28T02:23:17.115652",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/reject": {
+      "lastTested": "2026-04-28T02:23:17.115653",
+      "fileHash": null
+    },
+    "GET:/api/bids/:id": {
+      "lastTested": "2026-04-28T02:23:17.115654",
+      "fileHash": null
+    },
+    "PUT:/api/bids/:id": {
+      "lastTested": "2026-04-28T02:23:17.115656",
+      "fileHash": null
+    },
+    "GET:/api/bids/:id/visit-status": {
+      "lastTested": "2026-04-28T02:23:17.115657",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/payment-proof/presign": {
+      "lastTested": "2026-04-28T02:23:17.115659",
+      "fileHash": null
+    },
+    "PUT:/api/profile/serving-areas": {
+      "lastTested": "2026-04-28T02:23:17.115660",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/visit-confirmation": {
+      "lastTested": "2026-04-28T02:23:17.115662",
+      "fileHash": null
+    },
+    "PUT:/api/profile/update": {
+      "lastTested": "2026-04-28T02:23:17.115663",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/payment-confirmed": {
+      "lastTested": "2026-04-28T02:23:17.115664",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/visit-reminder": {
+      "lastTested": "2026-04-28T02:23:17.115665",
+      "fileHash": null
+    },
+    "GET:/api/bids/:bidId/additional-work": {
+      "lastTested": "2026-04-28T02:23:17.115667",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/abandon-no-show": {
+      "lastTested": "2026-04-28T02:23:17.115668",
+      "fileHash": null
+    },
+    "POST:/api/bids/:bidId/additional-work": {
+      "lastTested": "2026-04-28T02:23:17.115669",
+      "fileHash": null
+    },
+    "POST:/api/bids/:bidId/additional-work/:awoId/accept": {
+      "lastTested": "2026-04-28T02:23:17.115670",
+      "fileHash": null
+    },
+    "POST:/api/bids/:bidId/additional-work/:awoId/reject": {
+      "lastTested": "2026-04-28T02:23:17.115672",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/shortlist": {
+      "lastTested": "2026-04-28T02:23:17.115673",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/request-rating": {
+      "lastTested": "2026-04-28T02:23:17.115675",
+      "fileHash": null
+    },
+    "DELETE:/api/bids/:id/shortlist": {
+      "lastTested": "2026-04-28T02:23:17.115676",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/rating": {
+      "lastTested": "2026-04-28T02:23:17.115677",
+      "fileHash": null
+    },
+    "GET:/api/bids/:id/rating": {
+      "lastTested": "2026-04-28T02:23:17.115679",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/select-notify": {
+      "lastTested": "2026-04-28T02:23:17.115680",
+      "fileHash": null
+    },
+    "GET:/api/bids/contractor/:contractorId/reputation": {
+      "lastTested": "2026-04-28T02:23:17.115681",
+      "fileHash": null
+    },
+    "PATCH:/api/bids/:id/status": {
+      "lastTested": "2026-04-28T02:23:17.115683",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/attachments/presign": {
+      "lastTested": "2026-04-28T02:23:17.115684",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/attachments": {
+      "lastTested": "2026-04-28T02:23:17.115686",
+      "fileHash": null
+    },
+    "GET:/api/bids/:id/attachments": {
+      "lastTested": "2026-04-28T02:23:17.115687",
+      "fileHash": null
+    },
+    "DELETE:/api/bids/:id/attachments/:attachmentId": {
+      "lastTested": "2026-04-28T02:23:17.115688",
+      "fileHash": null
+    },
+    "GET:/api/bids/:id/messages": {
+      "lastTested": "2026-04-28T02:23:17.115690",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/messages": {
+      "lastTested": "2026-04-28T02:23:17.115692",
+      "fileHash": null
+    },
+    "GET:/api/bids/project/:projectId": {
+      "lastTested": "2026-04-28T02:23:17.115694",
+      "fileHash": null
+    },
+    "PATCH:/api/bids/:id/messages/:messageId/read": {
+      "lastTested": "2026-04-28T02:23:17.115695",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/accept-offer": {
+      "lastTested": "2026-04-28T02:23:17.115697",
+      "fileHash": null
+    },
+    "GET:/api/bids/:id/contract": {
+      "lastTested": "2026-04-28T02:23:17.115698",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/contract/sign": {
+      "lastTested": "2026-04-28T02:23:17.115699",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/contract/schedule": {
+      "lastTested": "2026-04-28T02:23:17.115701",
+      "fileHash": null
+    },
+    "POST:/api/bids/:id/deposit/intent": {
+      "lastTested": "2026-04-28T02:23:17.115702",
+      "fileHash": null
+    },
+    "PATCH:/api/bids/:id/contract/schedule/approve": {
+      "lastTested": "2026-04-28T02:23:17.115703",
+      "fileHash": null
+    },
+    "GET:/api/bids/:id/receipts": {
+      "lastTested": "2026-04-28T02:23:17.115705",
+      "fileHash": null
+    },
+    "PATCH:/api/bids/:id/contract/schedule/reject": {
+      "lastTested": "2026-04-28T02:23:17.115706",
+      "fileHash": null
+    },
+    "POST:/api/webhooks/stripe": {
+      "lastTested": "2026-04-28T02:23:17.115707",
+      "fileHash": null
+    },
+    "POST:/api/projects/:id/promote-next-shortlisted": {
+      "lastTested": "2026-04-28T02:23:17.115709",
+      "fileHash": null
+    }
+  }
+}

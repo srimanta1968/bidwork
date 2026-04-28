@@ -171,3 +171,90 @@ export async function resendCode(req: Request, res: Response): Promise<void> {
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
 }
+
+// ── OAuth (Google + LinkedIn) ──
+
+const OAUTH_PROVIDERS = ['google', 'linkedin'] as const;
+type OAuthProvider = typeof OAUTH_PROVIDERS[number];
+
+function clientCallbackBase(): string {
+  return (process.env.OAUTH_CLIENT_BASE || 'http://localhost:5173').replace(/\/$/, '');
+}
+
+function apiBase(req: Request): string {
+  // Prefer the explicit env value (works behind proxies); else derive from the request.
+  return process.env.OAUTH_REDIRECT_BASE || `${req.protocol}://${req.get('host')}`;
+}
+
+/**
+ * GET /api/auth/oauth/:provider/start?intent=signup|login&role=homeowner|contractor|skilled_labor
+ * 302 redirect to the provider's authorize URL with a signed state.
+ */
+export async function oauthStart(req: Request, res: Response): Promise<void> {
+  try {
+    const provider = String(req.params.provider) as OAuthProvider;
+    if (!OAUTH_PROVIDERS.includes(provider)) {
+      res.status(400).json({ success: false, error: 'Unsupported OAuth provider' }); return;
+    }
+    const intent = (req.query.intent === 'login' ? 'login' : 'signup') as 'signup' | 'login';
+    const roleParam = req.query.role ? String(req.query.role) : undefined;
+    if (intent === 'signup') {
+      if (!roleParam || !VALID_ROLES.includes(roleParam as any)) {
+        res.status(400).json({ success: false, error: 'role is required for signup and must be homeowner, contractor, or skilled_labor' });
+        return;
+      }
+    }
+    const { oauthService } = await import('../services/oauthService');
+    const url = oauthService.buildAuthorizeUrl(provider, roleParam as any, intent, apiBase(req));
+    res.redirect(302, url);
+  } catch (error: any) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+}
+
+/**
+ * GET /api/auth/oauth/:provider/callback?code=...&state=...
+ * Verifies state, exchanges code, fetches profile, creates/links user,
+ * then 302s to the client app with ?token=&role=, or ?error= on failure.
+ */
+export async function oauthCallback(req: Request, res: Response): Promise<void> {
+  const clientBase = clientCallbackBase();
+  try {
+    const provider = String(req.params.provider) as OAuthProvider;
+    if (!OAUTH_PROVIDERS.includes(provider)) {
+      res.redirect(302, `${clientBase}/oauth/callback?error=${encodeURIComponent('unsupported_provider')}`); return;
+    }
+    if (req.query.error) {
+      res.redirect(302, `${clientBase}/oauth/callback?error=${encodeURIComponent(String(req.query.error))}`); return;
+    }
+    const code = req.query.code ? String(req.query.code) : '';
+    const state = req.query.state ? String(req.query.state) : '';
+    if (!code || !state) {
+      res.redirect(302, `${clientBase}/oauth/callback?error=${encodeURIComponent('missing_code_or_state')}`); return;
+    }
+
+    const { oauthService } = await import('../services/oauthService');
+    const payload = oauthService.verifyState(state);
+    const { accessToken } = await oauthService.exchangeCode(provider, code, apiBase(req));
+    const profile = await oauthService.fetchProfile(provider, accessToken);
+
+    const result = await authService.findOrCreateFromOAuth({
+      provider,
+      profile,
+      role: payload.role as any,
+      intent: payload.intent,
+    });
+
+    // Encode the full user payload so the callback page can hydrate the
+    // AuthContext without an extra round-trip.
+    const userJson = Buffer.from(JSON.stringify(result.user), 'utf8').toString('base64url');
+    const params = new URLSearchParams({
+      token: result.token,
+      user: userJson,
+    });
+    res.redirect(302, `${clientBase}/oauth/callback?${params.toString()}`);
+  } catch (error: any) {
+    console.error('OAuth callback error:', error);
+    res.redirect(302, `${clientBase}/oauth/callback?error=${encodeURIComponent(error.message || 'oauth_failed')}`);
+  }
+}

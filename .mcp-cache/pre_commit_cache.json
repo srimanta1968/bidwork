@@ -1,15 +1,17 @@
 {
-  "last_scan": "2026-04-14T00:08:09.886696Z",
+  "last_scan": "2026-04-28T02:20:02.641486Z",
   "scanned_files": {
     "server/src/app.ts": {
-      "hash": "15eec691fc0bcf2f6a6e5fa9a9cca6762bd10cb5a7e39c8e5714a5edf7136cca",
+      "hash": "225ad46e572e95279cf19c3206a2d15502f11be38ea16b178837ea00d80a962c",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-13T21:43:02.946584Z",
-      "linesOfCode": 64
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:45.633238Z",
+      "linesOfCode": 86
     },
     "server/src/config/migrate.ts": {
-      "hash": "1c64221189fe48a6d699fdc92718463e985b186a2bf0b0c7d52f568dd1de5bbb",
+      "hash": "1b651069f6281afe999a0d00405d2ef06bbc94028e2406238be4a0f91264107d",
       "compliance": 75,
       "violations": [
         {
@@ -25,11 +27,13 @@
           "filePath": "server/src/config/migrate.ts"
         }
       ],
-      "timestamp": "2026-04-13T21:43:02.983321Z",
-      "linesOfCode": 71
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:45.911748Z",
+      "linesOfCode": 73
     },
     "server/src/config/migrations/adminMigration.ts": {
-      "hash": "8de685fbd91b96398469e306964be8ca9f503e774f19dacc5f7bd14407bebf8b",
+      "hash": "a1dc703717f184758ea25a57ccdb84c2758b54b53002754b2f763887c5a75a62",
       "compliance": 75,
       "violations": [
         {
@@ -45,25 +49,15 @@
           "filePath": "server/src/config/migrations/adminMigration.ts"
         }
       ],
-      "timestamp": "2026-04-13T21:43:03.016608Z",
-      "linesOfCode": 88
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:46.209251Z",
+      "linesOfCode": 107
     },
     "server/src/config/migrations/authMigration.ts": {
-      "hash": "98457d994542fc1f351fbb291831ba496e224459287e4425729841eebd50c2a1",
-      "compliance": 65,
+      "hash": "6b486953bb83bf49d987b2f81598c81187b18368acb47215f0f262d35d087e7a",
+      "compliance": 75,
       "violations": [
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-06",
-          "description": "Missing try/catch error handling",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/config/migrations/authMigration.ts"
-        },
         {
           "line": 0,
           "severity": "minor",
@@ -77,25 +71,15 @@
           "filePath": "server/src/config/migrations/authMigration.ts"
         }
       ],
-      "timestamp": "2026-04-13T23:25:30.859614Z",
-      "linesOfCode": 67
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:46.511340Z",
+      "linesOfCode": 119
     },
     "server/src/config/migrations/biddingMigration.ts": {
-      "hash": "28b4d467138a9c120b0a684edf8d16300e7c48a094e89a98c0632b12756258f5",
-      "compliance": 65,
+      "hash": "fe6195a35dc8d4ec87c3a7410168d7320718e4a3f1745c6145d2cbeda52b824f",
+      "compliance": 75,
       "violations": [
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-06",
-          "description": "Missing try/catch error handling",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/config/migrations/biddingMigration.ts"
-        },
         {
           "line": 0,
           "severity": "minor",
@@ -109,8 +93,10 @@
           "filePath": "server/src/config/migrations/biddingMigration.ts"
         }
       ],
-      "timestamp": "2026-04-13T21:43:03.086622Z",
-      "linesOfCode": 87
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:46.808193Z",
+      "linesOfCode": 586
     },
     "server/src/config/migrations/catalogMigration.ts": {
       "hash": "c406817ab762797397dff25d10b52ea56c4f9d967488e9d8af8e6d45286e14b4",
@@ -133,7 +119,7 @@
       "linesOfCode": 52
     },
     "server/src/config/migrations/projectMigration.ts": {
-      "hash": "d254503ac4499d81b00015e480a4570c084e9e35835a665f32a5277b13c55d0a",
+      "hash": "8d03b2f9c73c9faf671a4c87981b786d5e6e897fbdfdc7e9fb0ab66a1bb5dd8b",
       "compliance": 75,
       "violations": [
         {
@@ -149,107 +135,13 @@
           "filePath": "server/src/config/migrations/projectMigration.ts"
         }
       ],
-      "timestamp": "2026-04-13T23:33:48.811392Z",
-      "linesOfCode": 213
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:47.133274Z",
+      "linesOfCode": 259
     },
     "server/src/controllers/adminController.ts": {
-      "hash": "a7bf485834a4dc6f9f6e18881fd18323592003aa307adc651ddcec83bed57a9e",
-      "compliance": 82,
-      "violations": [
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-02",
-          "description": "API JSON definition not found - create it first",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/controllers/adminController.ts"
-        },
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-07",
-          "description": "Missing JSDoc comments for exported functions",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/controllers/adminController.ts"
-        }
-      ],
-      "timestamp": "2026-04-13T21:43:03.174066Z",
-      "linesOfCode": 148
-    },
-    "server/src/controllers/bidController.ts": {
-      "hash": "44d2a13d6ab4a1406c21f290ef5e852dd5a7cab75019e6869e9af2bac8602fa4",
-      "compliance": 82,
-      "violations": [
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-02",
-          "description": "API JSON definition not found - create it first",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/controllers/bidController.ts"
-        },
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-07",
-          "description": "Missing JSDoc comments for exported functions",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/controllers/bidController.ts"
-        }
-      ],
-      "timestamp": "2026-04-13T21:43:03.223776Z",
-      "linesOfCode": 77
-    },
-    "server/src/controllers/catalogController.ts": {
-      "hash": "1fb9a6fe83ac9b2b797d11c787b325dfb67292c1eab68c318e549ef71700ac4c",
-      "compliance": 82,
-      "violations": [
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-02",
-          "description": "API JSON definition not found - create it first",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/controllers/catalogController.ts"
-        },
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-07",
-          "description": "Missing JSDoc comments for exported functions",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/controllers/catalogController.ts"
-        }
-      ],
-      "timestamp": "2026-04-13T21:43:03.252716Z",
-      "linesOfCode": 51
-    },
-    "server/src/controllers/projectController.ts": {
-      "hash": "bad3c8c286bb6fadacbeb444dca2b033bb0d1c499a64ff73d6517a3f71bcba49",
+      "hash": "8f0c9df9133f11c68ad5fb530edfd2575763a4af195ef2b54d2dcde2656a3225",
       "compliance": 97,
       "violations": [
         {
@@ -262,11 +154,40 @@
           "autoFixable": false,
           "confidence": 90,
           "source": "local_rules",
-          "filePath": "server/src/controllers/projectController.ts"
+          "filePath": "server/src/controllers/adminController.ts"
         }
       ],
-      "timestamp": "2026-04-14T00:07:46.329006Z",
-      "linesOfCode": 211
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:47.441742Z",
+      "linesOfCode": 170
+    },
+    "server/src/controllers/bidController.ts": {
+      "hash": "e4f54e1063c0c05762d2c4cecdb0179cacd0d45281997631e6abcc064461b19c",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:47.738777Z",
+      "linesOfCode": 683
+    },
+    "server/src/controllers/catalogController.ts": {
+      "hash": "43b7d47457fdd801026407d94ddb7837629feb9c4a5b06d5d2b603153cf4a778",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:48.045541Z",
+      "linesOfCode": 73
+    },
+    "server/src/controllers/projectController.ts": {
+      "hash": "d861f214c3fc24895d386d77050d0d5df4deb0717b5f0c097c0cad141e971642",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:48.923740Z",
+      "linesOfCode": 259
     },
     "server/src/middleware/adminAuth.ts": {
       "hash": "50b46ccfe0f3957b71a0cce0ec8190935c19b9d5898cbf437079116aa0409352",
@@ -276,8 +197,8 @@
       "linesOfCode": 21
     },
     "server/src/routes/adminRoutes.ts": {
-      "hash": "9d6c64784080d6dd7798fec659d5eb7c478f88b4c3c6ce43e456305e654f8eaf",
-      "compliance": 80,
+      "hash": "a6a781051b6c040ecb165bd5b051049a0fe82f40563cb707351bea168377654e",
+      "compliance": 95,
       "violations": [
         {
           "line": 0,
@@ -290,26 +211,16 @@
           "confidence": 90,
           "source": "local_rules",
           "filePath": "server/src/routes/adminRoutes.ts"
-        },
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-02",
-          "description": "API JSON definition not found - create it first",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/routes/adminRoutes.ts"
         }
       ],
-      "timestamp": "2026-04-13T21:43:03.346990Z",
-      "linesOfCode": 27
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:49.813200Z",
+      "linesOfCode": 30
     },
     "server/src/routes/bidRoutes.ts": {
-      "hash": "874ad9e88f70779faaf484e0adb77c1ded0fcc44338455c846cc79ce40c379e2",
-      "compliance": 80,
+      "hash": "2449ac27b7b578bb763fcfed493ccce3d376d3db2da40fdaf751cdb044255b7f",
+      "compliance": 95,
       "violations": [
         {
           "line": 0,
@@ -322,26 +233,16 @@
           "confidence": 90,
           "source": "local_rules",
           "filePath": "server/src/routes/bidRoutes.ts"
-        },
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-02",
-          "description": "API JSON definition not found - create it first",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/routes/bidRoutes.ts"
         }
       ],
-      "timestamp": "2026-04-13T21:43:09.476278Z",
-      "linesOfCode": 15
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:57.247894Z",
+      "linesOfCode": 50
     },
     "server/src/routes/catalogRoutes.ts": {
-      "hash": "986aad93ae5a1423037332fcfa3d5ae8651fb2666e5489e81df4e30ae22356b0",
-      "compliance": 80,
+      "hash": "903678df6cafd4a52c80b5c7b4e3f0aa298f34feee5e028fc3d64926f6386d81",
+      "compliance": 95,
       "violations": [
         {
           "line": 0,
@@ -354,26 +255,16 @@
           "confidence": 90,
           "source": "local_rules",
           "filePath": "server/src/routes/catalogRoutes.ts"
-        },
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-02",
-          "description": "API JSON definition not found - create it first",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/routes/catalogRoutes.ts"
         }
       ],
-      "timestamp": "2026-04-13T21:43:12.267317Z",
-      "linesOfCode": 13
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:13.073298Z",
+      "linesOfCode": 14
     },
     "server/src/routes/projectRoutes.ts": {
-      "hash": "5798a8f18c3165f115f6a8c2cfe7d30b7016a6dd80d19a37f852b0485cf6837f",
-      "compliance": 80,
+      "hash": "f89a0803d44c4907ffd1c10a9fd8d179ac2366a3774df5e3e47feb67567be8fa",
+      "compliance": 95,
       "violations": [
         {
           "line": 0,
@@ -386,29 +277,21 @@
           "confidence": 90,
           "source": "local_rules",
           "filePath": "server/src/routes/projectRoutes.ts"
-        },
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-02",
-          "description": "API JSON definition not found - create it first",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/routes/projectRoutes.ts"
         }
       ],
-      "timestamp": "2026-04-13T21:43:14.560901Z",
-      "linesOfCode": 22
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:20.901078Z",
+      "linesOfCode": 24
     },
     "server/src/services/adminService.ts": {
-      "hash": "fc74edd2e658699141120e763936cf960bb344c0bd1ab242cb786e321c04e4be",
+      "hash": "2cb792f7917cb56eda6540fd1f67d3b6af27ccafa7cd6b998623faf7c6922458",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-13T21:43:19.774176Z",
-      "linesOfCode": 214
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:28.640783Z",
+      "linesOfCode": 255
     },
     "server/src/services/aiPipelineService.ts": {
       "hash": "ef1451271e992431d9c88bbe8cb84c19623dc9eddf0d4b4cd647f9b297bbf6b1",
@@ -431,7 +314,7 @@
       "linesOfCode": 203
     },
     "server/src/services/bidService.ts": {
-      "hash": "0c9d096d459201ffb04411a301708a5669b1a2da52279bddbd15c987182cb24b",
+      "hash": "70e1d6b29760f7d95877bf0ef91f400643a32128f9d3f7de6f1f62dd24cc9d53",
       "compliance": 72,
       "violations": [
         {
@@ -459,28 +342,19 @@
           "filePath": "server/src/services/bidService.ts"
         }
       ],
-      "timestamp": "2026-04-13T21:43:19.811159Z",
-      "linesOfCode": 75
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:28.975334Z",
+      "linesOfCode": 1048
     },
     "server/src/services/catalogService.ts": {
-      "hash": "763a53abbe48cff60c528548ad09e3daca12b77b48c4cb1f191e685f86423cac",
-      "compliance": 97,
-      "violations": [
-        {
-          "line": 0,
-          "severity": "minor",
-          "category": "general",
-          "rule": "SC-07",
-          "description": "Missing JSDoc comments for exported functions",
-          "currentCode": "",
-          "autoFixable": false,
-          "confidence": 90,
-          "source": "local_rules",
-          "filePath": "server/src/services/catalogService.ts"
-        }
-      ],
-      "timestamp": "2026-04-13T21:43:19.833349Z",
-      "linesOfCode": 62
+      "hash": "096d7b447f5d6429c68cfb9f951f3c7dfbaa8dc14e37096cb370c4ba03a7609e",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:29.220615Z",
+      "linesOfCode": 87
     },
     "server/src/services/domainDb.ts": {
       "hash": "62257d8c5c1d4b4ff655bdb029cf0ee5c5530df08297d5f770c94d754a286682",
@@ -503,7 +377,7 @@
       "linesOfCode": 108
     },
     "server/src/services/projectService.ts": {
-      "hash": "a1a35a24c00f3a399a8df0cae8aaabeb05b8ff18c332fdfcc1f67344ba9af0d4",
+      "hash": "0bbd1ad415a135f7118dbc26001282ed876bc47c6f674f3711e0e2622ed7d7fc",
       "compliance": 75,
       "violations": [
         {
@@ -519,15 +393,19 @@
           "filePath": "server/src/services/projectService.ts"
         }
       ],
-      "timestamp": "2026-04-14T00:07:48.245533Z",
-      "linesOfCode": 260
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:31.234847Z",
+      "linesOfCode": 321
     },
     "server/src/services/questionModerationService.ts": {
-      "hash": "1e294f9ef965580cbc6b9f85bf898386226d05ba944f71a6fda05c6456cc6b71",
+      "hash": "9756caf9807fe2ed6e15dec09715a394d084ad06abe3cbbe033f6c8d4f43ebd9",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-13T21:43:19.900794Z",
-      "linesOfCode": 100
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:31.565183Z",
+      "linesOfCode": 111
     },
     "server/src/types/index.ts": {
       "hash": "882f826b03759b236e027f79877298e3eb385bffc9d17d88ef9a4ca370dc130b",
@@ -698,39 +576,49 @@
       "linesOfCode": 16
     },
     "client/src/App.tsx": {
-      "hash": "8ebd07aec59547e696f9c340de8ca3e0f2a961ea5a48313e1618c214138a015b",
+      "hash": "a9da8d24743a1af4634d1400bdd5fb921edc626c4ba4eb23a6589c643f65e7f5",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-14T00:07:44.370603Z",
-      "linesOfCode": 72
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:27.800410Z",
+      "linesOfCode": 82
     },
     "client/src/pages/dashboards/ContractorDashboard.tsx": {
-      "hash": "7d93213f2bbaacf38ae0c935cc8029c84e32fc6ae24a6644cb0885de6a08a447",
+      "hash": "53419b6dadda29ece218d0889136d56c6dca2a1481dc98491b357886283d246e",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-14T00:07:45.371549Z",
-      "linesOfCode": 108
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:37.363341Z",
+      "linesOfCode": 364
     },
     "client/src/pages/dashboards/HomeownerDashboard.tsx": {
-      "hash": "c3f73cb113206c4a76568ada2a87eb245080dc8f3cf6f8757794bda558d7f182",
+      "hash": "85f83bcf9ad5f7ff302ab1d5f4c4a79db33ad2bc650325192197ff5c1d25bf7a",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-13T22:46:59.406667Z",
-      "linesOfCode": 137
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:38.007243Z",
+      "linesOfCode": 205
     },
     "client/src/pages/projects/AvailableJobsPage.tsx": {
-      "hash": "56bff87bc819f3342d7e8b20b2b7efa019dd3e2b9ce49ede934cee01d3a5e20d",
+      "hash": "375cb38f3ab3b20e103fa5fe724555127fe5046a3e87555cc92668e6b599cab2",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-13T22:46:59.816360Z",
-      "linesOfCode": 178
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:42.309656Z",
+      "linesOfCode": 448
     },
     "client/src/pages/projects/CatalogPage.tsx": {
-      "hash": "33a8cce54880be0d84f95996e5152219b69aa8ea2be1b69c72245e9764c38ee9",
+      "hash": "b99b569db8a7a8993951c2073c28cc91e27693c9b92fdad3421564c4699cc862",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-13T23:25:29.847171Z",
-      "linesOfCode": 172
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:43.643175Z",
+      "linesOfCode": 311
     },
     "client/src/pages/projects/EditProjectPage.tsx": {
       "hash": "079d628ad73faac03cc15776e4149715a0c574cfaf018296df8d393fc08da82b",
@@ -740,14 +628,16 @@
       "linesOfCode": 183
     },
     "client/src/pages/projects/ScopeReviewPage.tsx": {
-      "hash": "eb12e332c61cbfc49891ed62589eedd9769642a574921903596c967ad1b7b8da",
+      "hash": "905cc24c648dedf16b2daa782f2516beb9706ee8db5d70c0b096e5a32ab70df7",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-13T22:47:01.034608Z",
-      "linesOfCode": 312
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:44.553072Z",
+      "linesOfCode": 331
     },
     "client/src/services/projectApi.ts": {
-      "hash": "2e3e334a405858be0f675b69fb61032bfba3ce5e7b90f933890c0c4a91f5d512",
+      "hash": "2943d2b387177b98725c766fa5a4fae7d7a6180a892a6b345803582978672a33",
       "compliance": 97,
       "violations": [
         {
@@ -763,8 +653,10 @@
           "filePath": "client/src/services/projectApi.ts"
         }
       ],
-      "timestamp": "2026-04-14T00:07:46.193247Z",
-      "linesOfCode": 145
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:45.307699Z",
+      "linesOfCode": 397
     },
     "admin-client/package.json": {
       "hash": "0c1347e3f74c3455db7b13581f86ffcd35bb04d00a772a93a195d6c02487db31",
@@ -774,11 +666,13 @@
       "linesOfCode": 23
     },
     "admin-client/src/App.tsx": {
-      "hash": "de27248dee79600eb6295b22c946dbc5d9175a34dbf1dd69a16cf5ad844f1a00",
+      "hash": "e761d19c20c86e96f3d52e3e1015cd52459da29ee74de0e445026a7423eca5f2",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-13T23:04:11.494900Z",
-      "linesOfCode": 80
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:25.136164Z",
+      "linesOfCode": 83
     },
     "admin-client/src/context/AdminAuthContext.tsx": {
       "hash": "039ec3106770889b0aecb0007c0ca8ee9f08d7c6569c5ece43ff670591d5cd58",
@@ -869,7 +763,7 @@
       "linesOfCode": 90
     },
     "admin-client/src/services/adminApi.ts": {
-      "hash": "525d23e97e6e407e047678fdace9c084c1fa2be902bfa7c834cff1600f10ae55",
+      "hash": "b9db2501390134dee2e7411e18fa45f72744fdd9726bf22a8f53a1beebbbf1d0",
       "compliance": 87,
       "violations": [
         {
@@ -897,8 +791,10 @@
           "filePath": "admin-client/src/services/adminApi.ts"
         }
       ],
-      "timestamp": "2026-04-13T23:04:15.067044Z",
-      "linesOfCode": 76
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:27.263257Z",
+      "linesOfCode": 88
     },
     "admin-client/src/vite-env.d.ts": {
       "hash": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
@@ -1123,14 +1019,16 @@
       "linesOfCode": 221
     },
     "server/src/controllers/profileController.ts": {
-      "hash": "4d60088047d9ea281fb2716f2eae6674c292744bf30d75cfc90392e7e5406d5f",
+      "hash": "e73027799416c26b478affe26d96948a3313fb47b72f5058399422e3ed3b465e",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-14T00:07:46.264924Z",
-      "linesOfCode": 91
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:48.592330Z",
+      "linesOfCode": 134
     },
     "server/src/routes/profileRoutes.ts": {
-      "hash": "7f8103c4fb3a53498890521edd4d9f214b740ddf52db8b35649b2ded67e9320e",
+      "hash": "d67aa68b667c72a40a0f1fa94437728020ea2f2dc797673c80b3d6afd40471c4",
       "compliance": 95,
       "violations": [
         {
@@ -1146,15 +1044,19 @@
           "filePath": "server/src/routes/profileRoutes.ts"
         }
       ],
-      "timestamp": "2026-04-14T00:07:46.393822Z",
-      "linesOfCode": 11
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:17.839793Z",
+      "linesOfCode": 14
     },
     "server/src/services/profileService.ts": {
-      "hash": "98a374db8e83aee26c12bcf77f4b5fc10ff45663fa84d4db2fde12031ba3bf6f",
+      "hash": "98081e60402caf1228b56969df34b30c41a3703e986661737692ee38f4d3404d",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-14T00:07:48.175841Z",
-      "linesOfCode": 114
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:30.924731Z",
+      "linesOfCode": 222
     },
     "tests/api_definitions/profile/update-serving-areas.json": {
       "hash": "ccd9e7e9d58ffd229740da28838c9009f9d988d664e6c8ddeb3f3b8240c6b774",
@@ -1164,11 +1066,13 @@
       "linesOfCode": 16
     },
     "client/src/pages/ProfilePage.tsx": {
-      "hash": "b0f03df19f3553638c2ad4365e1565d52bd28251c254b30b06d412b62175182c",
+      "hash": "841e87c1dd8cb3def597ef81d5d87a9dc10deec429981d890986036829781f28",
       "compliance": 100,
       "violations": [],
-      "timestamp": "2026-04-14T00:07:44.944339Z",
-      "linesOfCode": 180
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:36.699383Z",
+      "linesOfCode": 336
     },
     "tests/api_definitions/profile/update-profile.json": {
       "hash": "069a26e8d691e15900c1a7866500136f41ac37bc0547077fe63a4a52eece0926",
@@ -1176,6 +1080,1131 @@
       "violations": [],
       "timestamp": "2026-04-14T00:07:48.330204Z",
       "linesOfCode": 22
+    },
+    ".claude/settings.local.json": {
+      "hash": "bf3a4bdbc5c49bdd3b4fdf2da86785e0d7fd55302c64f153d1092f5b5831b472",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:23.846432Z",
+      "linesOfCode": 34
+    },
+    ".mcp-cache/custom_standards.json": {
+      "hash": "91b4e8b9bfc75bbe9a39ab9ec4155c0473965d7c75a8cf8569b292274080c0f3",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:23.928353Z",
+      "linesOfCode": 198
+    },
+    ".mcp-cache/pre_commit_cache.json": {
+      "hash": "eb140a5a2df219d05490329f2a56554b223461bf537f7d2a1dd067df7656bd7e",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:24.052539Z",
+      "linesOfCode": 1387
+    },
+    ".mcp-cache/violations_latest.json": {
+      "hash": "887fbf3bc3a2cdc9630b8a2e3a4e68c8698519a3f8ccfb1a027b7a0488476091",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:24.152726Z",
+      "linesOfCode": 55
+    },
+    ".mcp-cache/violations_report_20260413_214332.json": {
+      "hash": "4ed5d1a0fba2b6984b3cb78be7f53e92aaac10bcf26889630cb9df42a808144d",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:24.267170Z",
+      "linesOfCode": 293
+    },
+    ".mcp-cache/violations_report_20260413_224713.json": {
+      "hash": "a72647b9a9f6d8a1012c9245373af2c90c8f6db090962d20e66ed83a69341ff5",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:24.335950Z",
+      "linesOfCode": 25
+    },
+    ".mcp-cache/violations_report_20260413_230427.json": {
+      "hash": "37b28846d64500268fea3d5ed26eb8e945a971a0dd7e1ec52918ee4b57a98a2d",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:24.467414Z",
+      "linesOfCode": 83
+    },
+    ".mcp-cache/violations_report_20260413_232555.json": {
+      "hash": "7a3c2ffc80dc83abe9886a38c83ad429481c65ea242545bbbe6de918fae08bc4",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:24.538699Z",
+      "linesOfCode": 83
+    },
+    ".mcp-cache/violations_report_20260413_233410.json": {
+      "hash": "2006d21706a437f31953ec5a538a50654a1f954408ad913b815069d830c71227",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:24.622366Z",
+      "linesOfCode": 45
+    },
+    ".mcp-cache/violations_report_20260414_000809.json": {
+      "hash": "887fbf3bc3a2cdc9630b8a2e3a4e68c8698519a3f8ccfb1a027b7a0488476091",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:24.708785Z",
+      "linesOfCode": 55
+    },
+    "admin-client/src/pages/ServiceFeePage.tsx": {
+      "hash": "e53c849a7a0e66063ea578410e25c541c19566b6cc9436c273271bf1f67ea160",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:26.349630Z",
+      "linesOfCode": 169
+    },
+    "client/src/components/common/AdditionalWorkPanel.tsx": {
+      "hash": "8307dcbb993df0f7d37aca79d616f00019d88e59249c5980a3e848c148f9f7fe",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:28.603372Z",
+      "linesOfCode": 240
+    },
+    "client/src/components/common/BidAttachmentsPanel.tsx": {
+      "hash": "13d40e1beaf53bc2c9b41aeb4de61b48a2d15b03e23ccb5c73c24c8e326d940d",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:29.789806Z",
+      "linesOfCode": 85
+    },
+    "client/src/components/common/BidMaterialsReview.tsx": {
+      "hash": "de83e428a51616b0121c0fa0950862d7ff08d7b3776825c4292aa7e9e0c6b6f8",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:30.598041Z",
+      "linesOfCode": 167
+    },
+    "client/src/components/common/BidMessagesPanel.tsx": {
+      "hash": "5b3ba48d7492aa2e46fb12d8ac252d35e4fd40c48a36d2fdd8f3f4617013e30c",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:31.250003Z",
+      "linesOfCode": 84
+    },
+    "client/src/components/common/ContractPanel.tsx": {
+      "hash": "2f47a64046de32d6834a5245cbdd636b60397b27bc2a095f8b6d57ae57d85e9d",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:31.864125Z",
+      "linesOfCode": 293
+    },
+    "client/src/components/common/DepositReceiptsPanel.tsx": {
+      "hash": "78fb3dfb8a3582dfd184d548cfcbc1197df0f88ae25e79fc848fefd19d210941",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:32.493237Z",
+      "linesOfCode": 109
+    },
+    "client/src/components/common/LocationPicker.tsx": {
+      "hash": "e644bc98cba08d37ffe7863efdfd12d35f2dcc8ff7c1b48d6b2a00d834caabb8",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:33.090984Z",
+      "linesOfCode": 140
+    },
+    "client/src/components/common/MarketingLayout.tsx": {
+      "hash": "a6fb363ad501be793c610d2f29c11bac1ef1b2cb7501490157609de2030b1d53",
+      "compliance": 97,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "client/src/components/common/MarketingLayout.tsx"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:33.682783Z",
+      "linesOfCode": 113
+    },
+    "client/src/components/common/RatingPanel.tsx": {
+      "hash": "795667d713a402498b379e951dce18303213e9cad6fcaf65942ee8709fbbd90b",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:34.504246Z",
+      "linesOfCode": 129
+    },
+    "client/src/components/common/VisitTrackingPanel.tsx": {
+      "hash": "bbeb32d257791473f13c8c3e861b214eeda767400b9008273524e3d493bc9dcf",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:35.244002Z",
+      "linesOfCode": 144
+    },
+    "client/src/pages/HomePage.tsx": {
+      "hash": "c6202c4e4c4ceaf969fb4233370c9f57492d21d5c5126715027718034f0607cb",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:36.038926Z",
+      "linesOfCode": 370
+    },
+    "client/src/pages/marketing/AboutPage.tsx": {
+      "hash": "b07ee2f337316888d8ae8ca1b08bbd7945a0632f4c26a2bbd8968bed86ce3654",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:38.659702Z",
+      "linesOfCode": 56
+    },
+    "client/src/pages/marketing/ContactPage.tsx": {
+      "hash": "917bf4891166a28174dcaf60fa10f731a38d0043b3668e2f1e293589da2b8caa",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:39.274295Z",
+      "linesOfCode": 91
+    },
+    "client/src/pages/marketing/FAQPage.tsx": {
+      "hash": "2a372f70044981724007d9a284a11aa401ca90cdfb3e92e4a119eed3584d26e5",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:39.946022Z",
+      "linesOfCode": 138
+    },
+    "client/src/pages/marketing/PrivacyPage.tsx": {
+      "hash": "b5b9597e6c9415fd91bafcbbe4a5ded17bf29fd98fe7c690be48cd1d5166fb7a",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:40.913582Z",
+      "linesOfCode": 105
+    },
+    "client/src/pages/marketing/TermsPage.tsx": {
+      "hash": "52969758c678493bce520dbe272f3cf75e0bdad3ef8e051d9ae9733ce9475dd4",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:41.558529Z",
+      "linesOfCode": 109
+    },
+    "client/src/pages/projects/BidComparisonPage.tsx": {
+      "hash": "5797773d701f6ff2a49912f914724ddcebfc3649e17a8033d1e84712dc6601fd",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:42.987745Z",
+      "linesOfCode": 349
+    },
+    "server/src/controllers/locationController.ts": {
+      "hash": "cb9ea3dca0ce9f885ef6237505a32efd32f6631555328cd09150b81bcb3d9d73",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:48.316410Z",
+      "linesOfCode": 43
+    },
+    "server/src/controllers/webhookController.ts": {
+      "hash": "202a1d9f5aa0199c4366a59e8e2ee9236d963c12201f6627903660a289d28171",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:18:49.275540Z",
+      "linesOfCode": 21
+    },
+    "server/src/routes/locationRoutes.ts": {
+      "hash": "41bee6b931ccea5f138ae4fd401281101349fcca2dad6749a4c90dec6d31e365",
+      "compliance": 95,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/locationRoutes.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:16.520619Z",
+      "linesOfCode": 10
+    },
+    "server/src/routes/webhookRoutes.ts": {
+      "hash": "31b0cd5aa7bd1d77ef900b7ab2909ec5c7cf1d47d8cc8631de8bb57ad64ce0bf",
+      "compliance": 95,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/routes/webhookRoutes.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:27.722935Z",
+      "linesOfCode": 5
+    },
+    "server/src/server/agents.ts": {
+      "hash": "c0a9b123af71faa06925889625cc0be971660bfd0c65d18a0f9d0cc76135b871",
+      "compliance": 87,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/server/agents.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/server/agents.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:28.313028Z",
+      "linesOfCode": 58
+    },
+    "server/src/services/contractGenerator.ts": {
+      "hash": "dbbf364b8a4db77925610a50ab0d6453e0f6c8e62b55fe257e4583f134f2e585",
+      "compliance": 90,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/contractGenerator.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:29.538753Z",
+      "linesOfCode": 252
+    },
+    "server/src/services/depositService.ts": {
+      "hash": "49a0c269ff6315b8cd39c8660672f9d1fc300606ede0e696c1e9c0eff4ed0e2a",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-12",
+          "description": "Potential hardcoded secrets detected",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/depositService.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:29.822231Z",
+      "linesOfCode": 277
+    },
+    "server/src/services/emailService.ts": {
+      "hash": "bc5312e99d4bc97738b217775769cbf97699180eebeb5fa040bcd5260fc25a07",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:30.091498Z",
+      "linesOfCode": 121
+    },
+    "server/src/services/locationService.ts": {
+      "hash": "887add406c9aaa75f85af92a6106c6461701e108c72190fe2b0d47213b137284",
+      "compliance": 90,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/locationService.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:30.335519Z",
+      "linesOfCode": 98
+    },
+    "server/src/services/locationsSeeder.ts": {
+      "hash": "4c4a0c401f9d36282ea559babc62337db4464756686f36af400797c7afb72bef",
+      "compliance": 72,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/locationsSeeder.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/locationsSeeder.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:30.606982Z",
+      "linesOfCode": 127
+    },
+    "server/src/services/ratingService.ts": {
+      "hash": "3a1c93f99d0cb38ebda15da37971376492ae1598d34a8526a95e9ee0ea0a6488",
+      "compliance": 90,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/ratingService.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:31.979511Z",
+      "linesOfCode": 96
+    },
+    "server/src/services/receiptGenerator.ts": {
+      "hash": "915639928c5f89b26bc280b303f4950b941cc5b583b607416079ea2fbbbdcd6a",
+      "compliance": 90,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/receiptGenerator.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:32.418071Z",
+      "linesOfCode": 138
+    },
+    "server/src/services/redactors.ts": {
+      "hash": "9ca1f55dfadce4d9c80b5c0fa660cb3f2aae7ee3af7f55a71b68032ff6e89f70",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:32.709494Z",
+      "linesOfCode": 87
+    },
+    "server/src/services/s3Service.ts": {
+      "hash": "73012f6c6fc1863e38037444e2c6f5f7810727142c6e778c667232221af99f21",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:33.109922Z",
+      "linesOfCode": 116
+    },
+    "server/src/services/visitTrackingService.ts": {
+      "hash": "0042e3f048ca3a55284884cd2728f30a76cf2aae41a26c610c2c33f9ab3e7bfc",
+      "compliance": 87,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/visitTrackingService.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/visitTrackingService.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:33.475801Z",
+      "linesOfCode": 144
+    },
+    "server/src/services/workflow/businessDay.ts": {
+      "hash": "196cdc6f3bcfc414a18ea12057a2ae28a9fbb5122b49bb862080df066ba664d7",
+      "compliance": 90,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/workflow/businessDay.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:33.816830Z",
+      "linesOfCode": 67
+    },
+    "server/src/services/workflow/emailDispatcher.ts": {
+      "hash": "9f56c0e7e15000c9f379201e7c3cd4901148e0b7e08b043d6b656854730f6a2e",
+      "compliance": 97,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-07",
+          "description": "Missing JSDoc comments for exported functions",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/workflow/emailDispatcher.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:34.139660Z",
+      "linesOfCode": 69
+    },
+    "server/src/services/workflow/selectionStateMachine.ts": {
+      "hash": "d04bcb976ecfacac7e2f29d34fc77cc7c8a1927c4821e851694a7c44a2617713",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:34.549759Z",
+      "linesOfCode": 51
+    },
+    "server/src/services/workflow/timerAgent.ts": {
+      "hash": "c92c7247cad6ad1b0dfac71b41d98978bb662c0ab562069ddb4dc1418c238127",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:34.985342Z",
+      "linesOfCode": 99
+    },
+    "server/tests/unit/businessDay.test.ts": {
+      "hash": "ce074d9c79a04d4c774498921ac559b4a6dfff80ff5757ee5e592f29ca804030",
+      "compliance": 85,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/tests/unit/businessDay.test.ts"
+        },
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/tests/unit/businessDay.test.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:35.494354Z",
+      "linesOfCode": 21
+    },
+    "server/tests/unit/redactors.test.ts": {
+      "hash": "13329e98434720cc51d2c8d595e0d3238575f834e04195889c8ad94533be7e95",
+      "compliance": 95,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-05",
+          "description": "Missing TypeScript types/interfaces",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/tests/unit/redactors.test.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:35.969431Z",
+      "linesOfCode": 104
+    },
+    "tests/api_definitions/admin/service-fee-current-get.json": {
+      "hash": "bc8d4ac75b5a33be8569ad4246c6fb0628b0033d6107a99fc6226ba4dd1d52d2",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:36.093771Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/service-fee-history-get.json": {
+      "hash": "61c2755670a2ce5f380447dc1c3764eafa4d0ce66111d3e83d1a2d47f0b28f19",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:36.190200Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/admin/service-fee-post.json": {
+      "hash": "360e323a7d254572643168dfd3b07395d9b8ac1dd18e3822da1e1dbf969d644b",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:36.296290Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/bids/abandon-no-show.json": {
+      "hash": "b90945e8c9da584fb0019bcc12340672f8691be467130e099440eb58c0088956",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:36.445423Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/accept-offer.json": {
+      "hash": "6b5278b003cb4a4eb166c939a284b66289b36a06394017f133810ae1dff5e2c8",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:36.605887Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/bids/additional-work-accept.json": {
+      "hash": "864bf3b635d6d0726d601bff53670c72f6fddd516c7c058d8fad3d71873e7bb4",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:36.714021Z",
+      "linesOfCode": 23
+    },
+    "tests/api_definitions/bids/additional-work-list.json": {
+      "hash": "69780fbac335c0bd762872ed3444b3ea5637df597ce85e3a24654a3aafad041a",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:36.843556Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/additional-work-reject.json": {
+      "hash": "36d0d8c1d0b4540e968912dd606f242bd5894ae09475d526d2b30c186e7658d5",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:36.982223Z",
+      "linesOfCode": 23
+    },
+    "tests/api_definitions/bids/additional-work-submit.json": {
+      "hash": "283a1a828438b52f82ab69f3f8f0fe3876d19b170d1e1ae54180e43362693edc",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:37.108071Z",
+      "linesOfCode": 24
+    },
+    "tests/api_definitions/bids/attachments-delete.json": {
+      "hash": "ab8a19eabaf4a9c7faf42e3e06e01d1a21d8b88f8e2fd4f8a068a7c1d0e1aed9",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:37.220962Z",
+      "linesOfCode": 20
+    },
+    "tests/api_definitions/bids/attachments-finalize.json": {
+      "hash": "703b7c764a17778c2c44041ae05ca5d519344d3c85c95cb11012357b2855f572",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:37.348896Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/attachments-list.json": {
+      "hash": "15d8894a40e5eaa4a3779b39995b8c044665a33556bc4f8a18f86f50298b7b83",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:37.463142Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/attachments-presign.json": {
+      "hash": "43c19b86bc197b462cbdde0f492ba5f06f82519c2bf18f1b59864e9d56c1d240",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:37.604081Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/bids/bids-id-get.json": {
+      "hash": "6a30d7266cd1a856453861e029575554e38d7135b3ba9da2d70ae710ed772672",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:37.715803Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/bids/bids-id-put.json": {
+      "hash": "47e8db03fc2f07e8b9fe5fb670ab086aa3b7aec65b3c6cccc7539d18f25b35e9",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:37.871409Z",
+      "linesOfCode": 22
+    },
+    "tests/api_definitions/bids/contract-get.json": {
+      "hash": "4d22d561ade13ccf5b80c97445b59d52a9ed276523994dbd8571cb47dec6b555",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:37.975269Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/bids/contract-sign.json": {
+      "hash": "fcca56955abea8343917ac261645b5b0fed42f6e78724b39b3586258a0b92616",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:38.124736Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/contractor-reputation.json": {
+      "hash": "63b793c090eb9e047a406ea43394b4fae4adef2795c81c8b4571f8f67e27ae57",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:38.233053Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/deposit-intent.json": {
+      "hash": "a238437b646700da19cdf0e9fee229b62697e2e4359f05facbce7cf587ed75fb",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:38.327757Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/bids/messages-list.json": {
+      "hash": "ff143beb8899ae0473d3fa9dfa07cd2bb780e6739902fef0c9fa347badc08516",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:38.458018Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/messages-post.json": {
+      "hash": "ec71c50a54e365f5d9a6f939cc90b509ddf76fca2b4a0095aacbb8f75c402ca7",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:38.571058Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/messages-read.json": {
+      "hash": "aa7575c35641689198fe4b7a876c6d765e68431a99ae09c46fbf5adf1a2e3804",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:38.712249Z",
+      "linesOfCode": 20
+    },
+    "tests/api_definitions/bids/payment-confirmed.json": {
+      "hash": "69bdb7df4f80996b40367a5534641237b89907e167c78dccd0ddbeea6bf8319f",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:38.872608Z",
+      "linesOfCode": 26
+    },
+    "tests/api_definitions/bids/payment-proof-presign.json": {
+      "hash": "3cb0d9e39960d6dca621964fd6d3c1362133f271aa05435d8dd291a3e1bb2fc3",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:38.979196Z",
+      "linesOfCode": 22
+    },
+    "tests/api_definitions/bids/project-bids-redacted.json": {
+      "hash": "94da05a7fa8cc352805c643b7903444b325972ee981e45236bab26620969ad43",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.063387Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/rating-get.json": {
+      "hash": "9aad02fed584d2992c9d68d3db25ee044852ad27dc6c6a1d90ce0d51613c3a6b",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.154549Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/bids/rating-submit.json": {
+      "hash": "1f87ae1909df3d5f7740d476d5e3c8763fd9df55b755203be87ad4799dfcce51",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.253669Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/receipts-list.json": {
+      "hash": "dae617354779eacb6b330798643cc9c3dcefec50c2ccabc963f69587c61eeddb",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.343370Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/bids/request-rating.json": {
+      "hash": "fa1605716e919a500bcfaf7f7553c57ba4f9f4466e16a7c7dd33641ccd79653b",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.441113Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/bids/schedule-approve.json": {
+      "hash": "6f507487222e715efc80cfac0007e98a243483f99960b2bc4b32830c2ca5ef2b",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.543097Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/schedule-propose.json": {
+      "hash": "93ea66ded6d363dcf5b9f8d2f5b4caca60cebdd0d0d08a386995038ba0bbd2a5",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.617947Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/schedule-reject.json": {
+      "hash": "6c9de8e2c3cff74b886ee6e8cdb3beac9adb61b27ab7b7cfc0495cd0310644c1",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.719023Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/select-notify-post.json": {
+      "hash": "223d87040a7901c02ff42dbb6a69ce240ee330d3f2f18c8635fd72f875f936de",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.824106Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/bids/shortlist-delete.json": {
+      "hash": "5c6d23542a37567b4bc589c315ad2ca8d498fa633884171d64a7b57426a47e99",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:39.923233Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/bids/shortlist-post.json": {
+      "hash": "d6b8a3705f8942aef06a8698b58a5b3a16723fdb5bad7e80ffee94b2be92fc72",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.020637Z",
+      "linesOfCode": 20
+    },
+    "tests/api_definitions/bids/status-patch.json": {
+      "hash": "ebc99de97d80ebdc1b4d769b98f994d129d0e1dba07efc0a907cccbb01654ff5",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.104083Z",
+      "linesOfCode": 20
+    },
+    "tests/api_definitions/bids/visit-confirmation.json": {
+      "hash": "c7a792411628923980c7b94f37c4c82755071eef34d5d00df570539558d87c5f",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.183793Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/bids/visit-reminder.json": {
+      "hash": "4fa8f567a93f1784d50f3f6f015378cd4b74582778c3b6fa1544ebc325296696",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.252262Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/bids/visit-status.json": {
+      "hash": "a85a68e73534e65265848915b7203c1dda7d87123bc5520deab3d4ad3b1d11bd",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.348547Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/catalogs/item-image-presign.json": {
+      "hash": "dbc91ef48856c466f1cfd34b7494d27a07eb3d275d39307ae8871017ac3a35bb",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.429245Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/locations/search-get.json": {
+      "hash": "c7d463e6018391cfdff45e9b7b92463c5aa9e1a6bd5d96edc0322a8edaaa20a0",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.536362Z",
+      "linesOfCode": 16
+    },
+    "tests/api_definitions/locations/zips-get.json": {
+      "hash": "e884ecf3aa2df62146addb53ca69a999316fdda51f81bdd5eec7371b797b4284",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.607836Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/profile/billing-get.json": {
+      "hash": "d2a2f00780146e16d5d674bda9280add4df54044473c7ef69589308ed4252f08",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.679072Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/profile/billing-put.json": {
+      "hash": "3656bbc816a888bb47060e8ac822c19e7567ca5a0bdf57b70a398c7a092ce059",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.759700Z",
+      "linesOfCode": 24
+    },
+    "tests/api_definitions/profile/billing-signature-presign.json": {
+      "hash": "67dd199cf391d38a0efde3a68ed4352ab59da3c326287e74971d56e6b8b7a9ac",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.858477Z",
+      "linesOfCode": 19
+    },
+    "tests/api_definitions/projects/bid-summary-get.json": {
+      "hash": "db5bab319ed1f4b4998ef130688ed6b7a650baf037721cbaa687b7b441f36bbf",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:40.971716Z",
+      "linesOfCode": 18
+    },
+    "tests/api_definitions/projects/promote-next.json": {
+      "hash": "ce8e32b8ceaba8f12e9fa96e7b61fdcbe91e62dff2800e24956449959a8ce338",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:41.051142Z",
+      "linesOfCode": 17
+    },
+    "tests/api_definitions/webhooks/stripe-post.json": {
+      "hash": "7da103a93d9b0826b4c0bae2847372b74c34589833e97416164cfcd71cb86c93",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:41.126231Z",
+      "linesOfCode": 14
+    },
+    "tests/config/test-config.json": {
+      "hash": "f4f05308c984b4a2b00c8d85afe70ff2ca228d5895fabad32ee805ae24b52216",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:19:41.201316Z",
+      "linesOfCode": 186
     }
   },
   "registered_apis": {
@@ -1249,35 +2278,35 @@
     },
     "POST:/api/bids/": {
       "filePath": "server/src/routes/bidRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050360Z"
+      "timestamp": "2026-04-28T02:20:02.641556Z"
     },
     "GET:/api/bids/my-bids": {
       "filePath": "server/src/routes/bidRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050364Z"
+      "timestamp": "2026-04-28T02:20:02.641558Z"
     },
     "GET:/api/bids/project/:projectId": {
       "filePath": "server/src/routes/bidRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050369Z"
+      "timestamp": "2026-04-28T02:20:02.641560Z"
     },
     "POST:/api/bids/:id/accept": {
       "filePath": "server/src/routes/bidRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050372Z"
+      "timestamp": "2026-04-28T02:20:02.641565Z"
     },
     "POST:/api/bids/:id/reject": {
       "filePath": "server/src/routes/bidRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050374Z"
+      "timestamp": "2026-04-28T02:20:02.641567Z"
     },
     "POST:/api/bids/questions": {
       "filePath": "server/src/routes/bidRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050379Z"
+      "timestamp": "2026-04-28T02:20:02.641620Z"
     },
     "GET:/api/bids/questions/project/:projectId": {
       "filePath": "server/src/routes/bidRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050381Z"
+      "timestamp": "2026-04-28T02:20:02.641622Z"
     },
     "PUT:/api/bids/questions/:questionId/reply": {
       "filePath": "server/src/routes/bidRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050384Z"
+      "timestamp": "2026-04-28T02:20:02.641624Z"
     },
     "GET:/": {
       "filePath": "server/src/routes/catalogRoutes.ts",
@@ -1305,83 +2334,367 @@
     },
     "POST:/api/projects/presign": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050400Z"
+      "timestamp": "2026-04-28T02:20:02.641666Z"
     },
     "POST:/api/projects/": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050402Z"
+      "timestamp": "2026-04-28T02:20:02.641668Z"
     },
     "POST:/api/projects/confirm-media": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050405Z"
+      "timestamp": "2026-04-28T02:20:02.641670Z"
     },
     "GET:/api/projects/": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050407Z"
+      "timestamp": "2026-04-28T02:20:02.641671Z"
     },
     "GET:/api/projects/available": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050410Z"
+      "timestamp": "2026-04-28T02:20:02.641672Z"
     },
     "GET:/api/projects/:id": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050412Z"
+      "timestamp": "2026-04-28T02:20:02.641674Z"
     },
     "GET:/api/projects/:id/draft": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050414Z"
+      "timestamp": "2026-04-28T02:20:02.641676Z"
     },
     "GET:/api/projects/:id/status": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050416Z"
+      "timestamp": "2026-04-28T02:20:02.641677Z"
     },
     "PUT:/api/projects/:id": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050418Z"
+      "timestamp": "2026-04-28T02:20:02.641681Z"
     },
     "PUT:/api/projects/:id/tasks/:taskId": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050420Z"
+      "timestamp": "2026-04-28T02:20:02.641683Z"
     },
     "PUT:/api/projects/:id/tasks/:taskId/price": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050422Z"
+      "timestamp": "2026-04-28T02:20:02.641684Z"
     },
     "PATCH:/api/projects/:id/tasks/:taskId/visibility": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050425Z"
+      "timestamp": "2026-04-28T02:20:02.641686Z"
     },
     "DELETE:/api/projects/:id/media/:mediaId": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050452Z"
+      "timestamp": "2026-04-28T02:20:02.641687Z"
     },
     "POST:/api/projects/:id/approve": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050455Z"
+      "timestamp": "2026-04-28T02:20:02.641688Z"
     },
     "POST:/api/projects/:id/retry": {
       "filePath": "server/src/routes/projectRoutes.ts",
-      "timestamp": "2026-04-13T21:43:33.050457Z"
+      "timestamp": "2026-04-28T02:20:02.641690Z"
     },
     "GET:/api/profile/me": {
       "filePath": "server/src/routes/profileRoutes.ts",
-      "timestamp": "2026-04-14T00:08:09.886707Z"
+      "timestamp": "2026-04-28T02:20:02.641653Z"
     },
     "POST:/api/profile/onboard": {
       "filePath": "server/src/routes/profileRoutes.ts",
-      "timestamp": "2026-04-14T00:08:09.886714Z"
+      "timestamp": "2026-04-28T02:20:02.641655Z"
     },
     "GET:/api/profile/categories": {
       "filePath": "server/src/routes/profileRoutes.ts",
-      "timestamp": "2026-04-14T00:08:09.886720Z"
+      "timestamp": "2026-04-28T02:20:02.641657Z"
     },
     "PUT:/api/profile/serving-areas": {
       "filePath": "server/src/routes/profileRoutes.ts",
-      "timestamp": "2026-04-14T00:08:09.886729Z"
+      "timestamp": "2026-04-28T02:20:02.641660Z"
     },
     "PUT:/api/profile/update": {
       "filePath": "server/src/routes/profileRoutes.ts",
-      "timestamp": "2026-04-14T00:08:09.886724Z"
+      "timestamp": "2026-04-28T02:20:02.641658Z"
+    },
+    "POST:/api/admin/auth/login": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641501Z"
+    },
+    "GET:/api/admin/users": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641505Z"
+    },
+    "GET:/api/admin/users/stats": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641507Z"
+    },
+    "GET:/api/admin/users/:id": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641508Z"
+    },
+    "PUT:/api/admin/users/:id/status": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641510Z"
+    },
+    "GET:/api/admin/rules/bid-price": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641512Z"
+    },
+    "POST:/api/admin/rules/bid-price": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641514Z"
+    },
+    "PUT:/api/admin/rules/bid-price/:id": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641515Z"
+    },
+    "DELETE:/api/admin/rules/bid-price/:id": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641517Z"
+    },
+    "GET:/api/admin/subscriptions": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641519Z"
+    },
+    "GET:/api/admin/subscriptions/stats": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641521Z"
+    },
+    "PUT:/api/admin/subscriptions/:id": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641524Z"
+    },
+    "GET:/api/admin/subscription-plans": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641525Z"
+    },
+    "POST:/api/admin/subscription-plans": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641527Z"
+    },
+    "GET:/api/admin/analytics/price-variance": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641529Z"
+    },
+    "GET:/api/admin/analytics/platform-usage": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641546Z"
+    },
+    "GET:/api/admin/analytics/contract-allocation": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641548Z"
+    },
+    "GET:/api/admin/service-fee/current": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641550Z"
+    },
+    "GET:/api/admin/service-fee/history": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641551Z"
+    },
+    "POST:/api/admin/service-fee": {
+      "filePath": "server/src/routes/adminRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641553Z"
+    },
+    "GET:/api/bids/:id": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641562Z"
+    },
+    "PUT:/api/bids/:id": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641564Z"
+    },
+    "POST:/api/bids/:id/shortlist": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641569Z"
+    },
+    "DELETE:/api/bids/:id/shortlist": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641570Z"
+    },
+    "POST:/api/bids/:id/select-notify": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641572Z"
+    },
+    "PATCH:/api/bids/:id/status": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641574Z"
+    },
+    "POST:/api/bids/:id/attachments/presign": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641576Z"
+    },
+    "POST:/api/bids/:id/attachments": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641578Z"
+    },
+    "GET:/api/bids/:id/attachments": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641580Z"
+    },
+    "DELETE:/api/bids/:id/attachments/:attachmentId": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641581Z"
+    },
+    "GET:/api/bids/:id/messages": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641583Z"
+    },
+    "POST:/api/bids/:id/messages": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641585Z"
+    },
+    "PATCH:/api/bids/:id/messages/:messageId/read": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641587Z"
+    },
+    "POST:/api/bids/:id/accept-offer": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641589Z"
+    },
+    "GET:/api/bids/:id/contract": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641591Z"
+    },
+    "POST:/api/bids/:id/contract/sign": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641600Z"
+    },
+    "POST:/api/bids/:id/contract/schedule": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641602Z"
+    },
+    "PATCH:/api/bids/:id/contract/schedule/approve": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641604Z"
+    },
+    "PATCH:/api/bids/:id/contract/schedule/reject": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641605Z"
+    },
+    "POST:/api/bids/:id/deposit/intent": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641608Z"
+    },
+    "GET:/api/bids/:id/receipts": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641609Z"
+    },
+    "POST:/api/bids/:id/payment-proof/presign": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641611Z"
+    },
+    "POST:/api/bids/:id/payment-confirmed": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641612Z"
+    },
+    "GET:/api/bids/:bidId/additional-work": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641614Z"
+    },
+    "POST:/api/bids/:bidId/additional-work": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641615Z"
+    },
+    "POST:/api/bids/:bidId/additional-work/:awoId/accept": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641617Z"
+    },
+    "POST:/api/bids/:bidId/additional-work/:awoId/reject": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641618Z"
+    },
+    "GET:/api/bids/:id/visit-status": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641625Z"
+    },
+    "POST:/api/bids/:id/visit-confirmation": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641627Z"
+    },
+    "POST:/api/bids/:id/visit-reminder": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641628Z"
+    },
+    "POST:/api/bids/:id/abandon-no-show": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641630Z"
+    },
+    "POST:/api/bids/:id/request-rating": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641631Z"
+    },
+    "POST:/api/bids/:id/rating": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641632Z"
+    },
+    "GET:/api/bids/:id/rating": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641634Z"
+    },
+    "GET:/api/bids/contractor/:contractorId/reputation": {
+      "filePath": "server/src/routes/bidRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641635Z"
+    },
+    "GET:/api/catalogs/": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641637Z"
+    },
+    "POST:/api/catalogs/": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641638Z"
+    },
+    "GET:/api/catalogs/:catalogId/items": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641640Z"
+    },
+    "POST:/api/catalogs/:catalogId/items": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641642Z"
+    },
+    "PUT:/api/catalogs/items/:itemId": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641643Z"
+    },
+    "DELETE:/api/catalogs/items/:itemId": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641645Z"
+    },
+    "POST:/api/catalogs/items/:itemId/image/presign": {
+      "filePath": "server/src/routes/catalogRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641646Z"
+    },
+    "GET:/search": {
+      "filePath": "server/src/routes/locationRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641648Z"
+    },
+    "GET:/by-ids": {
+      "filePath": "server/src/routes/locationRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641649Z"
+    },
+    "GET:/:id/zips": {
+      "filePath": "server/src/routes/locationRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641651Z"
+    },
+    "GET:/api/profile/billing": {
+      "filePath": "server/src/routes/profileRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641662Z"
+    },
+    "PUT:/api/profile/billing": {
+      "filePath": "server/src/routes/profileRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641663Z"
+    },
+    "POST:/api/profile/billing/signature/presign": {
+      "filePath": "server/src/routes/profileRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641664Z"
+    },
+    "GET:/api/projects/:id/bid-summary": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641678Z"
+    },
+    "POST:/api/projects/:id/promote-next-shortlisted": {
+      "filePath": "server/src/routes/projectRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641680Z"
+    },
+    "POST:/stripe": {
+      "filePath": "server/src/routes/webhookRoutes.ts",
+      "timestamp": "2026-04-28T02:20:02.641691Z"
     }
   }
 }
