@@ -30,8 +30,10 @@ export async function runMigrations(): Promise<void> {
   });
 
   try {
-    await runAuthMigration(pool);
+    // Project must run before auth — auth backfill (UPDATE contractor_profiles
+    // ... LEFT JOIN projects.locations) references the projects schema.
     await runProjectMigration(pool);
+    await runAuthMigration(pool);
     await runBiddingMigration(pool);
     await runCatalogMigration(pool);
     await runAdminMigration(pool);
