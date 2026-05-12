@@ -219,19 +219,23 @@ export async function oauthStart(req: Request, res: Response): Promise<void> {
  */
 export async function oauthCallback(req: Request, res: Response): Promise<void> {
   const clientBase = clientCallbackBase();
+  const providerParam = String(req.params.provider);
+  const provider: OAuthProvider | null = OAUTH_PROVIDERS.includes(providerParam as any)
+    ? (providerParam as OAuthProvider)
+    : null;
+
+  const errRedirect = (errCode: string) => {
+    const p = new URLSearchParams({ error: errCode });
+    if (provider) p.set('provider', provider);
+    res.redirect(302, `${clientBase}/oauth/callback?${p.toString()}`);
+  };
+
   try {
-    const provider = String(req.params.provider) as OAuthProvider;
-    if (!OAUTH_PROVIDERS.includes(provider)) {
-      res.redirect(302, `${clientBase}/oauth/callback?error=${encodeURIComponent('unsupported_provider')}`); return;
-    }
-    if (req.query.error) {
-      res.redirect(302, `${clientBase}/oauth/callback?error=${encodeURIComponent(String(req.query.error))}`); return;
-    }
+    if (!provider) { errRedirect('unsupported_provider'); return; }
+    if (req.query.error) { errRedirect(String(req.query.error)); return; }
     const code = req.query.code ? String(req.query.code) : '';
     const state = req.query.state ? String(req.query.state) : '';
-    if (!code || !state) {
-      res.redirect(302, `${clientBase}/oauth/callback?error=${encodeURIComponent('missing_code_or_state')}`); return;
-    }
+    if (!code || !state) { errRedirect('missing_code_or_state'); return; }
 
     const { oauthService } = await import('../services/oauthService');
     const payload = oauthService.verifyState(state);
@@ -245,8 +249,6 @@ export async function oauthCallback(req: Request, res: Response): Promise<void> 
       intent: payload.intent,
     });
 
-    // Encode the full user payload so the callback page can hydrate the
-    // AuthContext without an extra round-trip.
     const userJson = Buffer.from(JSON.stringify(result.user), 'utf8').toString('base64url');
     const params = new URLSearchParams({
       token: result.token,
@@ -255,6 +257,6 @@ export async function oauthCallback(req: Request, res: Response): Promise<void> 
     res.redirect(302, `${clientBase}/oauth/callback?${params.toString()}`);
   } catch (error: any) {
     console.error('OAuth callback error:', error);
-    res.redirect(302, `${clientBase}/oauth/callback?error=${encodeURIComponent(error.message || 'oauth_failed')}`);
+    errRedirect(error.message || 'oauth_failed');
   }
 }

@@ -252,7 +252,7 @@ export async function findOrCreateFromOAuth(opts: {
   }
 
   if (!userRow) {
-    if (intent !== 'signup') throw new Error('No account found for this identity — please sign up first');
+    if (intent !== 'signup') throw new Error('no_account_for_identity');
     if (!profile.email) throw new Error('OAuth provider did not return an email — cannot create account');
     if (!role || !VALID_ROLES.includes(role)) throw new Error('Invalid role for signup');
     const needsOnboarding = role === 'homeowner';
