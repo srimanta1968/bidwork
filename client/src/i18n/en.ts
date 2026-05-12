@@ -5,7 +5,7 @@ export const en = {
   // Hero
   hero: {
     badge: 'AI-Powered Project Scoping Platform',
-    headline1: 'Turn Home Project Photos into',
+    headline1: 'Turn Home Project Photos & Video into',
     headline2: 'Qualified Bids',
     subtitle: 'AI scopes your project, documents every task with photo evidence, and sets a fair bid range \u2014 so you can focus on choosing the right contractor instead of explaining the job.',
     ctaPrimary: 'Start Free Today',

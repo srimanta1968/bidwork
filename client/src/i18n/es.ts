@@ -3,7 +3,7 @@ export const es = {
 
   hero: {
     badge: 'Plataforma de Alcance de Proyectos con IA',
-    headline1: 'Convierte Fotos de Proyectos en',
+    headline1: 'Convierte Fotos y Video de Proyectos en',
     headline2: 'Ofertas Calificadas',
     subtitle: 'La IA analiza tu proyecto, documenta cada tarea con evidencia fotogr\u00e1fica y establece un rango justo de presupuesto \u2014 para que te enfoques en elegir al contratista correcto.',
     ctaPrimary: 'Comienza Gratis Hoy',

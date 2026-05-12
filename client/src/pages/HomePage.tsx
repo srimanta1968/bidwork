@@ -57,14 +57,20 @@ function Hero() {
         <p className="animate-fade-up-delay" style={{ fontSize: 'clamp(16px, 2vw, 19px)', lineHeight: 1.7, color: '#64748b', maxWidth: 640, margin: '0 auto 40px', fontWeight: 400 }}>
           {t.hero.subtitle}
         </p>
-        <div className="animate-fade-up-delay2" style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center', marginBottom: 64 }}>
-          <Link to="/register" style={{ fontSize: 16, fontWeight: 600, color: 'white', padding: '14px 32px', textDecoration: 'none', borderRadius: 10, background: 'linear-gradient(135deg, #2563eb, #4f46e5)', boxShadow: '0 4px 14px rgba(37,99,235,0.3)', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-            {t.hero.ctaPrimary}
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
-          </Link>
-          <Link to="#how-it-works" style={{ fontSize: 16, fontWeight: 600, color: '#475569', padding: '14px 32px', textDecoration: 'none', borderRadius: 10, border: '1px solid #e2e8f0', background: 'white' }}>
-            {t.hero.ctaSecondary}
-          </Link>
+        <div className="animate-fade-up-delay2" style={{ display: 'flex', flexWrap: 'wrap', gap: 48, justifyContent: 'center', marginBottom: 64 }}>
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#2563eb', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Homeowners</p>
+            <Link to="/register" style={{ fontSize: 16, fontWeight: 600, color: 'white', padding: '14px 28px', textDecoration: 'none', borderRadius: 10, background: 'linear-gradient(135deg, #2563eb, #4f46e5)', boxShadow: '0 4px 14px rgba(37,99,235,0.3)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, minWidth: 220, boxSizing: 'border-box' }}>
+              Start a project
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+            </Link>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#059669', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Contractors &amp; skilled workers</p>
+            <Link to="/register" style={{ fontSize: 16, fontWeight: 600, color: 'white', padding: '14px 28px', textDecoration: 'none', borderRadius: 10, background: 'linear-gradient(135deg, #059669, #0891b2)', boxShadow: '0 4px 14px rgba(5,150,105,0.3)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 220, boxSizing: 'border-box' }}>
+              Sign up free
+            </Link>
+          </div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 0, flexWrap: 'wrap' }}>
           {[
@@ -272,36 +278,6 @@ function CTA() {
   );
 }
 
-/* ═══════════════════════ PRICING ═══════════════════════ */
-function Pricing() {
-  return (
-    <section style={{ padding: '96px 0', background: 'white' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ textAlign: 'center', marginBottom: 56 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: '#0891b2', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Simple pricing</p>
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: 16 }}>One fee. No surprises.</h2>
-          <p style={{ fontSize: 17, color: '#64748b', maxWidth: 640, margin: '0 auto' }}>
-            BidWork charges a single platform service fee — 5% of the contract value — collected as a deposit when a contractor accepts your offer. That's it. Final payment for the work goes directly between homeowner and contractor.
-          </p>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, maxWidth: 960, margin: '0 auto' }}>
-          {[
-            { who: 'Homeowners', cost: 'Free to start', desc: 'Free account, free AI scoping, free bid review. The 5% deposit is paid once you select a contractor and is recognized as the platform fee at contract signature.', cta: 'Start a project', to: '/register' },
-            { who: 'Contractors & skilled workers', cost: 'Free to bid', desc: 'No subscription, no per-lead charges, no hidden cuts. We never take a percentage of the homeowner\'s payment to you. Build a profile, bid on jobs, win work.', cta: 'Sign up free', to: '/register' },
-          ].map(card => (
-            <div key={card.who} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 16, padding: 32 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{card.who}</p>
-              <p style={{ fontSize: 28, fontWeight: 800, color: '#0f172a', marginBottom: 12 }}>{card.cost}</p>
-              <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.7, marginBottom: 20 }}>{card.desc}</p>
-              <Link to={card.to} style={{ display: 'inline-block', padding: '10px 22px', fontSize: 14, fontWeight: 700, color: 'white', background: 'linear-gradient(135deg, #2563eb, #4f46e5)', borderRadius: 10, textDecoration: 'none' }}>{card.cta}</Link>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ═══════════════════════ TRUST & SAFETY ═══════════════════════ */
 function TrustSafety() {
   const items = [
@@ -376,7 +352,6 @@ export default function HomePage() {
       <FeaturesGrid />
       <HowItWorks />
       <ForWho />
-      <Pricing />
       <TrustSafety />
       <Testimonials />
       <FaqTeaser />
