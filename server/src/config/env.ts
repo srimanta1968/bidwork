@@ -62,7 +62,7 @@ export const config = {
     apiKey: process.env.TOGETHER_API_KEY || '',
     visionModel: process.env.TOGETHER_VISION_MODEL || 'Qwen/Qwen3-VL-8B-Instruct',
     textModel: process.env.TOGETHER_TEXT_MODEL || 'google/gemma-3n-E4B-it',
-    baseUrl: 'https://api.together.xyz/v1',
+    baseUrl: process.env.TOGETHER_BASE_URL || 'https://api.together.xyz/v1',
   },
 
   // AI Worker
