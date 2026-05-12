@@ -9,6 +9,7 @@ export interface User {
   phone: string | null;
   role: string;
   is_onboarded: boolean;
+  is_email_verified?: boolean;
   created_at: Date;
   updated_at: Date;
 }
@@ -20,6 +21,7 @@ export interface UserResponse {
   last_name: string | null;
   role: string;
   is_onboarded: boolean;
+  is_email_verified?: boolean;
   created_at?: Date;
 }
 

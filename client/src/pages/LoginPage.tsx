@@ -24,8 +24,13 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const result = await loginUser({ email, password });
-      if (result.success && result.data) { login(result.data.user, result.data.token); navigate('/dashboard'); }
-      else { setError(result.error || 'Login failed'); }
+      if (result.success && result.data) {
+        login(result.data.user, result.data.token);
+        // Unverified users land on the verify page (where Resend works) so they
+        // never get stuck behind a dashboard that requires verified status.
+        if (result.data.user.is_email_verified === false) navigate('/verify-email');
+        else navigate('/dashboard');
+      } else { setError(result.error || 'Login failed'); }
     } catch { setError('An unexpected error occurred'); }
     finally { setLoading(false); }
   };
@@ -57,7 +62,10 @@ export default function LoginPage() {
             </div>
 
             <div style={{ marginBottom: 24 }}>
-              <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Password</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+                <label style={{ fontSize: 14, fontWeight: 600, color: '#374151' }}>Password</label>
+                <Link to="/forgot-password" style={{ fontSize: 13, color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>Forgot password?</Link>
+              </div>
               <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Enter your password" style={inputStyle}
                 onFocus={(e) => (e.currentTarget.style.borderColor = '#2563eb')} onBlur={(e) => (e.currentTarget.style.borderColor = '#e2e8f0')} />
             </div>

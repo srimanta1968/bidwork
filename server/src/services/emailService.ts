@@ -121,8 +121,63 @@ export async function sendSelectAndNotifyEmail(params: {
   }
 }
 
+/**
+ * Send password-reset link via SendGrid. Resetting also re-verifies the email,
+ * so this is the recovery path for both forgotten passwords and stuck
+ * unverified accounts.
+ */
+export async function sendPasswordResetEmail(to: string, resetUrl: string, firstName: string): Promise<boolean> {
+  try {
+    if (!config.sendgrid.apiKey) {
+      console.warn('SendGrid API key not configured — skipping password-reset email');
+      return false;
+    }
+    const greetingName = firstName?.trim() ? firstName : 'there';
+    const msg = {
+      to,
+      from: { email: config.sendgrid.fromEmail, name: config.sendgrid.fromName },
+      subject: 'Reset your BidWork password',
+      html: `
+        <div style="font-family: 'Inter', -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 40px 24px;">
+          <div style="text-align: center; margin-bottom: 32px;">
+            <div style="display: inline-block; width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; font-weight: 800; font-size: 20px; line-height: 48px;">B</div>
+            <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 16px 0 0;">BidWork</h1>
+          </div>
+          <h2 style="font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Hi ${greetingName},</h2>
+          <p style="font-size: 15px; color: #64748b; line-height: 1.6; margin-bottom: 24px;">
+            We received a request to reset your BidWork password. Click the button below to choose a new one. This link expires in 1 hour.
+          </p>
+          <div style="text-align: center; margin-bottom: 24px;">
+            <a href="${resetUrl}" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #4f46e5); color: white; font-weight: 700; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-size: 15px;">Reset password</a>
+          </div>
+          <p style="font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 12px;">
+            Or paste this link into your browser:
+          </p>
+          <p style="font-size: 12px; color: #475569; word-break: break-all; background: #f1f5f9; padding: 12px; border-radius: 8px; margin-bottom: 24px;">
+            ${resetUrl}
+          </p>
+          <p style="font-size: 13px; color: #94a3b8; line-height: 1.6;">
+            If you didn't request a password reset, you can safely ignore this email — your password won't change.
+          </p>
+          <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 24px 0;" />
+          <p style="font-size: 12px; color: #cbd5e1; text-align: center;">
+            &copy; ${new Date().getFullYear()} BidWork. The operating system for home services execution.
+          </p>
+        </div>
+      `,
+    };
+    await sgMail.send(msg);
+    console.log(`Password-reset email sent to ${to}`);
+    return true;
+  } catch (error) {
+    console.error('SendGrid password-reset email error:', error);
+    return false;
+  }
+}
+
 export const emailService = {
   generateVerificationCode,
   sendVerificationEmail,
+  sendPasswordResetEmail,
   sendSelectAndNotifyEmail,
 };

@@ -1,5 +1,5 @@
 import { Router, Request, Response, RequestHandler } from 'express';
-import { register, login, verifyEmail, resendCode, oauthStart, oauthCallback } from '../controllers/authController';
+import { register, login, verifyEmail, resendCode, forgotPassword, resetPassword, oauthStart, oauthCallback } from '../controllers/authController';
 
 const router: Router = Router();
 
@@ -10,6 +10,8 @@ router.post('/register', wrap(register));
 router.post('/login', wrap(login));
 router.post('/verify-email', wrap(verifyEmail));
 router.post('/resend-code', wrap(resendCode));
+router.post('/forgot-password', wrap(forgotPassword));
+router.post('/reset-password', wrap(resetPassword));
 
 // OAuth (Google + LinkedIn)
 router.get('/oauth/:provider/start', wrap(oauthStart));

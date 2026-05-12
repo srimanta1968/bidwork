@@ -1,8 +1,15 @@
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env';
 import { authDb } from './domainDb';
 import { User, UserResponse, JwtPayload, VALID_ROLES } from '../types';
+
+const PASSWORD_RESET_TTL_MINUTES = 60;
+
+function hashResetToken(rawToken: string): string {
+  return crypto.createHash('sha256').update(rawToken).digest('hex');
+}
 
 /**
  * Hash a plain-text password using bcrypt
@@ -50,7 +57,7 @@ export function verifyToken(token: string): JwtPayload {
 export async function findUserByEmail(email: string): Promise<User | null> {
   try {
     return await authDb.queryOne<User>(
-      'SELECT id, email, password_hash, first_name, last_name, phone, role, is_onboarded, created_at, updated_at FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, first_name, last_name, phone, role, is_onboarded, is_email_verified, created_at, updated_at FROM users WHERE email = $1',
       [email]
     );
   } catch (error) {
@@ -142,6 +149,7 @@ export async function authenticateUser(email: string, password: string): Promise
         email: user.email,
         role: user.role,
         is_onboarded: user.is_onboarded,
+        is_email_verified: user.is_email_verified ?? false,
       },
       token,
     };
@@ -285,6 +293,70 @@ export async function findOrCreateFromOAuth(opts: {
   };
 }
 
+/**
+ * Create a password-reset token for a user. Returns the raw token (only ever
+ * shown in the email) or null if no local-password user matches. The token's
+ * SHA-256 hash is stored in the DB along with a 1-hour expiry.
+ */
+export async function createPasswordResetToken(email: string): Promise<{ rawToken: string; firstName: string } | null> {
+  try {
+    // OAuth-only accounts (password_hash IS NULL) can't be reset via password.
+    const user = await authDb.queryOne<{ id: string; first_name: string | null; password_hash: string | null }>(
+      'SELECT id, first_name, password_hash FROM users WHERE email = $1',
+      [email]
+    );
+    if (!user || !user.password_hash) return null;
+
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = hashResetToken(rawToken);
+    const expires = new Date(Date.now() + PASSWORD_RESET_TTL_MINUTES * 60 * 1000);
+    await authDb.query(
+      'UPDATE users SET password_reset_token = $2, password_reset_expires = $3, updated_at = NOW() WHERE id = $1',
+      [user.id, tokenHash, expires]
+    );
+    return { rawToken, firstName: user.first_name || '' };
+  } catch (error) {
+    console.error('Create password reset token error:', error);
+    throw new Error('Failed to create password reset token');
+  }
+}
+
+/**
+ * Consume a password-reset token. Validates token hash + expiry, then sets the
+ * new password, clears the reset token, AND marks the email as verified (the
+ * fact that they received the token at this email proves ownership).
+ * Returns true on success, false on invalid/expired token.
+ */
+export async function resetPasswordWithToken(rawToken: string, newPassword: string): Promise<boolean> {
+  try {
+    const tokenHash = hashResetToken(rawToken);
+    const row = await authDb.queryOne<{ id: string; password_reset_expires: Date | null }>(
+      'SELECT id, password_reset_expires FROM users WHERE password_reset_token = $1',
+      [tokenHash]
+    );
+    if (!row || !row.password_reset_expires) return false;
+    if (new Date() > new Date(row.password_reset_expires)) return false;
+
+    const password_hash = await hashPassword(newPassword);
+    await authDb.query(
+      `UPDATE users
+          SET password_hash = $2,
+              password_reset_token = NULL,
+              password_reset_expires = NULL,
+              is_email_verified = true,
+              verification_code = NULL,
+              verification_code_expires = NULL,
+              updated_at = NOW()
+        WHERE id = $1`,
+      [row.id, password_hash]
+    );
+    return true;
+  } catch (error) {
+    console.error('Reset password error:', error);
+    throw new Error('Failed to reset password');
+  }
+}
+
 export const authService = {
   hashPassword,
   comparePassword,
@@ -298,5 +370,7 @@ export const authService = {
   storeVerificationCode,
   verifyEmailCode,
   getUnverifiedUser,
+  createPasswordResetToken,
+  resetPasswordWithToken,
   findOrCreateFromOAuth,
 };

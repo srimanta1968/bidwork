@@ -172,6 +172,69 @@ export async function resendCode(req: Request, res: Response): Promise<void> {
   }
 }
 
+/**
+ * POST /api/auth/forgot-password
+ * Always returns 200 to prevent email enumeration. If the email matches a
+ * password-authenticated account, a reset link is emailed; otherwise we
+ * silently no-op.
+ */
+export async function forgotPassword(req: Request, res: Response): Promise<void> {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      res.status(400).json({ success: false, error: 'Email is required' });
+      return;
+    }
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+      res.status(400).json({ success: false, error: emailValidation.error });
+      return;
+    }
+
+    const issued = await authService.createPasswordResetToken(email);
+    if (issued) {
+      const base = (process.env.OAUTH_CLIENT_BASE || 'http://localhost:5173').replace(/\/$/, '');
+      const resetUrl = `${base}/reset-password?token=${encodeURIComponent(issued.rawToken)}`;
+      await emailService.sendPasswordResetEmail(email, resetUrl, issued.firstName);
+    }
+    // Same response either way — no email enumeration.
+    res.status(200).json({ success: true, data: { sent: true } });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+}
+
+/**
+ * POST /api/auth/reset-password
+ * Body: { token, new_password }
+ * On success, also marks the email as verified (proof of email control).
+ */
+export async function resetPassword(req: Request, res: Response): Promise<void> {
+  try {
+    const { token, new_password } = req.body;
+    if (!token || !new_password) {
+      res.status(400).json({ success: false, error: 'Token and new password are required' });
+      return;
+    }
+    const passwordValidation = validatePassword(new_password);
+    if (!passwordValidation.isValid) {
+      res.status(400).json({ success: false, error: passwordValidation.errors[0] });
+      return;
+    }
+
+    const ok = await authService.resetPasswordWithToken(token, new_password);
+    if (!ok) {
+      res.status(400).json({ success: false, error: 'Invalid or expired reset link' });
+      return;
+    }
+    res.status(200).json({ success: true, data: { reset: true } });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+}
+
 // ── OAuth (Google + LinkedIn) ──
 
 const OAUTH_PROVIDERS = ['google', 'linkedin'] as const;

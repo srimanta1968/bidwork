@@ -168,7 +168,22 @@ export async function runAuthMigration(pool: Pool): Promise<void> {
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_oauth_accounts_user ON auth.oauth_accounts (user_id)`);
 
-  console.log('[migrate:auth] Auth domain ready (v4: oauth_accounts + nullable password_hash).');
+  // ── v5: password reset ──
+  // Store SHA-256 hash of the raw token (raw token only ever lives in the email).
+  // 64 chars = 32-byte hex digest. Index on the hash for token lookup.
+  for (const col of [
+    "ALTER TABLE auth.users ADD COLUMN password_reset_token VARCHAR(64)",
+    "ALTER TABLE auth.users ADD COLUMN password_reset_expires TIMESTAMP WITH TIME ZONE",
+  ]) {
+    await pool.query(`DO $$ BEGIN ${col}; EXCEPTION WHEN duplicate_column THEN NULL; END $$`);
+  }
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_auth_users_password_reset_token
+      ON auth.users (password_reset_token)
+      WHERE password_reset_token IS NOT NULL
+  `);
+
+  console.log('[migrate:auth] Auth domain ready (v5: password reset tokens).');
   } catch (error) {
     console.error('[migrate:auth] Migration failed:', error);
     throw error;
