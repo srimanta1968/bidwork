@@ -48,5 +48,30 @@
     "status": "active",
     "isOwner": false,
     "schemaSyncEnabled": false
+  },
+  "6c0fc1d6-5174-498b-a0c6-eb0498b3f92c": {
+    "projectId": "6c0fc1d6-5174-498b-a0c6-eb0498b3f92c",
+    "projectName": "projex_crm",
+    "projectPath": "/c/Users/srima/projex_crm",
+    "workspacePath": "/c/Users/srima/projex_crm",
+    "containerPath": "/projects/additional1",
+    "databaseName": "linked_in_lead_generation_db",
+    "databaseType": "postgresql",
+    "databaseConfig": {
+      "enabled": true,
+      "type": "postgresql",
+      "host": "host.docker.internal",
+      "port": 5432,
+      "database": "linked_in_lead_generation_db",
+      "username": "postgres",
+      "password": "postgres"
+    },
+    "apiKey": "IrC2YQQHfDLp8T/uySDJY0otA51DGhFkbf5WPnqDg3FePWYyzYiuqGYfvgVzP1WRc67Pjer0PFGKgQZ+cfac1hBJRoUVp83j6N83Z82M4vjrcaHlgpAfAXd1fZlhGoeX3WApz/+AvsQBUdi+5ciYbadnfGY3WPUAgA5xCV0Qku6Zb/Ab9bn5BI095y3//RZNriX2mrPRh08qBtSsmQ==",
+    "sprintId": "efb66e3b-c05c-4cbf-b6f4-9fa4ad73c9aa",
+    "registeredAt": "2026-04-29T21:48:48.120592Z",
+    "lastSeen": "2026-04-29T21:48:48.120601Z",
+    "status": "active",
+    "isOwner": false,
+    "schemaSyncEnabled": false
   }
 }

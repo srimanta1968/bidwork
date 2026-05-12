@@ -212,24 +212,8 @@ export async function runBiddingMigration(pool: Pool): Promise<void> {
     ON bidding.bids (project_id, selection_workflow_state)
   `);
 
-  // Documented allowed selection_workflow_state values. Includes the 'paused'
-  // state used when another bid on the same project enters offer_accepted.
-  await pool.query(`
-    DO $$ BEGIN
-      ALTER TABLE bidding.bids
-        DROP CONSTRAINT IF EXISTS chk_workflow_state;
-      ALTER TABLE bidding.bids
-        ADD CONSTRAINT chk_workflow_state CHECK (
-          selection_workflow_state IN (
-            'pending','shortlisted','approved_by_owner','offer_accepted',
-            'contract_drafted','contract_owner_signed','contract_contractor_signed',
-            'addresses_revealed','in_progress','completion_submitted',
-            'completion_acknowledged','payment_received','receipt_issued',
-            'paused','rejected','withdrawn','abandoned'
-          )
-        );
-    END $$
-  `);
+  // chk_workflow_state is created by the v6.4 block below with the full
+  // (extended) state list — see "Extend selection_workflow_state enum…".
 
   // ── v6.02a: Deposits + payment intents (Stripe escrow) ──
   await pool.query(`
