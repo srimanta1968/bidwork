@@ -56,5 +56,6 @@ coverage/
 # Database
 *.sqlite
 *.sqlite3
-data/
+# Anchored so src/data/ (curated seed files like locations-seed.json) stays tracked
+/data/
 
