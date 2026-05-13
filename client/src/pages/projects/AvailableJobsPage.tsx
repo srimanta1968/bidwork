@@ -293,7 +293,7 @@ export default function AvailableJobsPage() {
                     {scopeTasks.length > 0 ? (
                       <div style={{ marginBottom: 16 }}>
                         <p style={{ fontSize: 13, color: '#475569', marginBottom: 12 }}>
-                          Enter your labor cost per task. Each line must meet or exceed the start price floor for that task. Materials added later from your catalog will roll into the bid total automatically.
+                          For each task, enter labor cost and add the materials you'll supply. Tasks marked <strong>Owner supplies materials</strong> are labor-only.
                         </p>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                           {scopeTasks.map(t => {
