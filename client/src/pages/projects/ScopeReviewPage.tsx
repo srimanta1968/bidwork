@@ -252,18 +252,7 @@ export default function ScopeReviewPage() {
                 const effectivePrice = task.owner_start_price ? Number(task.owner_start_price) : aiPrice;
 
                 return (
-                  <div key={task.id} style={{ background: task.is_hidden ? '#f8fafc' : 'white', borderRadius: 14, padding: 24, border: `1px solid ${task.is_hidden ? '#e2e8f0' : '#e2e8f0'}`, opacity: task.is_hidden ? 0.6 : 1, position: 'relative' }}>
-                    {/* Hide/Show toggle */}
-                    {!project?.is_approved && (
-                      <button onClick={async () => {
-                        const result = await toggleTaskVisibility(id!, task.id, !task.is_hidden);
-                        if (result.success) setTasks(prev => prev.map(t => t.id === task.id ? { ...t, is_hidden: !t.is_hidden } : t));
-                      }}
-                        style={{ position: 'absolute', top: 12, right: 12, fontSize: 12, fontWeight: 600, color: task.is_hidden ? '#059669' : '#94a3b8', background: task.is_hidden ? '#ecfdf5' : '#f8fafc', border: `1px solid ${task.is_hidden ? '#bbf7d0' : '#e2e8f0'}`, borderRadius: 6, padding: '4px 10px', cursor: 'pointer' }}>
-                        {task.is_hidden ? 'Show' : 'Hide'}
-                      </button>
-                    )}
-
+                  <div key={task.id} style={{ background: task.is_hidden ? '#f8fafc' : 'white', borderRadius: 14, padding: 24, border: `1px solid ${task.is_hidden ? '#e2e8f0' : '#e2e8f0'}`, opacity: task.is_hidden ? 0.6 : 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
@@ -273,9 +262,21 @@ export default function ScopeReviewPage() {
                         </div>
                         <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>{task.description}</p>
                       </div>
-                      <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 20 }}>
-                        <p style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>${aiPrice.toLocaleString()} - ${Number(task.cost_max || 0).toLocaleString()}</p>
-                        <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>{task.labor_hours_min || 0}-{task.labor_hours_max || 0} hrs labor</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', flexShrink: 0, marginLeft: 20, gap: 8 }}>
+                        {/* Hide/Show toggle — inline so it never overlaps the price range */}
+                        {!project?.is_approved && (
+                          <button onClick={async () => {
+                            const result = await toggleTaskVisibility(id!, task.id, !task.is_hidden);
+                            if (result.success) setTasks(prev => prev.map(t => t.id === task.id ? { ...t, is_hidden: !t.is_hidden } : t));
+                          }}
+                            style={{ fontSize: 12, fontWeight: 600, color: task.is_hidden ? '#059669' : '#94a3b8', background: task.is_hidden ? '#ecfdf5' : '#f8fafc', border: `1px solid ${task.is_hidden ? '#bbf7d0' : '#e2e8f0'}`, borderRadius: 6, padding: '4px 10px', cursor: 'pointer' }}>
+                            {task.is_hidden ? 'Show' : 'Hide'}
+                          </button>
+                        )}
+                        <div style={{ textAlign: 'right' }}>
+                          <p style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>${aiPrice.toLocaleString()} - ${Number(task.cost_max || 0).toLocaleString()}</p>
+                          <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>{task.labor_hours_min || 0}-{task.labor_hours_max || 0} hrs labor</p>
+                        </div>
                       </div>
                     </div>
 
