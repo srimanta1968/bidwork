@@ -88,8 +88,13 @@ function AppRoutes() {
 }
 
 function App() {
+  // In prod we live under https://bidwork.projexlight.com/admin/ so the router
+  // needs to know its base path. In dev (vite at :3001) the BASE_URL is "/" so
+  // basename collapses to undefined.
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const basename = baseUrl.replace(/\/$/, '') || undefined;
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <AdminAuthProvider>
         <AppRoutes />
       </AdminAuthProvider>
