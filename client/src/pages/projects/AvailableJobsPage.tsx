@@ -302,14 +302,15 @@ export default function AvailableJobsPage() {
                             const labor = parseFloat(line.labor_cost) || 0;
                             const belowFloor = line.labor_cost !== '' && labor < floor;
                             const ownerSupplies = !!t.owner_supplied_materials;
-                            const matMin = Number(t.material_cost_min || 0);
-                            const matMax = Number(t.material_cost_max || 0);
-                            const labMin = Number(t.labor_cost_min || 0);
-                            const labMax = Number(t.labor_cost_max || 0);
                             return (
                               <div key={t.id} style={{ background: '#f8fafc', border: belowFloor ? '1px solid #fca5a5' : '1px solid #e2e8f0', borderRadius: 10, padding: 12 }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                                   <div style={{ flex: 1 }}>
+                                    {/* Owner-Supplied badge is the only material/labor signal we surface
+                                        to the contractor. The homeowner's AI cost ranges intentionally
+                                        stay hidden here so the contractor isn't anchored to the AI
+                                        number when pricing their own bid — they compete on labor
+                                        rate, sourcing, and speed. */}
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                                       <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>{t.title}</p>
                                       {ownerSupplies && (
@@ -320,17 +321,6 @@ export default function AvailableJobsPage() {
                                       )}
                                     </div>
                                     {t.description && <p style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>{t.description.slice(0, 140)}{t.description.length > 140 ? '...' : ''}</p>}
-                                    {/* AI material / labor split — informational, helps the contractor calibrate */}
-                                    {(matMin || matMax || labMin || labMax) ? (
-                                      <div style={{ display: 'flex', gap: 14, marginTop: 6, fontSize: 11, color: '#475569' }}>
-                                        <span>
-                                          Materials est: {ownerSupplies
-                                            ? <span style={{ color: '#047857', fontWeight: 600 }}>owner-supplied</span>
-                                            : <span style={{ color: '#0f172a', fontWeight: 600 }}>${matMin.toLocaleString()} - ${matMax.toLocaleString()}</span>}
-                                        </span>
-                                        <span>Labor est: <span style={{ color: '#0f172a', fontWeight: 600 }}>${labMin.toLocaleString()} - ${labMax.toLocaleString()}</span></span>
-                                      </div>
-                                    ) : null}
                                   </div>
                                   <div style={{ marginLeft: 12, textAlign: 'right' }}>
                                     <p style={{ fontSize: 11, fontWeight: 600, color: '#64748b' }}>START PRICE</p>
