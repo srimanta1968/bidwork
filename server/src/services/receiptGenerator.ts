@@ -82,8 +82,12 @@ export async function generateContractorPaymentReceipt(bidId: string) {
   );
   if (!contractorProfile?.legal_company_name) throw new Error('Contractor billing profile incomplete');
 
+  // Pull owner_supplied_materials so the receipt itemization can render
+  // "— (owner supplied)" instead of $0 for any task where the homeowner
+  // provided materials themselves.
   const breakdown = await biddingDb.queryAll<any>(
-    `SELECT btb.task_id, btb.labor_cost, btb.materials_subtotal, btb.line_total, st.title
+    `SELECT btb.task_id, btb.labor_cost, btb.materials_subtotal, btb.line_total,
+            st.title, st.owner_supplied_materials
        FROM bid_task_breakdown btb LEFT JOIN scope_tasks st ON st.id = btb.task_id
       WHERE btb.bid_id = $1 ORDER BY st.sort_order`, [bidId]
   );
@@ -103,9 +107,13 @@ export async function generateContractorPaymentReceipt(bidId: string) {
   const issuerAddress = [contractorProfile.billing_address_line1, contractorProfile.billing_address_line2,
     `${contractorProfile.billing_city || ''}, ${contractorProfile.billing_state || ''} ${contractorProfile.billing_zip || ''}`].filter(Boolean).join(', ');
 
-  const lineRows = breakdown.map(r =>
-    `<tr><td>${escapeHtml(r.title || '')}<br><span class="muted">Labor $${Number(r.labor_cost).toFixed(2)} · Materials $${Number(r.materials_subtotal).toFixed(2)}</span></td><td style="text-align:right;">$${Number(r.line_total).toFixed(2)}</td></tr>`
-  ).join('');
+  const lineRows = breakdown.map(r => {
+    const ownerSupplies = !!r.owner_supplied_materials;
+    const materialsCell = ownerSupplies
+      ? '<span style="color:#047857;font-weight:600;">— (owner supplied)</span>'
+      : `$${Number(r.materials_subtotal).toFixed(2)}`;
+    return `<tr><td>${escapeHtml(r.title || '')}<br><span class="muted">Labor $${Number(r.labor_cost).toFixed(2)} · Materials ${materialsCell}</span></td><td style="text-align:right;">$${Number(r.line_total).toFixed(2)}</td></tr>`;
+  }).join('');
   const awoRows = additional.map(a =>
     `<tr><td>Additional work — ${escapeHtml(a.title)}</td><td style="text-align:right;">$${(Number(a.amount_cents)/100).toFixed(2)}</td></tr>`
   ).join('');

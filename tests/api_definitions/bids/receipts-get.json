@@ -1,0 +1,16 @@
+{
+  "endpoint": "/api/bids/:id/receipts",
+  "method": "GET",
+  "taskId": "d46989e6-217f-4888-90f1-8c72a5b54cde",
+  "description": "List receipts (deposit + final payment) for a bid. Final payment receipt now shows 'Owner supplies materials' per task and uses '— (owner supplied)' in the materials column where applicable.",
+  "requiresAuth": true,
+  "testability": "manual",
+  "priority": 210,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "List bid receipts",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

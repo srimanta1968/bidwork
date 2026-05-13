@@ -52,7 +52,16 @@ export async function generateContract(bidId: string): Promise<GeneratedDoc> {
   const homeowner = await authDb.queryOne<any>('SELECT id, first_name, last_name FROM users WHERE id = $1', [project.homeowner_id]);
   const contractor = await authDb.queryOne<any>('SELECT id, first_name, last_name FROM users WHERE id = $1', [bid.contractor_id]);
   const contractorProfile = await authDb.queryOne<any>('SELECT business_name, license_number, category FROM contractor_profiles WHERE user_id = $1', [bid.contractor_id]);
-  const tasks = await projectDb.queryAll<any>('SELECT id, title, description FROM scope_tasks WHERE project_id = $1 AND is_removed = false ORDER BY sort_order', [bid.project_id]);
+  // Include owner_supplied_materials so the rendered workorder + contract can
+  // clearly mark each task as Owner-Supplied or Contractor-Supplied — avoids
+  // post-signature disputes about who pays for what.
+  const tasks = await projectDb.queryAll<any>(
+    `SELECT id, title, description, owner_supplied_materials
+     FROM scope_tasks
+     WHERE project_id = $1 AND is_removed = false
+     ORDER BY sort_order`,
+    [bid.project_id]
+  );
   const breakdown = await biddingDb.queryAll<any>('SELECT task_id, labor_cost, materials_subtotal, line_total, notes FROM bid_task_breakdown WHERE bid_id = $1', [bidId]);
   const breakdownByTask = new Map(breakdown.map(b => [b.task_id, b]));
 
@@ -85,15 +94,25 @@ export async function generateContract(bidId: string): Promise<GeneratedDoc> {
   if (project.description) lines.push(`<p>${escapeHtml(project.description)}</p>`);
 
   lines.push('<h2>Scope &amp; Pricing</h2>');
-  lines.push('<table><thead><tr><th>Task</th><th>Labor</th><th>Materials</th><th>Total</th></tr></thead><tbody>');
+  // Materials column shows "— (owner supplied)" when the homeowner has opted to
+  // supply materials for that task. Recorded on the contract itself so both
+  // parties are clear on who is buying what before signing.
+  lines.push('<table><thead><tr><th>Task</th><th>Materials supplier</th><th>Labor</th><th>Materials</th><th>Total</th></tr></thead><tbody>');
   for (const t of tasks) {
     const b = breakdownByTask.get(t.id);
     const labor = Number(b?.labor_cost ?? 0);
     const mats = Number(b?.materials_subtotal ?? 0);
     const total = Number(b?.line_total ?? labor + mats);
-    lines.push(`<tr><td><strong>${escapeHtml(t.title || '')}</strong>${t.description ? `<br><span class="muted">${escapeHtml(t.description.slice(0, 240))}</span>` : ''}</td><td>$${labor.toFixed(2)}</td><td>$${mats.toFixed(2)}</td><td>$${total.toFixed(2)}</td></tr>`);
+    const ownerSupplies = !!t.owner_supplied_materials;
+    const supplierCell = ownerSupplies
+      ? '<span style="color:#047857;font-weight:600;">Homeowner</span>'
+      : 'Contractor';
+    const matsCell = ownerSupplies
+      ? '<span style="color:#64748b;">— (owner supplied)</span>'
+      : `$${mats.toFixed(2)}`;
+    lines.push(`<tr><td><strong>${escapeHtml(t.title || '')}</strong>${t.description ? `<br><span class="muted">${escapeHtml(t.description.slice(0, 240))}</span>` : ''}</td><td>${supplierCell}</td><td>$${labor.toFixed(2)}</td><td>${matsCell}</td><td>$${total.toFixed(2)}</td></tr>`);
   }
-  lines.push(`</tbody><tfoot><tr><td colspan="3" style="text-align:right;">Total Contract Value</td><td>$${Number(bid.bid_amount || 0).toFixed(2)}</td></tr></tfoot></table>`);
+  lines.push(`</tbody><tfoot><tr><td colspan="4" style="text-align:right;">Total Contract Value</td><td>$${Number(bid.bid_amount || 0).toFixed(2)}</td></tr></tfoot></table>`);
 
   lines.push('<h2>Timeline</h2>');
   lines.push(`<p>Estimated completion: <strong>${bid.estimated_days || '—'} days</strong> from contract execution.</p>`);
@@ -169,7 +188,16 @@ export async function generateSignedContract(bidId: string): Promise<GeneratedDo
   const homeowner = await authDb.queryOne<any>('SELECT id, first_name, last_name FROM users WHERE id = $1', [project.homeowner_id]);
   const contractor = await authDb.queryOne<any>('SELECT id, first_name, last_name FROM users WHERE id = $1', [bid.contractor_id]);
   const contractorProfile = await authDb.queryOne<any>('SELECT business_name, license_number FROM contractor_profiles WHERE user_id = $1', [bid.contractor_id]);
-  const tasks = await projectDb.queryAll<any>('SELECT id, title, description FROM scope_tasks WHERE project_id = $1 AND is_removed = false ORDER BY sort_order', [bid.project_id]);
+  // Include owner_supplied_materials so the rendered workorder + contract can
+  // clearly mark each task as Owner-Supplied or Contractor-Supplied — avoids
+  // post-signature disputes about who pays for what.
+  const tasks = await projectDb.queryAll<any>(
+    `SELECT id, title, description, owner_supplied_materials
+     FROM scope_tasks
+     WHERE project_id = $1 AND is_removed = false
+     ORDER BY sort_order`,
+    [bid.project_id]
+  );
   const breakdown = await biddingDb.queryAll<any>('SELECT task_id, labor_cost, materials_subtotal, line_total FROM bid_task_breakdown WHERE bid_id = $1', [bidId]);
   const breakdownByTask = new Map(breakdown.map(b => [b.task_id, b]));
 
@@ -202,15 +230,25 @@ export async function generateSignedContract(bidId: string): Promise<GeneratedDo
   if (project.description) lines.push(`<p>${escapeHtml(project.description)}</p>`);
 
   lines.push('<h2>Scope &amp; Pricing</h2>');
-  lines.push('<table><thead><tr><th>Task</th><th>Labor</th><th>Materials</th><th>Total</th></tr></thead><tbody>');
+  // Materials column shows "— (owner supplied)" when the homeowner has opted to
+  // supply materials for that task. Recorded on the contract itself so both
+  // parties are clear on who is buying what before signing.
+  lines.push('<table><thead><tr><th>Task</th><th>Materials supplier</th><th>Labor</th><th>Materials</th><th>Total</th></tr></thead><tbody>');
   for (const t of tasks) {
     const b = breakdownByTask.get(t.id);
     const labor = Number(b?.labor_cost ?? 0);
     const mats = Number(b?.materials_subtotal ?? 0);
     const total = Number(b?.line_total ?? labor + mats);
-    lines.push(`<tr><td><strong>${escapeHtml(t.title || '')}</strong>${t.description ? `<br><span class="muted">${escapeHtml(t.description.slice(0, 240))}</span>` : ''}</td><td>$${labor.toFixed(2)}</td><td>$${mats.toFixed(2)}</td><td>$${total.toFixed(2)}</td></tr>`);
+    const ownerSupplies = !!t.owner_supplied_materials;
+    const supplierCell = ownerSupplies
+      ? '<span style="color:#047857;font-weight:600;">Homeowner</span>'
+      : 'Contractor';
+    const matsCell = ownerSupplies
+      ? '<span style="color:#64748b;">— (owner supplied)</span>'
+      : `$${mats.toFixed(2)}`;
+    lines.push(`<tr><td><strong>${escapeHtml(t.title || '')}</strong>${t.description ? `<br><span class="muted">${escapeHtml(t.description.slice(0, 240))}</span>` : ''}</td><td>${supplierCell}</td><td>$${labor.toFixed(2)}</td><td>${matsCell}</td><td>$${total.toFixed(2)}</td></tr>`);
   }
-  lines.push(`</tbody><tfoot><tr><td colspan="3" style="text-align:right;">Total Contract Value</td><td>$${Number(bid.bid_amount || 0).toFixed(2)}</td></tr></tfoot></table>`);
+  lines.push(`</tbody><tfoot><tr><td colspan="4" style="text-align:right;">Total Contract Value</td><td>$${Number(bid.bid_amount || 0).toFixed(2)}</td></tr></tfoot></table>`);
 
   lines.push('<h2>Timeline</h2>');
   lines.push(`<p>Estimated completion: <strong>${bid.estimated_days || '—'} days</strong> from contract execution.</p>`);

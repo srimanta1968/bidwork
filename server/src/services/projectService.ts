@@ -70,10 +70,18 @@ export async function getProjectMedia(projectId: string) {
 export async function getScopeTasks(projectId: string, forContractor: boolean = false) {
   try {
     if (forContractor) {
-      // Contractor view: show effective_start_price, hide ceiling, exclude hidden tasks
+      // Contractor / skilled-labor view: include material/labor cost split and the
+      // owner_supplied_materials flag so the bidding UI can show "Owner supplies
+      // materials" badges and lock the materials portion of the bid breakdown.
+      // Hidden tasks still excluded; effective_start_price masks the homeowner's
+      // ceiling override.
       return await projectDb.queryAll(
         `SELECT id, project_id, sort_order, title, description, category, quantity, unit,
                 COALESCE(owner_start_price, cost_min) AS effective_start_price,
+                cost_min, cost_max,
+                material_cost_min, material_cost_max,
+                labor_cost_min, labor_cost_max,
+                owner_supplied_materials,
                 labor_hours_min, labor_hours_max, ai_confidence, photo_evidence_keys,
                 homeowner_notes, dimensions, created_at
          FROM scope_tasks
@@ -82,6 +90,8 @@ export async function getScopeTasks(projectId: string, forContractor: boolean = 
         [projectId]
       );
     }
+    // Homeowner / admin view: SELECT * — covers any future scope_task columns
+    // (e.g. material_cost_min/max from v4) without needing a code change here.
     return await projectDb.queryAll('SELECT * FROM scope_tasks WHERE project_id = $1 AND is_removed = false ORDER BY sort_order', [projectId]);
   }
   catch (error) { console.error('Get scope tasks error:', error); throw error; }

@@ -9,6 +9,14 @@ interface ScopeTaskLite {
   description?: string;
   effective_start_price?: number | string | null;
   cost_min?: number | string | null;
+  cost_max?: number | string | null;
+  material_cost_min?: number | string | null;
+  material_cost_max?: number | string | null;
+  labor_cost_min?: number | string | null;
+  labor_cost_max?: number | string | null;
+  /** When true the homeowner is supplying materials for this task — the
+   *  contractor only quotes labor and the materials picker is hidden. */
+  owner_supplied_materials?: boolean;
   photo_evidence_keys?: string[] | null;
 }
 
@@ -157,13 +165,21 @@ export default function AvailableJobsPage() {
         labor_cost: parseFloat(l.labor_cost),
         notes: l.notes || undefined,
       }));
-      if (materials.length > 0) {
-        const bad = materials.find(m => !(m.quantity > 0) || !(m.unit_price > 0));
+      // Strip materials lines for any task where the homeowner is supplying
+      // them — the bid breakdown's materials_subtotal must be $0 for those
+      // tasks regardless of what's in component state. Defense in depth: the
+      // UI already hides the picker, but state could be stale.
+      const ownerSuppliedTaskIds = new Set(
+        scopeTasks.filter(t => t.owner_supplied_materials).map(t => t.id)
+      );
+      const effectiveMaterials = materials.filter(m => !ownerSuppliedTaskIds.has(m.task_id));
+      if (effectiveMaterials.length > 0) {
+        const bad = effectiveMaterials.find(m => !(m.quantity > 0) || !(m.unit_price > 0));
         if (bad) {
           setError(`Set a quantity and unit price for "${bad.item_name}" before submitting.`);
           return;
         }
-        payload.material_list = materials.map(m => ({
+        payload.material_list = effectiveMaterials.map(m => ({
           task_id: m.task_id,
           catalog_item_id: m.catalog_item_id,
           quantity: m.quantity,
@@ -285,12 +301,36 @@ export default function AvailableJobsPage() {
                             const floor = floorFor(t);
                             const labor = parseFloat(line.labor_cost) || 0;
                             const belowFloor = line.labor_cost !== '' && labor < floor;
+                            const ownerSupplies = !!t.owner_supplied_materials;
+                            const matMin = Number(t.material_cost_min || 0);
+                            const matMax = Number(t.material_cost_max || 0);
+                            const labMin = Number(t.labor_cost_min || 0);
+                            const labMax = Number(t.labor_cost_max || 0);
                             return (
                               <div key={t.id} style={{ background: '#f8fafc', border: belowFloor ? '1px solid #fca5a5' : '1px solid #e2e8f0', borderRadius: 10, padding: 12 }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                                   <div style={{ flex: 1 }}>
-                                    <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>{t.title}</p>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                                      <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>{t.title}</p>
+                                      {ownerSupplies && (
+                                        <span title="Homeowner is supplying materials for this task — only quote labor."
+                                          style={{ fontSize: 11, fontWeight: 700, color: '#047857', background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: 999, padding: '2px 8px' }}>
+                                          Owner supplies materials
+                                        </span>
+                                      )}
+                                    </div>
                                     {t.description && <p style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>{t.description.slice(0, 140)}{t.description.length > 140 ? '...' : ''}</p>}
+                                    {/* AI material / labor split — informational, helps the contractor calibrate */}
+                                    {(matMin || matMax || labMin || labMax) ? (
+                                      <div style={{ display: 'flex', gap: 14, marginTop: 6, fontSize: 11, color: '#475569' }}>
+                                        <span>
+                                          Materials est: {ownerSupplies
+                                            ? <span style={{ color: '#047857', fontWeight: 600 }}>owner-supplied</span>
+                                            : <span style={{ color: '#0f172a', fontWeight: 600 }}>${matMin.toLocaleString()} - ${matMax.toLocaleString()}</span>}
+                                        </span>
+                                        <span>Labor est: <span style={{ color: '#0f172a', fontWeight: 600 }}>${labMin.toLocaleString()} - ${labMax.toLocaleString()}</span></span>
+                                      </div>
+                                    ) : null}
                                   </div>
                                   <div style={{ marginLeft: 12, textAlign: 'right' }}>
                                     <p style={{ fontSize: 11, fontWeight: 600, color: '#64748b' }}>START PRICE</p>
@@ -313,7 +353,14 @@ export default function AvailableJobsPage() {
                                 </div>
                                 {belowFloor && <p style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>Labor must be at least ${floor.toLocaleString()}</p>}
 
-                                {/* Attached materials for this task */}
+                                {/* Attached materials for this task — hidden entirely when the
+                                    homeowner is supplying materials. Contractor only quotes labor. */}
+                                {ownerSupplies ? (
+                                  <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px dashed #e2e8f0', fontSize: 12, color: '#047857', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <span style={{ fontWeight: 600 }}>✓ Homeowner supplies materials for this task.</span>
+                                    <span style={{ color: '#64748b' }}>Bid labor only.</span>
+                                  </div>
+                                ) : (
                                 <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px dashed #e2e8f0' }}>
                                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                                     <span style={{ fontSize: 12, fontWeight: 600, color: '#475569' }}>
@@ -355,6 +402,7 @@ export default function AvailableJobsPage() {
                                     </div>
                                   )}
                                 </div>
+                                )}
                               </div>
                             );
                           })}
