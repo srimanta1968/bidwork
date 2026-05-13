@@ -2,10 +2,10 @@
   "projectId": "e6977b8c-5931-4182-8fec-db277e187f8e",
   "sprintId": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
   "poolIndex": 1,
-  "encryptedPlatformApiKey": "+DfXGfFmWPLIHHJcwxrE0Y2AKlQDdi5zojzIhrtKCna+Jeqae1R1u8VPbsA6uvAv1kZeWHDReMSgDmGjkRMZCUQjyQ0bsAEPXWimNjUpU4rNFVTziY21fiD7iqQSMxyaAHGAuw+TTLwBpEg0UA1Lyw7hz+c6vyEP0uMrWCXHkFLH8Lp+gDYgMlqTM3rJoD14bxM5ekHJZFnWI/NGRg==",
-  "encryptedLLMConfig": "HOGgbj+nUi4KSzbJBmggzos96dx0InlhK6U8sRnfw8KtKIRo3L2c7Tp+xhxCG3OTlMtK42cdGYqTOSORivNjEy32DMUsaY9oW4k3k76Gm84hhAHy9QpiST39dWnhIS3uxQJ/Vm1JpVJs/R8KMPrJdv6/TXN2efCA8/QSaFicISsGGGvU2BWP6SKzuJ09VkGpQSxRSR2M47M8Z8dzkrmV5Sbc0CLR5aDg22FT936DNv76nmlZvjvTY1vB0lGBMxp11DRHO8yLXqD3SgPI3pic3laCCbi4sEv8j71bCZV1hydHqoHbI8m56bvRBhHAQNmdXPuOWpnEeY8o3+OeshEPQQ832EkRl1NzqRtMcBtFyBVNP4G6G4DiE/sO/pxr/C0tnTT4/GW1ox8CF1ltZ88nVyvzyphQdwP6Twtjn96eShJSIMGUBFRVm1wMyNE6Dk23CvKT04wBXM740lhi4G4xyz09wGbkbfJPexuySvkfj726FsddtTItK0Kx1DpFeyivq3pJt0+e2banzK66m2NKufu+l/oQByLFcjn/KFlOf1LqpcQSWrz2",
+  "encryptedPlatformApiKey": "SIs3vrC5YgEU2+n80Ks8iiMiBbSp5xVc5yP752bfJjGidrmtib4/9LxUV7zBDW//e3ONgsEDyirzwZ+/7nobtW/G4RJLI+OhhrbOV+6KuMirmUO+Y7eDLiFWObb85rAUZVXAM+jiJ+2EHwu+nvV/EW4Ir7x3TaaXkdAvHaoQKfHPr03msCak9PcgqzTtDsYPii7CsQ8E7heCDp/eAA==",
+  "encryptedLLMConfig": "Y7JPswAV/DgdnsVH9TVHgvASO/Vk/nIqr/P9nH+L2yLYTC/zfaRz+pX7e/pmpLpa6mPvs6Jd4kbm1AdOePqoAv6nsaGxhheIjscqwFRELncLPm1GsWuYEtLLSw/KXrXxznmWyW4q9uDcVOoo4gx3u0YM19cmegziqTjXPnvEVAaW0Kp2AbyjqvguDGRshDTHkwmg/k52ZJ00nCxhCbacDrnwDsFkX2gAmCJCqxbds8ni8PxwdEdLu6/uwSJnWpVn8J1Htm5ye0+CMyWUxOfjw95I2ycsTl/Q8xMqIhRLB3q/pQjAQpZYn+toXVVF10oUx4iKM/3YebGz+6pQtAgXVae4/sBroEMIN+mdjhFQ6tcsw5e5GZ3r6wRMmlx7+F1Ex3wF2fpK1+FkoFu36birSnAC6EZWpJXCmMmMJfyll/b7Dx8wqKl/00lj/tsmTET8DEq05jh6PWBcLT05R/Ir82d1cIyiWiXxGZjUeCr3ceZQr+O6MgDK9PKOtwqQO/8x8odYFRhcxfBBm7i+ddbUedbuZjumFWuMGXQA4z+xTCYHn1LPSOa4",
   "configVersion": "1.0.0",
-  "expiresAt": "2026-05-12T19:18:56.465Z",
+  "expiresAt": "2026-06-12T00:16:39.598Z",
   "databaseConfig": {
     "enabled": true,
     "type": "postgresql",

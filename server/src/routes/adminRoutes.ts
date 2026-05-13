@@ -2,7 +2,8 @@ import { Router, Request, Response } from 'express';
 import { authenticate } from '../middleware/auth';
 import { requireAdmin } from '../middleware/adminAuth';
 import { AuthenticatedRequest } from '../types';
-import { adminLogin, getUsers, getUserStats, getUserById, updateUserStatus, getBidPriceRules, createBidPriceRule, updateBidPriceRule, deleteBidPriceRule, getPriceVarianceAnalytics, getSubscriptions, getSubscriptionStats, updateSubscription, getSubscriptionPlans, createSubscriptionPlan, getPlatformUsage, getContractAllocation, getCurrentServiceFee, getServiceFeeHistory, setServiceFee } from '../controllers/adminController';
+import { adminLogin, getUsers, getUserStats, getUserById, updateUserStatus, getBidPriceRules, createBidPriceRule, updateBidPriceRule, deleteBidPriceRule, getPriceVarianceAnalytics, getSubscriptions, getSubscriptionStats, updateSubscription, getSubscriptionPlans, createSubscriptionPlan, getPlatformUsage, getContractAllocation, getCurrentServiceFee, getServiceFeeHistory, setServiceFee, getDashboardStats } from '../controllers/adminController';
+import { listProvidersHandler, upsertProviderHandler, setDefaultProviderHandler, deleteProviderHandler, testLlmHandler, testEmailHandler, sendUserEmailHandler } from '../controllers/adminProviderController';
 
 const router: Router = Router();
 const wrap = (fn: Function) => (req: Request, res: Response) => fn(req as AuthenticatedRequest, res);
@@ -42,5 +43,19 @@ router.get('/analytics/contract-allocation', wrap(getContractAllocation));
 router.get('/service-fee/current', wrap(getCurrentServiceFee));
 router.get('/service-fee/history', wrap(getServiceFeeHistory));
 router.post('/service-fee', wrap(setServiceFee));
+
+// Dashboard summary
+router.get('/stats', wrap(getDashboardStats));
+
+// Provider config (AI + Email)
+router.get('/providers', wrap(listProvidersHandler));
+router.post('/providers', wrap(upsertProviderHandler));
+router.post('/providers/:id/default', wrap(setDefaultProviderHandler));
+router.delete('/providers/:id', wrap(deleteProviderHandler));
+router.post('/providers/test-llm', wrap(testLlmHandler));
+router.post('/providers/test-email', wrap(testEmailHandler));
+
+// Send personal email to a specific user
+router.post('/users/:id/email', wrap(sendUserEmailHandler));
 
 export default router;

@@ -31,9 +31,11 @@ HAS_VIOLATIONS=false
 HAS_TODOS=false
 
 # API Test Mode Configuration
-# Set to 'full' to run ALL API tests (useful for CI/CD or before release)
-# Set to 'incremental' (default) to only test APIs related to changed files
-API_TEST_MODE="${API_TEST_MODE:-incremental}"
+# Pre-push ALWAYS runs ALL API tests regardless of changed files.
+# This is intentional: pushes represent a shipping boundary, so we validate
+# the full API surface before code leaves the developer's machine.
+# For delta/incremental validation based on staged files, use the pre-commit hook.
+API_TEST_MODE="full"
 
 # ============================================================
 # Detect Operating System
@@ -466,16 +468,18 @@ fi
 
 if [ -z "$CHANGED_FILES" ]; then
     echo -e "${YELLOW}⚠️  No changed files detected${NC}"
-    echo -e "${YELLOW}   Skipping API tests and component scanning${NC}"
-    exit 0
+    echo -e "${YELLOW}   TODO/component scans will be skipped${NC}"
+    echo -e "${BLUE}   API tests will still run in FULL mode (pre-push policy)${NC}"
+    FILE_COUNT=0
+    CHANGED_FILES_JSON="[]"
+else
+    # Count unique changed files
+    FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
+    echo -e "${GREEN}✓ Found ${FILE_COUNT} changed files${NC}"
+
+    # Convert to JSON array
+    CHANGED_FILES_JSON=$(echo "$CHANGED_FILES" | jq -R -s -c 'split("\n") | map(select(length > 0))')
 fi
-
-# Count unique changed files
-FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
-echo -e "${GREEN}✓ Found ${FILE_COUNT} changed files${NC}"
-
-# Convert to JSON array
-CHANGED_FILES_JSON=$(echo "$CHANGED_FILES" | jq -R -s -c 'split("\n") | map(select(length > 0))')
 
 # ============================================================
 # STEP 6: TODO Detection - Missing API/Mock Reminders
@@ -686,12 +690,7 @@ fi
 # ============================================================
 echo -e "\n${BLUE}🧪 Running API tests (mode: ${API_TEST_MODE})...${NC}"
 echo -e "   ${BLUE}Source: tests/api_definitions/ (LLM-generated)${NC}"
-
-if [ "$API_TEST_MODE" = "full" ]; then
-    echo -e "   ${YELLOW}Full mode: Testing ALL APIs${NC}"
-else
-    echo -e "   ${GREEN}Incremental mode: Testing APIs matching changed files${NC}"
-fi
+echo -e "   ${YELLOW}Full mode: Pre-push always runs ALL API tests (delta validation lives in pre-commit)${NC}"
 
 # Polling configuration
 API_TEST_POLL_INTERVAL="${API_TEST_POLL_INTERVAL:-3}"  # Poll every 3 seconds

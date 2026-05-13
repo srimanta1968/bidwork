@@ -3,7 +3,7 @@
 This folder contains Gherkin/Cucumber feature files for BDD testing.
 
 ## Files Generated
-4 feature file(s) were generated from the sprint features and scenarios.
+3 feature file(s) were generated from the sprint features and scenarios.
 
 ## Usage
 

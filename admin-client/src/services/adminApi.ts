@@ -111,3 +111,71 @@ export async function setServiceFee(data: { percent: number; effective_from?: st
   const res = await fetch(`${API}/service-fee`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
   return res.json();
 }
+
+// Dashboard summary
+export async function getDashboardStats() {
+  const res = await fetch(`${API}/stats`, { headers: authHeaders() });
+  return res.json();
+}
+
+// ── Provider config (LLM + Email) ──
+export type ProviderKind = 'llm' | 'email';
+export type ProviderName = 'openai' | 'gemini' | 'together' | 'sendgrid';
+
+export interface ProviderConfig {
+  id: string;
+  kind: ProviderKind;
+  provider: ProviderName;
+  model: string | null;
+  api_key_masked: string;
+  api_key_last4: string;
+  from_email: string | null;
+  from_name: string | null;
+  is_default: boolean;
+  is_active: boolean;
+  updated_at: string;
+}
+
+export async function listProviders(kind?: ProviderKind) {
+  const qs = kind ? `?kind=${kind}` : '';
+  const res = await fetch(`${API}/providers${qs}`, { headers: authHeaders() });
+  return res.json();
+}
+
+export async function upsertProvider(data: {
+  kind: ProviderKind;
+  provider: ProviderName;
+  model?: string;
+  api_key: string;
+  from_email?: string;
+  from_name?: string;
+  is_default?: boolean;
+}) {
+  const res = await fetch(`${API}/providers`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function setDefaultProvider(id: string) {
+  const res = await fetch(`${API}/providers/${id}/default`, { method: 'POST', headers: authHeaders() });
+  return res.json();
+}
+
+export async function deleteProvider(id: string) {
+  const res = await fetch(`${API}/providers/${id}`, { method: 'DELETE', headers: authHeaders() });
+  return res.json();
+}
+
+export async function testLlmConnection(data: { provider: ProviderName; api_key: string; model?: string }) {
+  const res = await fetch(`${API}/providers/test-llm`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function testEmailProvider(data: { provider: ProviderName; api_key: string; from_email: string; from_name?: string; to: string }) {
+  const res = await fetch(`${API}/providers/test-email`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
+export async function sendUserEmail(userId: string, data: { subject: string; body: string }) {
+  const res = await fetch(`${API}/users/${userId}/email`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}

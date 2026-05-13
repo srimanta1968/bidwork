@@ -195,3 +195,27 @@ export async function setServiceFee(req: AuthenticatedRequest, res: Response): P
     res.status(201).json({ success: true, data: { config } });
   } catch (error: any) { res.status(400).json({ success: false, error: error.message }); }
 }
+
+/**
+ * Aggregated KPI summary for the admin Dashboard. Bundles a few existing
+ * service calls so the UI can render the landing page in one round-trip.
+ */
+export async function getDashboardStats(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const [usersByRole, subStats, currentFee] = await Promise.all([
+      adminService.getUserStats().catch(() => ({})),
+      adminService.getSubscriptionStats().catch(() => ({})),
+      adminService.getCurrentServiceFee().catch(() => null),
+    ]);
+    res.status(200).json({
+      success: true,
+      data: {
+        users: usersByRole,
+        subscriptions: subStats,
+        service_fee: currentFee,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+}

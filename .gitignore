@@ -59,9 +59,7 @@ docker-compose.override.yml
 *.sqlite
 *.sqlite3
 *.db
-# Local DB dumps only — curated seed files under */src/data/ remain tracked
-/data/
-/*/data/
+data/
 
 # Temporary files
 tmp/

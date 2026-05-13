@@ -1,0 +1,23 @@
+{
+  "endpoint": "/api/admin/providers/test-email",
+  "method": "POST",
+  "taskId": "d8992a7b-1c55-4d95-b4bc-81fa5369ec3d",
+  "description": "Send a test email using caller-supplied SendGrid credentials (not persisted)",
+  "requiresAuth": true,
+  "testability": "manual",
+  "priority": 65,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Send SendGrid test email",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {
+      "provider": "sendgrid",
+      "api_key": "{{static:SG.test-bogus-key}}",
+      "from_email": "{{static:no-reply@bidwork.test}}",
+      "from_name": "{{static:BidWork}}",
+      "to": "{{dynamic:email}}"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

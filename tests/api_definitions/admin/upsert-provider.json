@@ -1,0 +1,25 @@
+{
+  "endpoint": "/api/admin/providers",
+  "method": "POST",
+  "taskId": "d8992a7b-1c55-4d95-b4bc-81fa5369ec3d",
+  "description": "Upsert (create or update) an LLM/email provider config",
+  "requiresAuth": true,
+  "priority": 62,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "captureResponse": {
+    "adminProviders.upsert.response.data.provider.id": "data.provider.id"
+  },
+  "testCases": [{
+    "name": "Upsert OpenAI LLM provider",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {
+      "kind": "llm",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "api_key": "{{static:sk-test-1234567890abcdef}}",
+      "is_default": true
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

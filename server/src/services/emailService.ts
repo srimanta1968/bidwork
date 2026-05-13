@@ -175,9 +175,209 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string, first
   }
 }
 
+// ── Admin-managed email provider + send-personal-email ──
+//
+// Admins can override the env-default SendGrid config from the Providers Setup
+// page. Active config is read fresh on each send so a rotation takes effect
+// immediately without restarting the server.
+
+import { adminDb } from './domainDb';
+import { decryptApiKey } from './llmProviderService';
+
+interface EmailProviderRow {
+  api_key_enc: string;
+  from_email: string | null;
+  from_name: string | null;
+}
+
+export interface ActiveEmailConfig {
+  apiKey: string;
+  fromEmail: string;
+  fromName: string;
+  source: 'db' | 'env';
+}
+
+export async function loadSendgridConfig(): Promise<ActiveEmailConfig> {
+  try {
+    const row = await adminDb.queryOne<EmailProviderRow>(
+      `SELECT api_key_enc, from_email, from_name FROM provider_config
+       WHERE kind = 'email' AND provider = 'sendgrid' AND is_default = true AND is_active = true
+       LIMIT 1`
+    );
+    if (row) {
+      try {
+        const key = decryptApiKey(row.api_key_enc);
+        if (key) {
+          return {
+            apiKey: key,
+            fromEmail: row.from_email || config.sendgrid.fromEmail,
+            fromName: row.from_name || config.sendgrid.fromName,
+            source: 'db',
+          };
+        }
+      } catch {
+        // decrypt failed (e.g. secret rotated) — fall through to env
+      }
+    }
+  } catch (err) {
+    console.error('loadSendgridConfig: DB lookup failed, falling back to env', err);
+  }
+  return {
+    apiKey: config.sendgrid.apiKey,
+    fromEmail: config.sendgrid.fromEmail,
+    fromName: config.sendgrid.fromName,
+    source: 'env',
+  };
+}
+
+/**
+ * Low-level send via the SendGrid REST API. Used by sendPersonalEmail and
+ * sendTestEmail so we don't mutate the shared sgMail singleton's API key.
+ */
+async function sendgridSend(opts: {
+  apiKey: string;
+  fromEmail: string;
+  fromName: string;
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<{ ok: boolean; status: number; error?: string }> {
+  if (!opts.apiKey) return { ok: false, status: 0, error: 'SendGrid API key not configured' };
+  try {
+    const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${opts.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: opts.to }] }],
+        from: { email: opts.fromEmail, name: opts.fromName },
+        subject: opts.subject,
+        content: [{ type: 'text/html', value: opts.html }],
+      }),
+    });
+    if (res.status >= 200 && res.status < 300) {
+      return { ok: true, status: res.status };
+    }
+    const errText = await res.text().catch(() => '');
+    return { ok: false, status: res.status, error: errText || `HTTP ${res.status}` };
+  } catch (err: any) {
+    return { ok: false, status: 0, error: err?.message || String(err) };
+  }
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function brandedHtmlWrap(plainBody: string, headline?: string): string {
+  const safeBody = escapeHtml(plainBody).replace(/\n/g, '<br />');
+  const heading = headline ? `<h2 style="font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">${escapeHtml(headline)}</h2>` : '';
+  return `
+    <div style="font-family: 'Inter', -apple-system, sans-serif; max-width: 540px; margin: 0 auto; padding: 40px 24px;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="display: inline-block; width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; font-weight: 800; font-size: 20px; line-height: 48px;">B</div>
+        <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 16px 0 0;">BidWork</h1>
+      </div>
+      ${heading}
+      <div style="font-size: 15px; color: #334155; line-height: 1.6;">${safeBody}</div>
+      <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 24px 0;" />
+      <p style="font-size: 12px; color: #cbd5e1; text-align: center;">
+        &copy; ${new Date().getFullYear()} BidWork. The operating system for home services execution.
+      </p>
+    </div>
+  `;
+}
+
+export interface SendPersonalEmailInput {
+  to: string;
+  subject: string;
+  body: string;
+  sent_by_admin_id?: string | null;
+  recipient_user_id?: string | null;
+}
+
+export interface SendPersonalEmailResult {
+  success: boolean;
+  email_log_id: string;
+  status: 'sent' | 'failed';
+  error?: string;
+  provider: string;
+}
+
+/**
+ * Send a one-off branded email to a specific user via the active email
+ * provider. Always logs the attempt to admin.email_log (sent or failed).
+ */
+export async function sendPersonalEmail(input: SendPersonalEmailInput): Promise<SendPersonalEmailResult> {
+  const cfg = await loadSendgridConfig();
+  const html = brandedHtmlWrap(input.body, input.subject);
+
+  const sendResult = await sendgridSend({
+    apiKey: cfg.apiKey,
+    fromEmail: cfg.fromEmail,
+    fromName: cfg.fromName,
+    to: input.to,
+    subject: input.subject,
+    html,
+  });
+
+  const status: 'sent' | 'failed' = sendResult.ok ? 'sent' : 'failed';
+  const errorMsg = sendResult.ok ? null : (sendResult.error || `HTTP ${sendResult.status}`);
+  const preview = input.body.length > 500 ? input.body.slice(0, 500) + '…' : input.body;
+
+  const logged = await adminDb.queryOne<{ id: string }>(
+    `INSERT INTO email_log
+       (to_email, subject, body_preview, sent_by_admin_id, recipient_user_id, provider, status, error, sent_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CASE WHEN $7 = 'sent' THEN NOW() ELSE NULL END)
+     RETURNING id`,
+    [input.to, input.subject, preview, input.sent_by_admin_id || null, input.recipient_user_id || null, `sendgrid:${cfg.source}`, status, errorMsg]
+  );
+
+  return {
+    success: sendResult.ok,
+    email_log_id: logged?.id || '',
+    status,
+    error: errorMsg || undefined,
+    provider: `sendgrid:${cfg.source}`,
+  };
+}
+
+export interface SendTestEmailInput {
+  to: string;
+  apiKey: string;
+  fromEmail: string;
+  fromName?: string;
+}
+
+/**
+ * Validate caller-supplied SendGrid credentials by sending a test email.
+ * NEVER persists the apiKey — only used in-memory for this one call.
+ * Does NOT write to email_log.
+ */
+export async function sendTestEmail(input: SendTestEmailInput): Promise<{ success: boolean; status: number; error?: string }> {
+  const html = brandedHtmlWrap(
+    'This is a SendGrid test email from your BidWork admin portal. If you can read this, your SendGrid configuration works.',
+    'SendGrid test email'
+  );
+  const r = await sendgridSend({
+    apiKey: input.apiKey,
+    fromEmail: input.fromEmail,
+    fromName: input.fromName || 'BidWork',
+    to: input.to,
+    subject: 'BidWork SendGrid test',
+    html,
+  });
+  return { success: r.ok, status: r.status, error: r.error };
+}
+
 export const emailService = {
   generateVerificationCode,
   sendVerificationEmail,
   sendPasswordResetEmail,
   sendSelectAndNotifyEmail,
+  loadSendgridConfig,
+  sendPersonalEmail,
+  sendTestEmail,
 };

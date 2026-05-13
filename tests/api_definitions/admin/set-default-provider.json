@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/admin/providers/:id/default",
+  "method": "POST",
+  "taskId": "d8992a7b-1c55-4d95-b4bc-81fa5369ec3d",
+  "description": "Promote a provider to default for its kind (LLM or email)",
+  "requiresAuth": true,
+  "priority": 63,
+  "dependsOn": ["POST /api/admin/providers"],
+  "pathParams": {
+    "id": "{{cache:adminProviders.upsert.response.data.provider.id}}"
+  },
+  "testCases": [{
+    "name": "Set provider as default",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

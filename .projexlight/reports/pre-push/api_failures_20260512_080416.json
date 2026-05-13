@@ -1,7 +1,7 @@
 {
   "reportType": "api_test_failures",
   "source": "pre-push",
-  "timestamp": "2026-05-12T23:38:43Z",
+  "timestamp": "2026-05-12T15:04:16Z",
   "priority": "immediate",
   "blocking": false,
   "description": "API tests failed during pre-push validation. These should be fixed before pushing.",
@@ -10,7 +10,7 @@
     "passed": 0,
     "failed": 20,
     "skipped": 12,
-    "duration_ms": 934
+    "duration_ms": 999
   },
   "failed_tests": [
     {
@@ -19,9 +19,9 @@
       "method": "POST",
       "status": "failed",
       "statusCode": 400,
-      "responseTimeMs": 6,
+      "responseTimeMs": 5,
       "requestBody": {
-        "full_name": "Test User_118603",
+        "full_name": "Test User_248176",
         "email": "kiana_e2e_default@kiana.test",
         "password": "DefaultTestPass123!"
       },
@@ -39,7 +39,7 @@
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -d '{\n  \"full_name\": \"Test User_118603\",\n  \"email\": \"kiana_e2e_default@kiana.test\",\n  \"password\": \"DefaultTestPass123!\"\n}' \\\n  \"http://localhost:3000/api/auth/register\"",
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -d '{\n  \"full_name\": \"Test User_248176\",\n  \"email\": \"kiana_e2e_default@kiana.test\",\n  \"password\": \"DefaultTestPass123!\"\n}' \\\n  \"http://localhost:3000/api/auth/register\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -65,7 +65,7 @@
       "requestBodyTemplate": null,
       "responseSchema": null,
       "sampleInput": {
-        "full_name": "Test User_118603",
+        "full_name": "Test User_248176",
         "email": "kiana_e2e_default@kiana.test",
         "password": "DefaultTestPass123!"
       },
@@ -119,7 +119,7 @@
       "method": "POST",
       "status": "failed",
       "statusCode": 401,
-      "responseTimeMs": 8,
+      "responseTimeMs": 6,
       "requestBody": {
         "email": "kiana_e2e_default@kiana.test",
         "password": "DefaultTestPass123!"
@@ -137,9 +137,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  -d '{\n  \"email\": \"kiana_e2e_default@kiana.test\",\n  \"password\": \"DefaultTestPass123!\"\n}' \\\n  \"http://localhost:3000/api/auth/login\"",
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  -d '{\n  \"email\": \"kiana_e2e_default@kiana.test\",\n  \"password\": \"DefaultTestPass123!\"\n}' \\\n  \"http://localhost:3000/api/auth/login\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -223,11 +223,11 @@
       "method": "POST",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 7,
+      "responseTimeMs": 4,
       "requestBody": {
-        "full_name": "Test User_118635",
-        "email": "testuser_118635@example.com",
-        "phone": "+447911118635",
+        "full_name": "Test User_248196",
+        "email": "testuser_248196@example.com",
+        "phone": "+447911248196",
         "source": "web_form",
         "notes": "Looking for a 3-bedroom villa in Karjat, move-in ready."
       },
@@ -243,7 +243,7 @@
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -d '{\n  \"full_name\": \"Test User_118635\",\n  \"email\": \"testuser_118635@example.com\",\n  \"phone\": \"+447911118635\",\n  \"source\": \"web_form\",\n  \"notes\": \"Looking for a 3-bedroom villa in Karjat, move-in ready.\"\n}' \\\n  \"http://localhost:3000/api/leads\"",
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -d '{\n  \"full_name\": \"Test User_248196\",\n  \"email\": \"testuser_248196@example.com\",\n  \"phone\": \"+447911248196\",\n  \"source\": \"web_form\",\n  \"notes\": \"Looking for a 3-bedroom villa in Karjat, move-in ready.\"\n}' \\\n  \"http://localhost:3000/api/leads\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -269,9 +269,9 @@
       "requestBodyTemplate": null,
       "responseSchema": null,
       "sampleInput": {
-        "full_name": "Test User_118635",
-        "email": "testuser_118635@example.com",
-        "phone": "+447911118635",
+        "full_name": "Test User_248196",
+        "email": "testuser_248196@example.com",
+        "phone": "+447911248196",
         "source": "web_form",
         "notes": "Looking for a 3-bedroom villa in Karjat, move-in ready."
       },
@@ -327,7 +327,7 @@
       "method": "POST",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 6,
+      "responseTimeMs": 4,
       "requestBody": {
         "slug": "stage_changed",
         "channel": "email",
@@ -345,9 +345,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  -d '{\n  \"slug\": \"stage_changed\",\n  \"channel\": \"email\",\n  \"subject\": \"Your enquiry is now {{to_stage}}\",\n  \"body\": \"Hi {{full_name}} \\u2014 your enquiry has moved to {{to_stage}}.\"\n}' \\\n  \"http://localhost:3000/api/notifications/templates\"",
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  -d '{\n  \"slug\": \"stage_changed\",\n  \"channel\": \"email\",\n  \"subject\": \"Your enquiry is now {{to_stage}}\",\n  \"body\": \"Hi {{full_name}} \\u2014 your enquiry has moved to {{to_stage}}.\"\n}' \\\n  \"http://localhost:3000/api/notifications/templates\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -447,10 +447,10 @@
       "method": "POST",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 6,
+      "responseTimeMs": 4,
       "requestBody": {
         "title": "Lonavala Hilltop Villa",
-        "slug": "118653",
+        "slug": "248208",
         "type": "villa",
         "location": "Lonavala",
         "price_min_minor": 12500000000,
@@ -472,9 +472,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  -d '{\n  \"title\": \"Lonavala Hilltop Villa\",\n  \"slug\": \"118653\",\n  \"type\": \"villa\",\n  \"location\": \"Lonavala\",\n  \"price_min_minor\": 12500000000,\n  \"price_max_minor\": 14000000000,\n  \"tags\": [\n    \"villa\",\n    \"lonavala\"\n  ],\n  \"media\": []\n}' \\\n  \"http://localhost:3000/api/properties\"",
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  -d '{\n  \"title\": \"Lonavala Hilltop Villa\",\n  \"slug\": \"248208\",\n  \"type\": \"villa\",\n  \"location\": \"Lonavala\",\n  \"price_min_minor\": 12500000000,\n  \"price_max_minor\": 14000000000,\n  \"tags\": [\n    \"villa\",\n    \"lonavala\"\n  ],\n  \"media\": []\n}' \\\n  \"http://localhost:3000/api/properties\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -503,7 +503,7 @@
       "responseSchema": null,
       "sampleInput": {
         "title": "Lonavala Hilltop Villa",
-        "slug": "118653",
+        "slug": "248208",
         "type": "villa",
         "location": "Lonavala",
         "price_min_minor": 12500000000,
@@ -599,11 +599,11 @@
       "method": "POST",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 6,
+      "responseTimeMs": 4,
       "requestBody": {
-        "email": "testuser_118662@example.com",
+        "email": "testuser_248213@example.com",
         "role": "presales",
-        "full_name": "Test User_118662"
+        "full_name": "Test User_248213"
       },
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /api/users/invite</pre>\n</body>\n</html>\n",
@@ -616,9 +616,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  -d '{\n  \"email\": \"testuser_118662@example.com\",\n  \"role\": \"presales\",\n  \"full_name\": \"Test User_118662\"\n}' \\\n  \"http://localhost:3000/api/users/invite\"",
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  -d '{\n  \"email\": \"testuser_248213@example.com\",\n  \"role\": \"presales\",\n  \"full_name\": \"Test User_248213\"\n}' \\\n  \"http://localhost:3000/api/users/invite\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -646,9 +646,9 @@
       "requestBodyTemplate": null,
       "responseSchema": null,
       "sampleInput": {
-        "email": "testuser_118662@example.com",
+        "email": "testuser_248213@example.com",
         "role": "presales",
-        "full_name": "Test User_118662"
+        "full_name": "Test User_248213"
       },
       "sampleOutput": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /api/users/invite</pre>\n</body>\n</html>\n",
@@ -731,7 +731,7 @@
       "requestBody": {
         "token": "MISSING_AUTH_TOKEN",
         "password": "NewStaffPass123!",
-        "full_name": "Test User_118669"
+        "full_name": "Test User_248219"
       },
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /api/users/accept-invite</pre>\n</body>\n</html>\n",
@@ -745,7 +745,7 @@
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -d '{\n  \"token\": \"MISSING_AUTH_TOKEN\",\n  \"password\": \"NewStaffPass123!\",\n  \"full_name\": \"Test User_118669\"\n}' \\\n  \"http://localhost:3000/api/users/accept-invite\"",
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -d '{\n  \"token\": \"MISSING_AUTH_TOKEN\",\n  \"password\": \"NewStaffPass123!\",\n  \"full_name\": \"Test User_248219\"\n}' \\\n  \"http://localhost:3000/api/users/accept-invite\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -773,7 +773,7 @@
       "sampleInput": {
         "token": "MISSING_AUTH_TOKEN",
         "password": "NewStaffPass123!",
-        "full_name": "Test User_118669"
+        "full_name": "Test User_248219"
       },
       "sampleOutput": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /api/users/accept-invite</pre>\n</body>\n</html>\n",
@@ -839,7 +839,7 @@
       "method": "POST",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 5,
+      "responseTimeMs": 4,
       "requestBody": {},
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /api/auth/logout</pre>\n</body>\n</html>\n",
@@ -852,9 +852,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  \"http://localhost:3000/api/auth/logout\"",
+      "curlCommand": "curl \\\n  -X \\\n  POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  \"http://localhost:3000/api/auth/logout\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -934,7 +934,7 @@
       "method": "GET",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 6,
+      "responseTimeMs": 8,
       "requestBody": null,
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/properties/_status</pre>\n</body>\n</html>\n",
@@ -1008,7 +1008,7 @@
       "method": "GET",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 5,
+      "responseTimeMs": 6,
       "requestBody": null,
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/notifications/_status</pre>\n</body>\n</html>\n",
@@ -1084,7 +1084,7 @@
       "method": "GET",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 5,
+      "responseTimeMs": 8,
       "requestBody": null,
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/crm/_status</pre>\n</body>\n</html>\n",
@@ -1171,9 +1171,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  \"http://localhost:3000/api/auth/me\"",
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  \"http://localhost:3000/api/auth/me\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -1257,7 +1257,7 @@
       "method": "GET",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 5,
+      "responseTimeMs": 4,
       "requestBody": null,
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/leads/sources</pre>\n</body>\n</html>\n",
@@ -1355,9 +1355,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  \"http://localhost:3000/api/leads\"",
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  \"http://localhost:3000/api/leads\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -1518,7 +1518,7 @@
       "method": "GET",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 5,
+      "responseTimeMs": 4,
       "requestBody": null,
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/crm/pipeline</pre>\n</body>\n</html>\n",
@@ -1531,9 +1531,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  \"http://localhost:3000/api/crm/pipeline\"",
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  \"http://localhost:3000/api/crm/pipeline\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -1613,7 +1613,7 @@
       "method": "GET",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 4,
+      "responseTimeMs": 5,
       "requestBody": null,
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/workflows</pre>\n</body>\n</html>\n",
@@ -1626,9 +1626,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  \"http://localhost:3000/api/workflows\"",
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  \"http://localhost:3000/api/workflows\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -1722,9 +1722,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  \"http://localhost:3000/api/workflows/lead-to-customer\"",
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  \"http://localhost:3000/api/workflows/lead-to-customer\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -1810,7 +1810,7 @@
       "method": "GET",
       "status": "failed",
       "statusCode": 404,
-      "responseTimeMs": 5,
+      "responseTimeMs": 4,
       "requestBody": null,
       "responseBody": {
         "__text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/workflows/lead-to-customer/metrics</pre>\n</body>\n</html>\n",
@@ -1823,9 +1823,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  \"http://localhost:3000/api/workflows/lead-to-customer/metrics\"",
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  \"http://localhost:3000/api/workflows/lead-to-customer/metrics\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,
@@ -1937,9 +1937,9 @@
       "requestHeaders": {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU"
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs"
       },
-      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTFmMDRhLWRiNTUtNGU5Yy1hMjc5LTBhNTUxZGY3MmQ1OSIsInVzZXJfaWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ1c2VySWQiOiI2NTUxZjA0YS1kYjU1LTRlOWMtYTI3OS0wYTU1MWRmNzJkNTkiLCJ0ZW5hbnRfaWQiOiI3NjkyNzc4Yi1hYjY4LTRhYzItYjE2MS02MTQ2OGJkN2Y0Y2QiLCJ0ZW5hbnRJZCI6Ijc2OTI3NzhiLWFiNjgtNGFjMi1iMTYxLTYxNDY4YmQ3ZjRjZCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg2MjkxMTgsImV4cCI6MTc3OTIzMzkxOH0.lXzr-nQvg1S2FTj6GyuVTN4QazOrjFZgCzU8ifHVDlU\" \\\n  \"http://localhost:3000/api/leads/stale\"",
+      "curlCommand": "curl \\\n  -X \\\n  GET \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json\" \\\n  -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwNTVlY2RiLTk3ZTMtNDllMC1iM2UwLWUxMjUyMjk3ODkyNCIsInVzZXJfaWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ1c2VySWQiOiIwMDU1ZWNkYi05N2UzLTQ5ZTAtYjNlMC1lMTI1MjI5Nzg5MjQiLCJ0ZW5hbnRfaWQiOiIyMjg3NzU1NC0xMTY5LTRlMDAtYTFjNy01MzRlYWQ4OTliYzgiLCJ0ZW5hbnRJZCI6IjIyODc3NTU0LTExNjktNGUwMC1hMWM3LTUzNGVhZDg5OWJjOCIsImVtYWlsIjoia2lhbmFfZTJlX2RlZmF1bHRAa2lhbmEudGVzdCIsInJvbGUiOiJhZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Nzg1OTgyNDgsImV4cCI6MTc3OTIwMzA0OH0.4myzQSQgUFAEAFl7qelojcfKH4Mxe5M4FRtU3OTdZTs\" \\\n  \"http://localhost:3000/api/leads/stale\"",
       "constraintInfo": null,
       "testability": "auto",
       "setupScript": null,

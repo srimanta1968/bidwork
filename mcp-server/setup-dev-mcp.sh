@@ -220,11 +220,49 @@ sync_credentials_if_needed() {
     if [ "$config_prefix" != "$registered_prefix" ]; then
         print_msg "$YELLOW" "[SYNC] API key mismatch detected - auto-fixing..."
 
-        # Unregister old project
-        curl -sf -X DELETE "http://localhost:${port}/api/projects/${project_id}" > /dev/null 2>&1 || true
-        sleep 1
+        # Try DELETE first. Owner projects return 403, in which case we fall
+        # back to editing the persisted file directly and restarting the
+        # container — because POST /api/projects/register does NOT update
+        # apiKey on an already-registered project.
+        local delete_http
+        delete_http=$(curl -s -o /dev/null -w '%{http_code}' \
+            -X DELETE "http://localhost:${port}/api/projects/${project_id}" 2>/dev/null || echo "000")
 
-        # Re-register with new credentials
+        if [ "$delete_http" = "403" ]; then
+            print_msg "$YELLOW" "[SYNC] Owner project — updating persisted apiKey directly"
+            local persisted_file="$SCRIPT_DIR/feedback/registered_projects.json"
+            if [ -f "$persisted_file" ] && command -v jq &> /dev/null; then
+                cp "$persisted_file" "${persisted_file}.bak" 2>/dev/null || true
+                local tmp_file="${persisted_file}.tmp"
+                if jq --arg pid "$project_id" --arg key "$config_api_key" \
+                        '.[$pid].apiKey = $key' "$persisted_file" > "$tmp_file"; then
+                    mv "$tmp_file" "$persisted_file"
+                    docker restart "$CONTAINER_NAME" > /dev/null 2>&1 || true
+                    # Poll /api/projects rather than /health — /health returns 200
+                    # before the route handlers + in-memory registry are ready.
+                    local i
+                    for i in $(seq 1 15); do
+                        sleep 2
+                        if curl -sf "http://localhost:${port}/api/projects" > /dev/null 2>&1; then
+                            print_msg "$GREEN" "[SYNC] Credentials synced successfully (via file + restart) after $((i*2))s"
+                            return 0
+                        fi
+                    done
+                    print_msg "$YELLOW" "[SYNC] Container did not become ready within 30s after restart (file already rewritten; container may still be starting)"
+                    return 1
+                else
+                    rm -f "$tmp_file"
+                    print_msg "$RED" "[SYNC] jq failed to update persisted apiKey"
+                    return 1
+                fi
+            else
+                print_msg "$RED" "[SYNC] Cannot update persisted apiKey — file missing or jq not installed"
+                return 1
+            fi
+        fi
+
+        # Non-owner path (DELETE succeeded or no such project) — re-register.
+        sleep 1
         local db_name=$(jq -r '.databaseConfig.database // ""' "$SCRIPT_DIR/mcp-config.json" 2>/dev/null)
         local db_type=$(jq -r '.databaseConfig.type // ""' "$SCRIPT_DIR/mcp-config.json" 2>/dev/null)
         local sprint_id=$(jq -r '.sprintId // ""' "$SCRIPT_DIR/mcp-config.json" 2>/dev/null)

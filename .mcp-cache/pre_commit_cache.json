@@ -1,13 +1,13 @@
 {
-  "last_scan": "2026-04-28T02:20:02.641486Z",
+  "last_scan": "2026-05-01T22:12:40.630523Z",
   "scanned_files": {
     "server/src/app.ts": {
       "hash": "225ad46e572e95279cf19c3206a2d15502f11be38ea16b178837ea00d80a962c",
       "compliance": 100,
       "violations": [],
-      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "standards_version": "local-only-vunknown",
       "custom_violations": [],
-      "timestamp": "2026-04-28T02:18:45.633238Z",
+      "timestamp": "2026-04-29T04:33:23.902405Z",
       "linesOfCode": 86
     },
     "server/src/config/migrate.ts": {
@@ -55,7 +55,7 @@
       "linesOfCode": 107
     },
     "server/src/config/migrations/authMigration.ts": {
-      "hash": "6b486953bb83bf49d987b2f81598c81187b18368acb47215f0f262d35d087e7a",
+      "hash": "8a79374777c74ee96eeecc0c7ee44fadbae4649b8dee57ee65690ba37535038f",
       "compliance": 75,
       "violations": [
         {
@@ -73,8 +73,8 @@
       ],
       "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
       "custom_violations": [],
-      "timestamp": "2026-04-28T02:18:46.511340Z",
-      "linesOfCode": 119
+      "timestamp": "2026-04-28T02:44:51.427780Z",
+      "linesOfCode": 139
     },
     "server/src/config/migrations/biddingMigration.ts": {
       "hash": "fe6195a35dc8d4ec87c3a7410168d7320718e4a3f1745c6145d2cbeda52b824f",
@@ -576,13 +576,13 @@
       "linesOfCode": 16
     },
     "client/src/App.tsx": {
-      "hash": "a9da8d24743a1af4634d1400bdd5fb921edc626c4ba4eb23a6589c643f65e7f5",
+      "hash": "c71d29a8716e4b8782b0ca192c45c261e77fa0447f63c2daf0b4f681d475ceb7",
       "compliance": 100,
       "violations": [],
       "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
       "custom_violations": [],
-      "timestamp": "2026-04-28T02:18:27.800410Z",
-      "linesOfCode": 82
+      "timestamp": "2026-04-28T02:44:48.232193Z",
+      "linesOfCode": 84
     },
     "client/src/pages/dashboards/ContractorDashboard.tsx": {
       "hash": "53419b6dadda29ece218d0889136d56c6dca2a1481dc98491b357886283d246e",
@@ -1100,22 +1100,22 @@
       "linesOfCode": 198
     },
     ".mcp-cache/pre_commit_cache.json": {
-      "hash": "eb140a5a2df219d05490329f2a56554b223461bf537f7d2a1dd067df7656bd7e",
+      "hash": "880aa6b1946ab9da16a79185fcf0a65315bacefb7306524d59ecc0081237d73d",
       "compliance": 100,
       "violations": [],
       "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
       "custom_violations": [],
-      "timestamp": "2026-04-28T02:18:24.052539Z",
-      "linesOfCode": 1387
+      "timestamp": "2026-04-30T23:07:19.839722Z",
+      "linesOfCode": 2867
     },
     ".mcp-cache/violations_latest.json": {
-      "hash": "887fbf3bc3a2cdc9630b8a2e3a4e68c8698519a3f8ccfb1a027b7a0488476091",
+      "hash": "8cb1e5d4e33f3e6c6e8d0df324af28ad17f7bc3cdfdf001845ed9d6a25a03aa5",
       "compliance": 100,
       "violations": [],
-      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "standards_version": "local-only-vunknown",
       "custom_violations": [],
-      "timestamp": "2026-04-28T02:18:24.152726Z",
-      "linesOfCode": 55
+      "timestamp": "2026-04-29T02:21:08.242374Z",
+      "linesOfCode": 45
     },
     ".mcp-cache/violations_report_20260413_214332.json": {
       "hash": "4ed5d1a0fba2b6984b3cb78be7f53e92aaac10bcf26889630cb9df42a808144d",
@@ -1490,9 +1490,9 @@
       "hash": "bc5312e99d4bc97738b217775769cbf97699180eebeb5fa040bcd5260fc25a07",
       "compliance": 100,
       "violations": [],
-      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "standards_version": "local-only-vunknown",
       "custom_violations": [],
-      "timestamp": "2026-04-28T02:19:30.091498Z",
+      "timestamp": "2026-04-29T02:21:08.725922Z",
       "linesOfCode": 121
     },
     "server/src/services/locationService.ts": {
@@ -2205,6 +2205,149 @@
       "custom_violations": [],
       "timestamp": "2026-04-28T02:19:41.201316Z",
       "linesOfCode": 186
+    },
+    ".mcp-cache/api_test_cache.json": {
+      "hash": "96f6bf71fbb09d1aab6719eaefd2f5f1f13a902aa3507ff821c232e63762cc4a",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-30T23:07:19.738377Z",
+      "linesOfCode": 413
+    },
+    ".mcp-cache/test_failures_latest.json": {
+      "hash": "5a4491631aa3bd94daacfddc7adea8be099b3977abda1d0ef575f24f57b14169",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:47.536086Z",
+      "linesOfCode": 5246
+    },
+    ".mcp-cache/violations_report_20260428_022002.json": {
+      "hash": "b17d11497cb2b8724bf0a16fe3fa8aa252ceddd3cbfbdc6c231658c9bcf7bbfd",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:47.707026Z",
+      "linesOfCode": 363
+    },
+    "client/src/components/auth/OAuthButtons.tsx": {
+      "hash": "d4829a2ea770de15aee619652833d2c0d0208e9196c39cf94ed29fd2b4654fc3",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:48.934769Z",
+      "linesOfCode": 63
+    },
+    "client/src/pages/LoginPage.tsx": {
+      "hash": "13c396ecf23163cbfd517e6b173315cd8f9dfb3f29344e3732897cc8bbd54f9a",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:49.541309Z",
+      "linesOfCode": 69
+    },
+    "client/src/pages/OAuthCallbackPage.tsx": {
+      "hash": "4acec0d0a892c74d6d3fb0f7f349af316c4c25f09484b1da785234e276a40467",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:50.163753Z",
+      "linesOfCode": 45
+    },
+    "client/src/pages/RegisterPage.tsx": {
+      "hash": "c6dfb35aeafa7a4246b746f5f594b24a14123ed2bffc570e9be5eb5f5dd00876",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:50.793301Z",
+      "linesOfCode": 107
+    },
+    "server/src/controllers/authController.ts": {
+      "hash": "bbb58bd5da51f9b5d19f694d2a5f3a18cdd2e86f49d42c19011f9b66312a48ad",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:51.764773Z",
+      "linesOfCode": 219
+    },
+    "server/src/routes/authRoutes.ts": {
+      "hash": "1f8237608c7d17aadb55fa1c5f90bd287c518c8baab0d10f21b8ed5fbde4708b",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:52.292007Z",
+      "linesOfCode": 12
+    },
+    "server/src/services/authService.ts": {
+      "hash": "42f2450f3a00d03807c3ca628478f70d5f20822134f72be1a0ba97458fc3ac9d",
+      "compliance": 75,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-11",
+          "description": "Direct database access - use DataService/ORM instead",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/authService.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:54.889228Z",
+      "linesOfCode": 276
+    },
+    "server/src/services/oauthService.ts": {
+      "hash": "a8cf0738d774e8897b2a1a44eb2feebd7e584c03f5ea079cf83b058a25904563",
+      "compliance": 90,
+      "violations": [
+        {
+          "line": 0,
+          "severity": "minor",
+          "category": "general",
+          "rule": "SC-06",
+          "description": "Missing try/catch error handling",
+          "currentCode": "",
+          "autoFixable": false,
+          "confidence": 90,
+          "source": "local_rules",
+          "filePath": "server/src/services/oauthService.ts"
+        }
+      ],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:55.210595Z",
+      "linesOfCode": 149
+    },
+    "tests/api_definitions/auth/oauth-callback.json": {
+      "hash": "da54b3fd820e1bd7946a942a018b48ef28d3d3205bdc4dba99f8463ca37509dd",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:55.313845Z",
+      "linesOfCode": 15
+    },
+    "tests/api_definitions/auth/oauth-start.json": {
+      "hash": "826c8c6269ff66a3c69618c0e83f1869792cba1d056ba46afeac6fae61fbeca4",
+      "compliance": 100,
+      "violations": [],
+      "standards_version": "sha256:7cf517c6c97eb3c02613c89ab9ab90c84e2a2020608d1abb82ce6a55ba803f62",
+      "custom_violations": [],
+      "timestamp": "2026-04-28T02:44:55.410460Z",
+      "linesOfCode": 15
     }
   },
   "registered_apis": {
@@ -2695,6 +2838,30 @@
     "POST:/stripe": {
       "filePath": "server/src/routes/webhookRoutes.ts",
       "timestamp": "2026-04-28T02:20:02.641691Z"
+    },
+    "POST:/api/auth/register": {
+      "filePath": "server/src/routes/authRoutes.ts",
+      "timestamp": "2026-04-28T02:44:58.670367Z"
+    },
+    "POST:/api/auth/login": {
+      "filePath": "server/src/routes/authRoutes.ts",
+      "timestamp": "2026-04-28T02:44:58.670370Z"
+    },
+    "POST:/api/auth/verify-email": {
+      "filePath": "server/src/routes/authRoutes.ts",
+      "timestamp": "2026-04-28T02:44:58.670372Z"
+    },
+    "POST:/api/auth/resend-code": {
+      "filePath": "server/src/routes/authRoutes.ts",
+      "timestamp": "2026-04-28T02:44:58.670374Z"
+    },
+    "GET:/api/auth/oauth/:provider/start": {
+      "filePath": "server/src/routes/authRoutes.ts",
+      "timestamp": "2026-04-28T02:44:58.670376Z"
+    },
+    "GET:/api/auth/oauth/:provider/callback": {
+      "filePath": "server/src/routes/authRoutes.ts",
+      "timestamp": "2026-04-28T02:44:58.670377Z"
     }
   }
 }

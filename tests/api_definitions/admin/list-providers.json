@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/providers",
+  "method": "GET",
+  "taskId": "d8992a7b-1c55-4d95-b4bc-81fa5369ec3d",
+  "description": "List configured LLM/email providers with api_key masked",
+  "requiresAuth": true,
+  "priority": 61,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "List all providers",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

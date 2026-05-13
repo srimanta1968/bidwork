@@ -1,0 +1,15 @@
+{
+  "epic_id_mapping": {
+    "epic-admin-portal": "b4d11c00-d7be-4ef0-95b3-fd0ad8cfeb6a"
+  },
+  "features": [
+    {
+      "temp_id": "feat-admin-portal-providers-and-comms",
+      "epic_temp_id": "epic-admin-portal",
+      "title": "Admin Portal: Dashboard, Users, Billings, AI Provider & Email Provider Setup",
+      "description": "Comprehensive admin portal experience that lives in the separate admin-client React app (port 3001) and talks to /api/admin/*. Adds (1) a landing Dashboard with platform KPIs (users by role, active projects, accepted bids, MRR), (2) a Users module listing every user with role tabs, search, status toggle and a per-user 'Send personal email' action, (3) a Billings module that surfaces subscription, plan and billing history, (4) a Providers Setup page with two tabs - LLM Provider (OpenAI, Gemini, Together AI) and Email Providers (SendGrid). LLM provider is selectable + testable; when no DB-stored provider exists or the saved key is invalid, the system falls back to the env-configured Together AI provider so existing AI features keep working. SendGrid setup persists the encrypted API key and from-address and provides a 'Send test email' action. From the Users list the admin can send a one-off branded email to a specific user via the active email provider. All write endpoints are gated by authenticate + requireAdmin middleware.",
+      "feature_type": "api",
+      "priority": "high"
+    }
+  ]
+}

@@ -242,11 +242,73 @@ check_credential_sync() {
     return 0  # Match
 }
 
+# Overwrite apiKey in the persisted registered_projects.json and restart the
+# container so the new value is loaded into memory.
+#
+# Why this exists: POST /api/projects/register returns early when project_id is
+# already known and does NOT update apiKey on re-registration. DELETE refuses to
+# remove owner projects. So the only way to update the cached apiKey for an
+# owner project is to edit the persisted file directly, then restart.
+_overwrite_persisted_apikey_and_restart() {
+    local project_id="$1"
+    local new_api_key="$2"
+    local persisted_file="$SCRIPT_DIR/feedback/registered_projects.json"
+
+    if [ ! -f "$persisted_file" ]; then
+        warn "Persisted projects file not found at $persisted_file"
+        return 1
+    fi
+
+    if ! command -v jq &> /dev/null; then
+        warn "jq required to overwrite persisted apiKey; install jq or remove + re-add the project manually"
+        return 1
+    fi
+
+    log "Owner project detected — updating persisted apiKey directly..."
+    cp "$persisted_file" "${persisted_file}.bak" 2>/dev/null || true
+
+    local tmp_file="${persisted_file}.tmp"
+    if ! jq --arg pid "$project_id" --arg key "$new_api_key" \
+            '.[$pid].apiKey = $key' "$persisted_file" > "$tmp_file"; then
+        warn "Failed to update persisted apiKey via jq"
+        rm -f "$tmp_file"
+        return 1
+    fi
+    mv "$tmp_file" "$persisted_file"
+
+    log "Restarting MCP container so the new apiKey is loaded into memory..."
+    docker restart "$DEV_MCP_CONTAINER" > /dev/null 2>&1 || {
+        warn "docker restart failed for $DEV_MCP_CONTAINER"
+        return 1
+    }
+
+    # Wait for the server to be fully serving. Poll /api/projects rather than
+    # /health — the FastAPI app responds 200 on /health before the route
+    # handlers (and the in-memory project registry) are actually ready, so
+    # /health is unreliable as a readiness signal. 30s is enough for a warm
+    # restart; on a cold start the SchemaSyncAgent can take longer, in which
+    # case the script reports "not ready" but the file rewrite is already done
+    # and the container will finish coming up on its own.
+    local i
+    for i in $(seq 1 15); do
+        sleep 2
+        if curl -sf "http://localhost:${DEV_MCP_PORT}/api/projects" > /dev/null 2>&1; then
+            log "MCP container ready after $((i*2))s"
+            return 0
+        fi
+    done
+
+    warn "MCP container did not become ready within 30s after restart (file already rewritten; container may still be starting)"
+    return 1
+}
+
 # Sync credentials by unregistering and re-registering project
 sync_credentials() {
     local project_id=""
+    local config_api_key=""
     if [ -f "$CONFIG_FILE" ] && command -v jq &> /dev/null; then
         project_id=$(jq -r '.projectId // ""' "$CONFIG_FILE" 2>/dev/null)
+        config_api_key=$(jq -r '.encryptedPlatformApiKey // .sessionToken // ""' "$CONFIG_FILE" 2>/dev/null)
     fi
 
     if [ -z "$project_id" ]; then
@@ -256,17 +318,38 @@ sync_credentials() {
 
     log "Syncing credentials for project: $project_id"
 
-    # Unregister old project
-    log "Removing stale registration..."
-    curl -sf -X DELETE "http://localhost:${DEV_MCP_PORT}/api/projects/${project_id}" > /dev/null 2>&1 || true
+    # Try to unregister. For owner projects this returns 403, in which case we
+    # fall back to editing the persisted file + restarting the container.
+    local delete_http
+    delete_http=$(curl -s -o /dev/null -w '%{http_code}' \
+        -X DELETE "http://localhost:${DEV_MCP_PORT}/api/projects/${project_id}" 2>/dev/null || echo "000")
 
-    # Small delay to ensure unregistration completes
+    if [ "$delete_http" = "200" ] || [ "$delete_http" = "204" ]; then
+        log "Removed stale registration (HTTP $delete_http)"
+        sleep 1
+        log "Re-registering with updated credentials..."
+        register_project "false"
+        log "Credential sync complete!"
+        return 0
+    fi
+
+    if [ "$delete_http" = "403" ]; then
+        if [ -z "$config_api_key" ]; then
+            warn "DELETE returned 403 (owner project) but no apiKey in config to write back"
+            return 1
+        fi
+        if _overwrite_persisted_apikey_and_restart "$project_id" "$config_api_key"; then
+            log "Credential sync complete!"
+            return 0
+        else
+            warn "File-based credential sync failed"
+            return 1
+        fi
+    fi
+
+    warn "Unexpected DELETE response (HTTP $delete_http); attempting standard re-register anyway..."
     sleep 1
-
-    # Re-register with new credentials
-    log "Re-registering with updated credentials..."
     register_project "false"
-
     log "Credential sync complete!"
 }
 

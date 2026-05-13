@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/stats",
+  "method": "GET",
+  "taskId": "d8992a7b-1c55-4d95-b4bc-81fa5369ec3d",
+  "description": "Aggregated KPI summary for the admin Dashboard",
+  "requiresAuth": true,
+  "priority": 60,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Get dashboard stats",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

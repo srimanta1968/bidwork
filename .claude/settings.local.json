@@ -24,7 +24,9 @@
       "mcp__projexlight__projexlight_get_features_by_epic",
       "mcp__projexlight__projexlight_import_epics",
       "mcp__projexlight__projexlight_import_features",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npx --no-install tsc --noEmit -p .)",
+      "Bash(node ./node_modules/typescript/bin/tsc --noEmit)"
     ]
   },
   "enableAllProjectMcpServers": true,

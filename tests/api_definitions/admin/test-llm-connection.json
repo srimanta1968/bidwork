@@ -1,0 +1,21 @@
+{
+  "endpoint": "/api/admin/providers/test-llm",
+  "method": "POST",
+  "taskId": "d8992a7b-1c55-4d95-b4bc-81fa5369ec3d",
+  "description": "Probe an LLM provider with the given credentials without persisting",
+  "requiresAuth": true,
+  "testability": "manual",
+  "priority": 64,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Test LLM connection",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {
+      "provider": "openai",
+      "model": "gpt-4o-mini",
+      "api_key": "{{static:sk-test-bogus-key-for-probe}}"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

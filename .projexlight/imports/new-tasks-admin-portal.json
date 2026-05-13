@@ -1,0 +1,94 @@
+{
+  "feature_id_mapping": {
+    "feat-admin-portal-providers-and-comms": "PENDING_IMPORT"
+  },
+  "epic_id": "b4d11c00-d7be-4ef0-95b3-fd0ad8cfeb6a",
+  "sprint_id": "5c274505-37e9-46f4-8b3b-51bd608c5ee0",
+  "tasks": [
+    {
+      "feature_temp_id": "feat-admin-portal-providers-and-comms",
+      "title": "admin.provider_config + admin.email_log migrations",
+      "description": "Extend server/src/config/migrations/adminMigration.ts to add two new tables: (1) admin.provider_config — id, kind ('llm'|'email'), provider ('openai'|'gemini'|'together'|'sendgrid'), model (nullable), api_key_enc (encrypted), from_email/from_name (nullable, email only), is_default (bool), is_active (bool), updated_by_admin_id, updated_at, created_at. Partial unique index ensures only one is_default per kind. (2) admin.email_log — id, to_email, subject, body_preview, sent_by_admin_id, recipient_user_id (nullable), provider ('sendgrid'|'fallback'), status ('sent'|'failed'), error TEXT, sent_at, created_at. Adds indexes on (kind, is_active) for provider_config and (sent_by_admin_id, sent_at DESC) for email_log.",
+      "task_type": "database",
+      "priority": "high",
+      "acceptance_criteria": [
+        "admin.provider_config exists with all listed columns and partial unique index on (kind) WHERE is_default=true",
+        "admin.email_log exists with all listed columns",
+        "Migration is idempotent (CREATE IF NOT EXISTS, DO blocks for constraints)",
+        "Existing admin.subscription_plans / admin.service_fee_config migrations still run cleanly"
+      ]
+    },
+    {
+      "feature_temp_id": "feat-admin-portal-providers-and-comms",
+      "title": "llmProviderService: OpenAI / Gemini / Together abstraction with env fallback",
+      "description": "Create server/src/services/llmProviderService.ts that exposes (a) getActiveLlmProvider() which reads admin.provider_config WHERE kind='llm' AND is_default=true AND is_active=true and falls back to env-based Together AI when no DB row exists or the row has an empty key; (b) chatCompletion({ messages, maxTokens, jsonMode }) that internally dispatches to the OpenAI Chat Completions API, Google Gemini generateContent API, or Together /chat/completions based on provider; (c) testConnection(provider, apiKey, model) used by the admin UI to validate credentials with a minimal probe call. Each provider implements the same return shape { content, model, inputTokens, outputTokens }. Decrypts api_key_enc with a project-wide AES-256-GCM helper (PROVIDER_CONFIG_SECRET env). Existing togetherApiService.ts continues to work — this new service is the entry point for any AI feature that should respect admin overrides.",
+      "task_type": "service",
+      "priority": "high",
+      "acceptance_criteria": [
+        "Calling chatCompletion with provider=openai hits api.openai.com/v1/chat/completions",
+        "Calling chatCompletion with provider=gemini hits generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+        "Calling chatCompletion with provider=together hits config.together.baseUrl/chat/completions using the DB key (or env key fallback)",
+        "When no DB row exists, getActiveLlmProvider() returns the Together env defaults",
+        "testConnection() returns { success, latencyMs, error } and never throws"
+      ]
+    },
+    {
+      "feature_temp_id": "feat-admin-portal-providers-and-comms",
+      "title": "adminProviderService + emailService.sendPersonalEmail / sendTestEmail",
+      "description": "Create server/src/services/adminProviderService.ts that wraps admin.provider_config CRUD: listProviders(kind), upsertProvider(kind, provider, payload), setDefault(id), softDelete(id). Encrypts api_key on save and never returns it in responses (instead returns a masked '****' + last 4 chars). Extend server/src/services/emailService.ts with (1) loadSendgridConfig() that reads admin.provider_config kind='email' provider='sendgrid' is_default=true, decrypts the key, and falls back to the env SendGrid config when not set, (2) sendPersonalEmail({ to, subject, body, fromAdmin }) — a BidWork-branded HTML wrapper around an admin-authored plain message that uses the active SendGrid config and logs the result to admin.email_log, and (3) sendTestEmail({ to, apiKey, fromEmail, fromName }) — uses the provided credentials directly (without persisting) so the admin can validate keys before saving.",
+      "task_type": "service",
+      "priority": "high",
+      "acceptance_criteria": [
+        "listProviders returns DB rows with api_key masked (****<last4>) and never the raw key",
+        "upsertProvider stores AES-256-GCM-encrypted api_key in api_key_enc column",
+        "setDefault is transactional — only one is_default=true per kind at any time",
+        "sendPersonalEmail writes an admin.email_log row with status sent or failed + error",
+        "sendTestEmail uses caller-provided credentials and returns success/error without persisting"
+      ]
+    },
+    {
+      "feature_temp_id": "feat-admin-portal-providers-and-comms",
+      "title": "/api/admin/providers/* and /api/admin/email/* endpoints",
+      "description": "Add to server/src/routes/adminRoutes.ts (under authenticate + requireAdmin): GET /api/admin/providers?kind=llm|email — list saved providers (api_key masked); POST /api/admin/providers — upsert (body: kind, provider, model, api_key, from_email?, from_name?, is_default?); POST /api/admin/providers/:id/default — set default; DELETE /api/admin/providers/:id — soft delete; POST /api/admin/providers/test-llm (body: provider, model, api_key) — proxy to llmProviderService.testConnection without persisting; POST /api/admin/providers/test-email (body: provider, api_key, from_email, from_name, to) — proxy to emailService.sendTestEmail; POST /api/admin/users/:id/email (body: subject, body) — send a personal email to that user via the active email provider. Wire matching controller functions in server/src/controllers/adminController.ts (or a new adminProviderController.ts). Use a Zod-light validator block for each endpoint that rejects unknown providers / missing required fields with 400.",
+      "task_type": "api_endpoint",
+      "priority": "high",
+      "acceptance_criteria": [
+        "GET /api/admin/providers?kind=llm returns 200 with masked api_key strings",
+        "POST /api/admin/providers with valid payload returns 200 and the saved (masked) row",
+        "POST /api/admin/providers/test-llm with a bogus key returns 200 with { success:false, error }",
+        "POST /api/admin/providers/test-email sends a real email when SendGrid key is valid",
+        "POST /api/admin/users/:id/email returns 404 if user is missing and 200 with email_log id otherwise",
+        "All endpoints respond 403 when caller lacks admin role"
+      ]
+    },
+    {
+      "feature_temp_id": "feat-admin-portal-providers-and-comms",
+      "title": "Dashboard, Billings & ProvidersSetup pages in admin-client",
+      "description": "Build three new pages in admin-client/src/pages/: (1) DashboardPage.tsx — landing page replacing /dashboard route as default after login. Shows KPI cards (Homeowners, Contractors, Skilled Labor, Active Projects, Accepted Bids this month, MRR placeholder) using a new GET /api/admin/stats summary plus reuse of existing endpoints. Card grid + small recent-activity feed. (2) BillingsPage.tsx — renames/extends SubscriptionsPage to show subscription stats + plan list + billing_history table with status pills, pagination. (3) ProvidersSetupPage.tsx — matches screen1.png: tab strip with 'LLM Provider' and 'Email Providers'. LLM tab has provider dropdown (OpenAI/Gemini/Together), model dropdown that switches per provider, password-style API key input pre-masked with last 4, Save Provider + Test Connection buttons, status pill showing current default ('openai · gpt-4.1-mini'). Email tab has provider dropdown (SendGrid only for now), API key, From Email, From Name, Save + Send test email (asks for a To address). Show a 'Where is this used?' info card on each tab. Update services/adminApi.ts with the new endpoints and App.tsx nav with /dashboard, /users, /billings, /providers, /service-fee, /rules, /analytics.",
+      "task_type": "frontend",
+      "priority": "high",
+      "acceptance_criteria": [
+        "Visiting / or /dashboard renders the new DashboardPage with KPI cards from real data (no console errors)",
+        "Sidebar has Dashboard, Users, Billings, Providers Setup, Service Fee, Bid Rules, Analytics in that order",
+        "Providers Setup LLM tab persists a new provider+model+key and shows masked key on reload",
+        "Providers Setup LLM tab 'Test Connection' shows green success / red error toast based on API response",
+        "Providers Setup Email tab 'Send test email' sends to admin's email and shows success/failure toast",
+        "All admin pages still require login (redirect to /login when no token)"
+      ]
+    },
+    {
+      "feature_temp_id": "feat-admin-portal-providers-and-comms",
+      "title": "Send-personal-email action on UsersPage",
+      "description": "Add a 'Send Email' action button on every row of admin-client/src/pages/UsersPage.tsx (next to the existing Activate/Deactivate button). Clicking opens a modal with the user's name + email pre-filled (read-only), a Subject input, a multiline Body textarea, and Send / Cancel buttons. Calls POST /api/admin/users/:id/email and surfaces a toast (Sent / Failed) on response. While pending, button is disabled and shows spinner text. Modal closes on success after 1s. No fields persist between users.",
+      "task_type": "frontend",
+      "priority": "medium",
+      "acceptance_criteria": [
+        "Send Email button appears for every user row regardless of role tab",
+        "Modal pre-fills the user's email read-only",
+        "Empty subject or empty body disables the Send button",
+        "Successful send shows toast 'Email sent to <email>' and closes modal",
+        "Failed send shows toast with the server's error string and leaves the modal open"
+      ]
+    }
+  ]
+}

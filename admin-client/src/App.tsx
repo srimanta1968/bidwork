@@ -1,11 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext';
 import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
 import UsersPage from './pages/UsersPage';
-import SubscriptionsPage from './pages/SubscriptionsPage';
+import BillingsPage from './pages/BillingsPage';
 import RulesPage from './pages/RulesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import ServiceFeePage from './pages/ServiceFeePage';
+import ProvidersSetupPage from './pages/ProvidersSetupPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAdminAuth();
@@ -14,11 +16,13 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 const NAV_ITEMS = [
-  { path: '/dashboard', label: 'Users', icon: '👥' },
-  { path: '/subscriptions', label: 'Subscriptions', icon: '💳' },
-  { path: '/rules', label: 'Bid Rules', icon: '⚙️' },
+  { path: '/dashboard', label: 'Dashboard', icon: '📊' },
+  { path: '/users', label: 'Users', icon: '👥' },
+  { path: '/billings', label: 'Billings', icon: '💳' },
+  { path: '/providers', label: 'Providers Setup', icon: '🤖' },
   { path: '/service-fee', label: 'Service Fee', icon: '💰' },
-  { path: '/analytics', label: 'Analytics', icon: '📊' },
+  { path: '/rules', label: 'Bid Rules', icon: '⚙️' },
+  { path: '/analytics', label: 'Analytics', icon: '📈' },
 ];
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -70,8 +74,11 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
-      <Route path="/dashboard" element={<ProtectedRoute><AdminLayout><UsersPage /></AdminLayout></ProtectedRoute>} />
-      <Route path="/subscriptions" element={<ProtectedRoute><AdminLayout><SubscriptionsPage /></AdminLayout></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><AdminLayout><DashboardPage /></AdminLayout></ProtectedRoute>} />
+      <Route path="/users" element={<ProtectedRoute><AdminLayout><UsersPage /></AdminLayout></ProtectedRoute>} />
+      <Route path="/billings" element={<ProtectedRoute><AdminLayout><BillingsPage /></AdminLayout></ProtectedRoute>} />
+      <Route path="/subscriptions" element={<Navigate to="/billings" replace />} />
+      <Route path="/providers" element={<ProtectedRoute><AdminLayout><ProvidersSetupPage /></AdminLayout></ProtectedRoute>} />
       <Route path="/rules" element={<ProtectedRoute><AdminLayout><RulesPage /></AdminLayout></ProtectedRoute>} />
       <Route path="/service-fee" element={<ProtectedRoute><AdminLayout><ServiceFeePage /></AdminLayout></ProtectedRoute>} />
       <Route path="/analytics" element={<ProtectedRoute><AdminLayout><AnalyticsPage /></AdminLayout></ProtectedRoute>} />

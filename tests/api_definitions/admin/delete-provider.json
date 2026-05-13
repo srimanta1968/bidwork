@@ -1,0 +1,18 @@
+{
+  "endpoint": "/api/admin/providers/:id",
+  "method": "DELETE",
+  "taskId": "d8992a7b-1c55-4d95-b4bc-81fa5369ec3d",
+  "description": "Soft-delete a provider config",
+  "requiresAuth": true,
+  "priority": 99,
+  "dependsOn": ["POST /api/admin/providers"],
+  "pathParams": {
+    "id": "{{cache:adminProviders.upsert.response.data.provider.id}}"
+  },
+  "testCases": [{
+    "name": "Soft-delete provider",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

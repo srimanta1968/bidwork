@@ -19,65 +19,21 @@ The **MCP (Model Context Protocol) Server** connects your AI coding assistant (C
 
 ### Step 1: Start MCP Server
 
-The recommended way is to use the **setup-all.sh** script, which handles database, Dev MCP, and Test MCP containers together:
+The MCP server image is pulled automatically from Docker Hub (`projexlight/mcp-server`).
 
 ```bash
 cd mcp-server
-./setup-all.sh
+docker-compose up -d
 ```
-
-This smart script will:
-- Detect existing containers and skip what's already running
-- Start the database, Dev MCP, and Test MCP containers
-- Set up database schema and install git hooks
-- Register your project automatically (multi-project aware)
 
 Wait about 30 seconds for services to initialize.
 
-#### Individual Setup Scripts
-
-If you only need specific services, use the individual scripts:
-
-```bash
-cd mcp-server
-
-# Database only (PostgreSQL, MySQL, MongoDB, etc.)
-./setup-database.sh start
-
-# Dev MCP only (code generation, code review, git hooks)
-./setup-dev-mcp.sh start
-
-# Test MCP only (UI and API test execution)
-./setup-test-mcp.sh start
-```
-
-#### Setup Script Commands
-
-All individual scripts support the same commands:
-
-| Command | Description |
-|---------|-------------|
-| `start` | Start the service |
-| `stop` | Stop the service |
-| `restart` | Restart the service |
-| `status` | Check service status |
-| `logs` | View service logs |
-| `update` | Pull latest image and restart |
-
-`setup-all.sh` supports additional flags:
-
-| Flag | Description |
-|------|-------------|
-| `--status` | Check status of all containers |
-| `--register` | Register this project with existing MCP |
-| `--install-hooks` | Install git hooks only |
-| `--force` | Force restart all containers |
+See [DOCKER_HUB.md](DOCKER_HUB.md) for detailed Docker Hub usage and configuration options.
 
 ### Step 2: Verify It's Running
 
 ```bash
-curl http://localhost:8766/health    # Dev MCP
-curl http://localhost:8000/health    # Test MCP
+curl http://localhost:8766/health
 ```
 
 **Expected Response:**
@@ -128,7 +84,7 @@ These tools use curl to fetch instructions from the MCP server:
 cd your-project
 
 # Start MCP server first
-cd mcp-server && ./setup-all.sh && cd ..
+cd mcp-server && docker-compose up -d && cd ..
 
 # Start your tool
 cursor  # or aider, windsurf
@@ -289,12 +245,10 @@ cat .mcp-logs/latest-server.log
 docker ps
 
 # View logs for errors
-./setup-dev-mcp.sh logs      # Dev MCP logs
-./setup-test-mcp.sh logs     # Test MCP logs
+docker logs projexlight-mcp
 
 # Restart
-./setup-all.sh --force       # Force restart all
-./setup-dev-mcp.sh restart   # Or restart individually
+docker-compose down && docker-compose up -d
 ```
 
 ### AI Assistant Can't Connect
@@ -319,35 +273,27 @@ curl -X POST http://localhost:8766/hooks/install
 
 ```bash
 cd mcp-server
-
-# Stop all services
-./setup-dev-mcp.sh stop
-./setup-test-mcp.sh stop
-./setup-database.sh stop
-
-# Or stop individually
-./setup-dev-mcp.sh stop     # Dev MCP only
-./setup-test-mcp.sh stop    # Test MCP only
-./setup-database.sh stop    # Database only
+docker-compose down
 ```
 
 To remove data volumes too:
 ```bash
-./setup-database.sh reset   # Stop database, remove data, restart
+docker-compose down -v
 ```
 
 ---
 
 ## Additional Documentation
 
-- **[docs/DEV_MCP.md](docs/DEV_MCP.md)** - Dev MCP: code generation, git hooks, API testing, debugging
-- **[docs/TEST_MCP.md](docs/TEST_MCP.md)** - Test MCP: UI and API test execution
-- **[docs/SUT_SETUP_GUIDE.md](docs/SUT_SETUP_GUIDE.md)** - Framework-specific SUT setup (binding to 0.0.0.0)
+- **[DOCKER_HUB.md](DOCKER_HUB.md)** - Docker Hub image usage guide
+- **[QUICK_START.md](QUICK_START.md)** - Detailed setup guide
+- **[DEBUGGING.md](DEBUGGING.md)** - Troubleshooting and logs
+- **[HOOKS_INSTALLATION.md](HOOKS_INSTALLATION.md)** - Git hooks details
 
 ---
 
 ## Support
 
-1. Check **[docs/DEV_MCP.md](docs/DEV_MCP.md)** for troubleshooting and debugging
+1. Check **[DEBUGGING.md](DEBUGGING.md)** for common solutions
 2. View logs: `docker logs projexlight-mcp`
 3. Contact ProjexLight support through the platform

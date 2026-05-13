@@ -1,0 +1,23 @@
+{
+  "endpoint": "/api/admin/users/:id/email",
+  "method": "POST",
+  "taskId": "d8992a7b-1c55-4d95-b4bc-81fa5369ec3d",
+  "description": "Admin sends a one-off branded email to a specific user via the active email provider",
+  "requiresAuth": true,
+  "testability": "manual",
+  "priority": 66,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "pathParams": {
+    "id": "{{cache:admin.login.response.data.user.id}}"
+  },
+  "testCases": [{
+    "name": "Send personal email to user",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {
+      "subject": "{{static:Admin update}}",
+      "body": "{{static:Hello from BidWork admin. This is a test message.}}"
+    },
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}
