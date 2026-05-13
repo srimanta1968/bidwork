@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/admin/feedback/:id/status",
+  "method": "PATCH",
+  "taskId": "a5a133b4-ad57-4cc6-a96a-29be9743c582",
+  "description": "Admin marks a feedback row reviewed|replied",
+  "requiresAuth": true,
+  "testability": "manual",
+  "priority": 96,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Mark feedback reviewed",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {"status": "reviewed"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

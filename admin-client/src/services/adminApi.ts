@@ -179,3 +179,45 @@ export async function sendUserEmail(userId: string, data: { subject: string; bod
   const res = await fetch(`${API}/users/${userId}/email`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
   return res.json();
 }
+
+// ── Customer feedback ──
+
+export type FeedbackStatus = 'new' | 'reviewed' | 'replied';
+
+export interface FeedbackRow {
+  id: string;
+  user_id: string;
+  project_id: string | null;
+  context: string;
+  message: string;
+  status: FeedbackStatus;
+  summary: string | null;
+  replied_at: string | null;
+  replied_by_admin_id: string | null;
+  created_at: string;
+  updated_at: string;
+  submitter_email: string | null;
+  submitter_first_name: string | null;
+  submitter_last_name: string | null;
+}
+
+export async function listFeedback(params: { status?: FeedbackStatus; context?: string; project_id?: string; page?: number; limit?: number } = {}) {
+  const qs = new URLSearchParams();
+  if (params.status) qs.set('status', params.status);
+  if (params.context) qs.set('context', params.context);
+  if (params.project_id) qs.set('project_id', params.project_id);
+  if (params.page) qs.set('page', String(params.page));
+  if (params.limit) qs.set('limit', String(params.limit));
+  const res = await fetch(`${API}/feedback?${qs}`, { headers: authHeaders() });
+  return res.json();
+}
+
+export async function setFeedbackStatus(id: string, status: FeedbackStatus) {
+  const res = await fetch(`${API}/feedback/${id}/status`, { method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ status }) });
+  return res.json();
+}
+
+export async function summarizeFeedback(body: { ids?: string[]; filter?: { status?: FeedbackStatus; context?: string } }) {
+  const res = await fetch(`${API}/feedback/summarize`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(body) });
+  return res.json();
+}

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import FeedbackLink from '../../components/common/FeedbackLink';
 
 export default function SkilledLaborDashboard() {
   const { user, logout } = useAuth();
@@ -20,6 +21,7 @@ export default function SkilledLaborDashboard() {
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span style={{ fontSize: 12, fontWeight: 500, color: 'white', background: '#7c3aed', padding: '4px 10px', borderRadius: 20 }}>Skilled Labor</span>
+          <FeedbackLink context="general" />
           <span style={{ fontSize: 14, color: '#64748b' }}>{user?.email}</span>
           <button onClick={logout} style={{ fontSize: 14, fontWeight: 500, color: '#64748b', background: 'none', border: '1px solid #e2e8f0', borderRadius: 8, padding: '6px 16px', cursor: 'pointer' }}>Logout</button>
         </div>

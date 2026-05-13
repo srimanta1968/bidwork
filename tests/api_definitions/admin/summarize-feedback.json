@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/admin/feedback/summarize",
+  "method": "POST",
+  "taskId": "a5a133b4-ad57-4cc6-a96a-29be9743c582",
+  "description": "Admin asks the active LLM provider to summarize common themes across selected feedback (or filtered)",
+  "requiresAuth": true,
+  "testability": "manual",
+  "priority": 97,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "Summarize all new feedback",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "payload": {"filter": {"status": "new"}},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

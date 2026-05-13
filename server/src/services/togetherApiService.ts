@@ -89,6 +89,50 @@ export async function classifyProject(imageUrl: string, description: string): Pr
 /**
  * Stage 2: Generate scope of work from all project photos
  */
+/**
+ * Normalize a single AI-generated scope task so material/labor splits are always
+ * present and consistent with the combined cost. If the model omits the splits
+ * or they don't sum to the combined cost, we fall back to a 60/40 split — same
+ * default the migration uses for legacy rows.
+ */
+function normalizeScopeTask(t: any): any {
+  const costMin = Number(t.cost_min) || 0;
+  const costMax = Number(t.cost_max) || 0;
+  const mMin = Number(t.material_cost_min);
+  const mMax = Number(t.material_cost_max);
+  const lMin = Number(t.labor_cost_min);
+  const lMax = Number(t.labor_cost_max);
+
+  const haveSplits =
+    Number.isFinite(mMin) && Number.isFinite(mMax) &&
+    Number.isFinite(lMin) && Number.isFinite(lMax);
+
+  let material_cost_min: number, material_cost_max: number;
+  let labor_cost_min: number, labor_cost_max: number;
+  if (haveSplits) {
+    material_cost_min = Math.max(0, mMin);
+    material_cost_max = Math.max(0, mMax);
+    labor_cost_min = Math.max(0, lMin);
+    labor_cost_max = Math.max(0, lMax);
+  } else {
+    material_cost_min = Math.round(costMin * 0.6 * 100) / 100;
+    material_cost_max = Math.round(costMax * 0.6 * 100) / 100;
+    labor_cost_min = Math.round(costMin * 0.4 * 100) / 100;
+    labor_cost_max = Math.round(costMax * 0.4 * 100) / 100;
+  }
+
+  // Keep cost_min/max as the sum so downstream readers stay consistent.
+  return {
+    ...t,
+    cost_min: haveSplits ? (material_cost_min + labor_cost_min) : costMin,
+    cost_max: haveSplits ? (material_cost_max + labor_cost_max) : costMax,
+    material_cost_min,
+    material_cost_max,
+    labor_cost_min,
+    labor_cost_max,
+  };
+}
+
 export async function generateScope(imageUrls: string[], category: string, description: string, qualityTier: string): Promise<{
   tasks: any[]; model: string; inputTokens: number; outputTokens: number;
 }> {
@@ -100,14 +144,15 @@ export async function generateScope(imageUrls: string[], category: string, descr
   const result = await callTogether(config.together.visionModel, [{
     role: 'user',
     content: [
-      { type: 'text', text: `/no_think\nYou are an expert home renovation estimator. Analyze ALL the photos of this ${category} project (${qualityTier} quality tier). Homeowner says: "${description}"\n\nGenerate a detailed scope of work. Return ONLY valid JSON (no markdown):\n{"tasks": [{"title": "...", "description": "...", "quantity": number, "unit": "sq_ft|linear_ft|each|hour", "materials": [{"name": "...", "estimated_cost": number}], "labor_hours_min": number, "labor_hours_max": number, "cost_min": number, "cost_max": number, "confidence": 0.0 to 1.0}]}\n\nBe thorough — identify ALL visible work needed. Include realistic USD costs for the ${qualityTier} tier. Minimum 3 tasks.` },
+      { type: 'text', text: `/no_think\nYou are an expert home renovation estimator. Analyze ALL the photos of this ${category} project (${qualityTier} quality tier). Homeowner says: "${description}"\n\nGenerate a detailed scope of work. For EACH task, split the cost into materials and labor (in USD) so the homeowner can opt out of materials they will supply themselves. cost_min/cost_max MUST equal the sum of the corresponding material+labor values.\n\nReturn ONLY valid JSON (no markdown):\n{"tasks": [{"title": "...", "description": "...", "quantity": number, "unit": "sq_ft|linear_ft|each|hour", "materials": [{"name": "...", "estimated_cost": number}], "labor_hours_min": number, "labor_hours_max": number, "material_cost_min": number, "material_cost_max": number, "labor_cost_min": number, "labor_cost_max": number, "cost_min": number, "cost_max": number, "confidence": 0.0 to 1.0}]}\n\nBe thorough — identify ALL visible work needed. Include realistic USD costs for the ${qualityTier} tier. Minimum 3 tasks.` },
       ...imageContent,
     ],
   }], 2000);
 
   const parsed = extractJson(result.content);
+  const rawTasks = Array.isArray(parsed.tasks) ? parsed.tasks : [];
   return {
-    tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
+    tasks: rawTasks.map(normalizeScopeTask),
     model: result.model,
     inputTokens: result.inputTokens,
     outputTokens: result.outputTokens,
@@ -173,12 +218,13 @@ export async function generateScopeFromDescription(description: string, category
   tasks: any[]; model: string; inputTokens: number; outputTokens: number;
 }> {
   const result = await callTogether(config.together.textModel, [
-    { role: 'user', content: `You are an expert home renovation estimator. Generate a scope of work for this ${category} project (${qualityTier} quality tier). Description: "${description}"\n\nReturn ONLY valid JSON (no markdown):\n{"tasks": [{"title": "...", "description": "...", "quantity": number, "unit": "sq_ft|linear_ft|each|hour", "materials": [{"name": "...", "estimated_cost": number}], "labor_hours_min": number, "labor_hours_max": number, "cost_min": number, "cost_max": number, "confidence": 0.0 to 1.0}]}\n\nBe thorough. Include realistic USD costs. Minimum 3 tasks.` },
+    { role: 'user', content: `You are an expert home renovation estimator. Generate a scope of work for this ${category} project (${qualityTier} quality tier). Description: "${description}"\n\nFor EACH task, split the cost into materials and labor (USD) so the homeowner can opt out of materials they will supply themselves. cost_min/cost_max MUST equal the sum of the corresponding material+labor values.\n\nReturn ONLY valid JSON (no markdown):\n{"tasks": [{"title": "...", "description": "...", "quantity": number, "unit": "sq_ft|linear_ft|each|hour", "materials": [{"name": "...", "estimated_cost": number}], "labor_hours_min": number, "labor_hours_max": number, "material_cost_min": number, "material_cost_max": number, "labor_cost_min": number, "labor_cost_max": number, "cost_min": number, "cost_max": number, "confidence": 0.0 to 1.0}]}\n\nBe thorough. Include realistic USD costs. Minimum 3 tasks.` },
   ], 2000);
 
   const parsed = extractJson(result.content);
+  const rawTasks = Array.isArray(parsed.tasks) ? parsed.tasks : [];
   return {
-    tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
+    tasks: rawTasks.map(normalizeScopeTask),
     model: result.model,
     inputTokens: result.inputTokens,
     outputTokens: result.outputTokens,

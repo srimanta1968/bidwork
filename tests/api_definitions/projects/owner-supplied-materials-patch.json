@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/projects/:id/tasks/:taskId/owner-supplied-materials",
+  "method": "PATCH",
+  "taskId": "9480c277-a3ce-4c2a-97db-89725998ffa3",
+  "description": "Toggle whether the homeowner supplies materials for a scope task. When true, the materials cost is excluded from the project's calculated starting bid.",
+  "requiresAuth": true,
+  "testability": "manual",
+  "priority": 80,
+  "dependsOn": ["POST /api/auth/register"],
+  "testCases": [{
+    "name": "Owner supplies materials",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"owner_supplied": true},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

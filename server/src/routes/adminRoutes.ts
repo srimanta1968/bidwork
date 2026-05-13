@@ -3,7 +3,7 @@ import { authenticate } from '../middleware/auth';
 import { requireAdmin } from '../middleware/adminAuth';
 import { AuthenticatedRequest } from '../types';
 import { adminLogin, getUsers, getUserStats, getUserById, updateUserStatus, getBidPriceRules, createBidPriceRule, updateBidPriceRule, deleteBidPriceRule, getPriceVarianceAnalytics, getSubscriptions, getSubscriptionStats, updateSubscription, getSubscriptionPlans, createSubscriptionPlan, getPlatformUsage, getContractAllocation, getCurrentServiceFee, getServiceFeeHistory, setServiceFee, getDashboardStats } from '../controllers/adminController';
-import { listProvidersHandler, upsertProviderHandler, setDefaultProviderHandler, deleteProviderHandler, testLlmHandler, testEmailHandler, sendUserEmailHandler } from '../controllers/adminProviderController';
+import { listProvidersHandler, upsertProviderHandler, setDefaultProviderHandler, deleteProviderHandler, testLlmHandler, testEmailHandler, sendUserEmailHandler, listFeedbackHandler, setFeedbackStatusHandler, summarizeFeedbackHandler } from '../controllers/adminProviderController';
 
 const router: Router = Router();
 const wrap = (fn: Function) => (req: Request, res: Response) => fn(req as AuthenticatedRequest, res);
@@ -57,5 +57,10 @@ router.post('/providers/test-email', wrap(testEmailHandler));
 
 // Send personal email to a specific user
 router.post('/users/:id/email', wrap(sendUserEmailHandler));
+
+// Customer feedback
+router.get('/feedback', wrap(listFeedbackHandler));
+router.patch('/feedback/:id/status', wrap(setFeedbackStatusHandler));
+router.post('/feedback/summarize', wrap(summarizeFeedbackHandler));
 
 export default router;

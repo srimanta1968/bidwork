@@ -9,6 +9,7 @@ import ContractPanel from '../../components/common/ContractPanel';
 import DepositReceiptsPanel from '../../components/common/DepositReceiptsPanel';
 import RatingPanel from '../../components/common/RatingPanel';
 import BidMaterialsReview from '../../components/common/BidMaterialsReview';
+import FeedbackLink from '../../components/common/FeedbackLink';
 
 const PAYMENT_METHODS = [
   { value: 'stripe', label: 'Stripe', placeholder: 'pi_xxxxxxxxxxxxxxxx' },
@@ -142,6 +143,7 @@ export default function ContractorDashboard() {
           <span style={{ fontSize: 12, fontWeight: 500, color: 'white', background: '#059669', padding: '4px 10px', borderRadius: 20 }}>Contractor</span>
           <button onClick={() => navigate('/profile')} style={{ fontSize: 13, fontWeight: 500, color: '#7c3aed', background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' }}>My Profile</button>
           <button onClick={() => navigate('/catalogs')} style={{ fontSize: 13, fontWeight: 500, color: '#2563eb', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 8, padding: '6px 14px', cursor: 'pointer' }}>My Catalogs</button>
+          <FeedbackLink context="general" />
           <span style={{ fontSize: 14, color: '#64748b' }}>{user?.email}</span>
           <button onClick={logout} style={{ fontSize: 14, fontWeight: 500, color: '#64748b', background: 'none', border: '1px solid #e2e8f0', borderRadius: 8, padding: '6px 16px', cursor: 'pointer' }}>Logout</button>
         </div>

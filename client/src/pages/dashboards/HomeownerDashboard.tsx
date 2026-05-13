@@ -9,6 +9,7 @@ import VisitTrackingPanel from '../../components/common/VisitTrackingPanel';
 import RatingPanel from '../../components/common/RatingPanel';
 import BidMessagesPanel from '../../components/common/BidMessagesPanel';
 import BidMaterialsReview from '../../components/common/BidMaterialsReview';
+import FeedbackLink from '../../components/common/FeedbackLink';
 
 export default function HomeownerDashboard() {
   const { user, logout } = useAuth();
@@ -76,6 +77,7 @@ export default function HomeownerDashboard() {
           <span style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>BidWork</span>
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <FeedbackLink context="general" />
           <span style={{ fontSize: 14, color: '#64748b' }}>{user?.email}</span>
           <button onClick={logout} style={{ fontSize: 14, fontWeight: 500, color: '#64748b', background: 'none', border: '1px solid #e2e8f0', borderRadius: 8, padding: '6px 16px', cursor: 'pointer' }}>Logout</button>
         </div>

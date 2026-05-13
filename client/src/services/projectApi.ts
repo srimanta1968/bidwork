@@ -267,6 +267,16 @@ export async function toggleTaskVisibility(projectId: string, taskId: string, is
   return res.json();
 }
 
+export async function setOwnerSuppliedMaterials(projectId: string, taskId: string, ownerSupplied: boolean) {
+  const res = await fetch(`${API}/projects/${projectId}/tasks/${taskId}/owner-supplied-materials`, { method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ owner_supplied: ownerSupplied }) });
+  return res.json();
+}
+
+export async function submitFeedback(data: { message: string; context?: string; project_id?: string }) {
+  const res = await fetch(`${API}/feedback`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(data) });
+  return res.json();
+}
+
 // ── Q&A System ──
 
 export async function submitQuestion(projectId: string, question: string) {

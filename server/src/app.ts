@@ -14,6 +14,7 @@ import adminRoutes from './routes/adminRoutes';
 import catalogRoutes from './routes/catalogRoutes';
 import webhookRoutes from './routes/webhookRoutes';
 import locationRoutes from './routes/locationRoutes';
+import feedbackRoutes from './routes/feedbackRoutes';
 
 interface ServerConfig {
   port: number;
@@ -67,6 +68,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/catalogs', catalogRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/locations', locationRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {

@@ -304,7 +304,37 @@ export async function runProjectMigration(pool: Pool): Promise<void> {
     WHERE is_listed = true AND status = 'bidding'
   `);
 
-  console.log('[migrate:projects] Projects domain ready (v3: worker type + location).');
+  // ── v4: Per-task material/labor cost breakdown ──
+  // Owner can opt out of materials per task ("Owner supplied") which excludes
+  // the materials portion from the project's calculated starting bid. The AI
+  // scope-gen prompt now returns both splits alongside the combined cost.
+  for (const col of [
+    'material_cost_min DECIMAL(10, 2)',
+    'material_cost_max DECIMAL(10, 2)',
+    'labor_cost_min DECIMAL(10, 2)',
+    'labor_cost_max DECIMAL(10, 2)',
+    'owner_supplied_materials BOOLEAN DEFAULT false',
+  ]) {
+    await pool.query(`
+      DO $$ BEGIN
+        ALTER TABLE projects.scope_tasks ADD COLUMN ${col};
+      EXCEPTION WHEN duplicate_column THEN NULL;
+      END $$
+    `);
+  }
+
+  // Backfill existing rows with a 60/40 material/labor split so the new columns
+  // are non-NULL after migration. Rounded to 2 decimals to match the columns.
+  await pool.query(`
+    UPDATE projects.scope_tasks
+    SET material_cost_min = ROUND(COALESCE(cost_min, 0)::numeric * 0.6, 2),
+        material_cost_max = ROUND(COALESCE(cost_max, 0)::numeric * 0.6, 2),
+        labor_cost_min    = ROUND(COALESCE(cost_min, 0)::numeric * 0.4, 2),
+        labor_cost_max    = ROUND(COALESCE(cost_max, 0)::numeric * 0.4, 2)
+    WHERE material_cost_min IS NULL OR labor_cost_min IS NULL
+  `);
+
+  console.log('[migrate:projects] Projects domain ready (v4: material/labor split + owner_supplied).');
   } catch (error) {
     console.error('[migrate:projects] Migration failed:', error);
     throw error;

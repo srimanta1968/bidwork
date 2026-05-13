@@ -1,0 +1,19 @@
+{
+  "endpoint": "/api/feedback",
+  "method": "POST",
+  "taskId": "eadf06be-36fc-4cb7-a5b6-450fef141c7a",
+  "description": "Logged-in user submits a free-form feedback note",
+  "requiresAuth": true,
+  "priority": 90,
+  "dependsOn": ["POST /api/auth/register"],
+  "captureResponse": {
+    "feedback.submit.response.data.feedback.id": "data.feedback.id"
+  },
+  "testCases": [{
+    "name": "Submit feedback",
+    "headers": {"Authorization": "Bearer {{cache:auth.register.response.data.token}}"},
+    "payload": {"message": "{{static:Great experience but the bid range was too wide for a small project.}}", "context": "{{static:scope_review}}"},
+    "expectedStatus": 201,
+    "expectedResponse": {"success": true}
+  }]
+}

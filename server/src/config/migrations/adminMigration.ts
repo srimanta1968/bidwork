@@ -201,7 +201,46 @@ export async function runAdminMigration(pool: Pool): Promise<void> {
       ON admin.email_log (sent_by_admin_id, sent_at DESC)
     `);
 
-    console.log('[migrate:admin] Admin domain ready (v3: provider config + email log).');
+    // ── v4: Customer feedback ──
+    // Free-form notes submitted by any logged-in user (homeowner, contractor,
+    // skilled labor) via "Send feedback". The admin portal reads them and can
+    // summarize themes via the active LLM provider.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS admin.customer_feedback (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        user_id UUID NOT NULL,
+        project_id UUID,
+        context VARCHAR(64) NOT NULL DEFAULT 'general',
+        message TEXT NOT NULL,
+        status VARCHAR(16) NOT NULL DEFAULT 'new',
+        summary TEXT,
+        replied_at TIMESTAMP WITH TIME ZONE,
+        replied_by_admin_id UUID,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      DO $$ BEGIN
+        ALTER TABLE admin.customer_feedback
+          DROP CONSTRAINT IF EXISTS chk_feedback_status;
+        ALTER TABLE admin.customer_feedback
+          ADD CONSTRAINT chk_feedback_status CHECK (status IN ('new', 'reviewed', 'replied'));
+      END $$
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_feedback_status_created
+      ON admin.customer_feedback (status, created_at DESC)
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_feedback_user_created
+      ON admin.customer_feedback (user_id, created_at DESC)
+    `);
+
+    console.log('[migrate:admin] Admin domain ready (v4: provider config + email log + customer feedback).');
   } catch (error) {
     console.error('[migrate:admin] Migration failed:', error);
     throw error;

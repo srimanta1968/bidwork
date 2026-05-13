@@ -1,0 +1,15 @@
+{
+  "endpoint": "/api/admin/feedback",
+  "method": "GET",
+  "taskId": "a5a133b4-ad57-4cc6-a96a-29be9743c582",
+  "description": "Admin paginated list of customer feedback with submitter join",
+  "requiresAuth": true,
+  "priority": 95,
+  "dependsOn": ["POST /api/admin/auth/login"],
+  "testCases": [{
+    "name": "List feedback",
+    "headers": {"Authorization": "Bearer {{cache:admin.login.response.data.token}}"},
+    "expectedStatus": 200,
+    "expectedResponse": {"success": true}
+  }]
+}

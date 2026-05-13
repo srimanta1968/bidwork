@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { authenticate } from '../middleware/auth';
 import { AuthenticatedRequest } from '../types';
-import { presignUpload, createProject, confirmMedia, getMyProjects, getProject, getProjectStatus, approveProject, retryProject, getAvailableProjects, getDraftProject, updateDraftProject, deleteMedia, setTaskPrice, updateTask, toggleTaskVisibility, getProjectBidSummary, promoteNextShortlisted } from '../controllers/projectController';
+import { presignUpload, createProject, confirmMedia, getMyProjects, getProject, getProjectStatus, approveProject, retryProject, getAvailableProjects, getDraftProject, updateDraftProject, deleteMedia, setTaskPrice, updateTask, toggleTaskVisibility, setOwnerSuppliedMaterials, getProjectBidSummary, promoteNextShortlisted } from '../controllers/projectController';
 
 const router: Router = Router();
 const wrap = (fn: Function) => (req: Request, res: Response) => fn(req as AuthenticatedRequest, res);
@@ -20,6 +20,7 @@ router.put('/:id', authenticate, wrap(updateDraftProject));
 router.put('/:id/tasks/:taskId', authenticate, wrap(updateTask));
 router.put('/:id/tasks/:taskId/price', authenticate, wrap(setTaskPrice));
 router.patch('/:id/tasks/:taskId/visibility', authenticate, wrap(toggleTaskVisibility));
+router.patch('/:id/tasks/:taskId/owner-supplied-materials', authenticate, wrap(setOwnerSuppliedMaterials));
 router.delete('/:id/media/:mediaId', authenticate, wrap(deleteMedia));
 router.post('/:id/approve', authenticate, wrap(approveProject));
 router.post('/:id/retry', authenticate, wrap(retryProject));

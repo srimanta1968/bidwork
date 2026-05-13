@@ -8,6 +8,7 @@ import RulesPage from './pages/RulesPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import ServiceFeePage from './pages/ServiceFeePage';
 import ProvidersSetupPage from './pages/ProvidersSetupPage';
+import FeedbackPage from './pages/FeedbackPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAdminAuth();
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { path: '/users', label: 'Users', icon: '👥' },
   { path: '/billings', label: 'Billings', icon: '💳' },
   { path: '/providers', label: 'Providers Setup', icon: '🤖' },
+  { path: '/feedback', label: 'Feedback', icon: '💬' },
   { path: '/service-fee', label: 'Service Fee', icon: '💰' },
   { path: '/rules', label: 'Bid Rules', icon: '⚙️' },
   { path: '/analytics', label: 'Analytics', icon: '📈' },

@@ -127,11 +127,14 @@ async function processScopeGen(job: AiJob): Promise<void> {
     for (let i = 0; i < descResult.tasks.length; i++) {
       const t = descResult.tasks[i];
       await projectDb.query(
-        `INSERT INTO scope_tasks (project_id, sort_order, title, description, quantity, unit, materials, labor_hours_min, labor_hours_max, cost_min, cost_max, ai_confidence)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+        `INSERT INTO scope_tasks (project_id, sort_order, title, description, quantity, unit, materials, labor_hours_min, labor_hours_max, cost_min, cost_max, material_cost_min, material_cost_max, labor_cost_min, labor_cost_max, ai_confidence)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
         [job.project_id, i, t.title, t.description, t.quantity || 1, t.unit || 'each',
          JSON.stringify(t.materials || []), t.labor_hours_min || 0, t.labor_hours_max || 0,
-         t.cost_min || 0, t.cost_max || 0, t.confidence || 0.7]
+         t.cost_min || 0, t.cost_max || 0,
+         t.material_cost_min || 0, t.material_cost_max || 0,
+         t.labor_cost_min || 0, t.labor_cost_max || 0,
+         t.confidence || 0.7]
       );
     }
     await workerDb.query(

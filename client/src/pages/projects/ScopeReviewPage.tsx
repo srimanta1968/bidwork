@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProject, getProjectStatus, approveProject, retryProject, updateTask, setTaskPrice, toggleTaskVisibility } from '../../services/projectApi';
+import { getProject, getProjectStatus, approveProject, retryProject, updateTask, setTaskPrice, toggleTaskVisibility, setOwnerSuppliedMaterials } from '../../services/projectApi';
+import FeedbackLink from '../../components/common/FeedbackLink';
 
 /**
  * Lazy video player — zero S3 data until user clicks play.
@@ -45,6 +46,7 @@ export default function ScopeReviewPage() {
   const [error, setError] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
 
   useEffect(() => {
     loadProject();
@@ -273,10 +275,66 @@ export default function ScopeReviewPage() {
                             {task.is_hidden ? 'Show' : 'Hide'}
                           </button>
                         )}
-                        <div style={{ textAlign: 'right' }}>
-                          <p style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>${aiPrice.toLocaleString()} - ${Number(task.cost_max || 0).toLocaleString()}</p>
-                          <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>{task.labor_hours_min || 0}-{task.labor_hours_max || 0} hrs labor</p>
-                        </div>
+                        {(() => {
+                          const matMin = Number(task.material_cost_min || 0);
+                          const matMax = Number(task.material_cost_max || 0);
+                          const labMin = Number(task.labor_cost_min || 0);
+                          const labMax = Number(task.labor_cost_max || 0);
+                          const ownerSupplies = !!task.owner_supplied_materials;
+                          // Total reflects what the contractor will quote: labor always +
+                          // materials only when the contractor is supplying them.
+                          const totalMin = labMin + (ownerSupplies ? 0 : matMin);
+                          const totalMax = labMax + (ownerSupplies ? 0 : matMax);
+                          return (
+                            <div style={{ textAlign: 'right', minWidth: 200 }}>
+                              <p style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>${totalMin.toLocaleString()} - ${totalMax.toLocaleString()}</p>
+                              <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{task.labor_hours_min || 0}-{task.labor_hours_max || 0} hrs labor</p>
+                              {/* Materials sub-row with Owner | Contractor toggle */}
+                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, marginTop: 10, fontSize: 12 }}>
+                                <span style={{ color: '#64748b' }}>Materials:</span>
+                                <span style={{ fontWeight: 600, color: ownerSupplies ? '#cbd5e1' : '#0f172a', textDecoration: ownerSupplies ? 'line-through' : 'none' }}>
+                                  ${matMin.toLocaleString()} - ${matMax.toLocaleString()}
+                                </span>
+                              </div>
+                              {!project?.is_approved && (
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6 }}>
+                                  <div role="tablist" aria-label="Who supplies materials" style={{ display: 'inline-flex', background: '#f1f5f9', borderRadius: 999, padding: 2 }}>
+                                    {(['contractor', 'owner'] as const).map(role => {
+                                      const active = (role === 'owner') === ownerSupplies;
+                                      return (
+                                        <button key={role} role="tab" aria-selected={active}
+                                          onClick={async () => {
+                                            const target = role === 'owner';
+                                            if (target === ownerSupplies) return;
+                                            // Optimistic
+                                            setTasks(prev => prev.map(t => t.id === task.id ? { ...t, owner_supplied_materials: target } : t));
+                                            const r = await setOwnerSuppliedMaterials(id!, task.id, target);
+                                            if (!r.success) {
+                                              setTasks(prev => prev.map(t => t.id === task.id ? { ...t, owner_supplied_materials: !target } : t));
+                                            }
+                                          }}
+                                          style={{
+                                            fontSize: 11, fontWeight: 600, padding: '4px 12px', borderRadius: 999,
+                                            border: 'none', cursor: 'pointer',
+                                            background: active ? 'white' : 'transparent',
+                                            color: active ? '#0f172a' : '#64748b',
+                                            boxShadow: active ? '0 1px 2px rgba(15,23,42,0.08)' : 'none',
+                                          }}>
+                                          {role === 'owner' ? 'Owner' : 'Contractor'}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                              {/* Labor sub-row */}
+                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, marginTop: 8, fontSize: 12 }}>
+                                <span style={{ color: '#64748b' }}>Labor:</span>
+                                <span style={{ fontWeight: 600, color: '#0f172a' }}>${labMin.toLocaleString()} - ${labMax.toLocaleString()}</span>
+                              </div>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -357,6 +415,11 @@ export default function ScopeReviewPage() {
                 </button>
               </div>
             )}
+
+            {/* Send feedback (reusable component) */}
+            <div style={{ marginTop: 24, textAlign: 'center' }}>
+              <FeedbackLink context="scope_review" projectId={id} label="Send feedback about this scope" />
+            </div>
           </>
         )}
       </div>

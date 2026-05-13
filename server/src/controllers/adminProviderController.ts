@@ -1,7 +1,8 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../types';
 import * as providerService from '../services/adminProviderService';
-import { testConnection as testLlmConnection, defaultModelFor, LlmProvider } from '../services/llmProviderService';
+import * as feedbackService from '../services/feedbackService';
+import { testConnection as testLlmConnection, defaultModelFor, LlmProvider, chatCompletion } from '../services/llmProviderService';
 import { sendTestEmail, sendPersonalEmail } from '../services/emailService';
 import { adminService } from '../services/adminService';
 
@@ -139,6 +140,73 @@ export async function sendUserEmailHandler(req: AuthenticatedRequest, res: Respo
       data: { email_log_id: result.email_log_id, status: result.status, provider: result.provider },
       error: result.error,
     });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+}
+
+// ── Customer feedback ──
+
+export async function listFeedbackHandler(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const status = req.query.status as string | undefined;
+    const context = req.query.context as string | undefined;
+    const project_id = req.query.project_id as string | undefined;
+    const page = parseInt((req.query.page as string) || '1', 10);
+    const limit = parseInt((req.query.limit as string) || '50', 10);
+    const out = await feedbackService.listFeedback({ status: status as any, context, project_id, page, limit });
+    res.status(200).json({ success: true, data: out });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+}
+
+export async function setFeedbackStatusHandler(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { status } = req.body || {};
+    if (!status) return badRequest(res, 'status is required');
+    if (!req.user) {
+      res.status(401).json({ success: false, error: 'Authentication required' });
+      return;
+    }
+    const updated = await feedbackService.setStatus(id, status, req.user.userId);
+    if (!updated) {
+      res.status(404).json({ success: false, error: 'Feedback not found' });
+      return;
+    }
+    res.status(200).json({ success: true, data: { feedback: updated } });
+  } catch (err: any) {
+    if (err.message?.startsWith('status')) return badRequest(res, err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+}
+
+export async function summarizeFeedbackHandler(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const { ids, filter } = req.body || {};
+    const messages = await feedbackService.getMessagesForSummary({
+      ids: Array.isArray(ids) ? ids : undefined,
+      status: filter?.status,
+      context: filter?.context,
+    });
+    if (messages.length === 0) {
+      res.status(200).json({ success: true, data: { summary: '(no feedback to summarize)', count: 0, model: null } });
+      return;
+    }
+    const numbered = messages.map((m, i) => `${i + 1}. ${m}`).join('\n');
+    try {
+      const r = await chatCompletion({
+        messages: [
+          { role: 'system', content: 'You summarize a batch of customer feedback notes from a home-services platform. Output 2-4 short paragraphs covering: recurring themes, things customers love, things they complain about, and any feature requests. Be concrete, no fluff, no fake percentages.' },
+          { role: 'user', content: `Here are ${messages.length} feedback notes:\n\n${numbered}` },
+        ],
+        maxTokens: 600,
+      });
+      res.status(200).json({ success: true, data: { summary: r.content, count: messages.length, model: r.model } });
+    } catch (err: any) {
+      res.status(200).json({ success: false, error: err?.message || 'LLM summarize failed', data: { count: messages.length } });
+    }
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }

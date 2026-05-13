@@ -260,6 +260,30 @@ export async function toggleTaskVisibility(req: AuthenticatedRequest, res: Respo
 }
 
 /**
+ * PATCH /api/projects/:id/tasks/:taskId/owner-supplied-materials
+ * Toggle whether the homeowner supplies materials for a task. When true, the
+ * material portion is excluded from the project's calculated starting bid.
+ */
+export async function setOwnerSuppliedMaterials(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) { res.status(401).json({ success: false, error: 'Authentication required' }); return; }
+    const project = await projectService.getProject(req.params.id);
+    if (!project) { res.status(404).json({ success: false, error: 'Project not found' }); return; }
+    if (project.homeowner_id !== req.user.userId) { res.status(403).json({ success: false, error: 'Not your project' }); return; }
+
+    const { owner_supplied } = req.body;
+    if (typeof owner_supplied !== 'boolean') {
+      res.status(400).json({ success: false, error: 'owner_supplied (boolean) is required' });
+      return;
+    }
+
+    const updated = await projectService.setMaterialsSupplier(req.params.id, req.params.taskId, owner_supplied);
+    if (!updated) { res.status(404).json({ success: false, error: 'Task not found' }); return; }
+    res.status(200).json({ success: true, data: { task: updated } });
+  } catch (error: any) { res.status(500).json({ success: false, error: error.message }); }
+}
+
+/**
  * POST /api/projects/:id/promote-next-shortlisted
  * Homeowner promotes the next shortlisted bid by ascending rank to approved_by_owner.
  */

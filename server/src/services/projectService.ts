@@ -284,6 +284,20 @@ export async function toggleTaskVisibility(projectId: string, taskId: string, is
 }
 
 /**
+ * Flip who supplies materials for a single task. When ownerSupplies = true the
+ * material portion of that task is excluded from the project's calculated
+ * starting bid and the contractor view shows an "Owner supplies materials" tag.
+ */
+export async function setMaterialsSupplier(projectId: string, taskId: string, ownerSupplies: boolean) {
+  try {
+    return await projectDb.queryOne(
+      'UPDATE scope_tasks SET owner_supplied_materials = $3, updated_at = NOW() WHERE id = $2 AND project_id = $1 RETURNING *',
+      [projectId, taskId, ownerSupplies]
+    );
+  } catch (error) { console.error('Set materials supplier error:', error); throw error; }
+}
+
+/**
  * Strips full street address, keeping only city and zip for privacy.
  * Input: "123 Main St, Springfield, IL 62701"
  * Output: "Springfield, IL 62701"
@@ -314,8 +328,14 @@ export function sanitizeProjectForContractor(project: any, isAcceptedBidder: boo
  */
 export async function getProjectBidSummary(projectId: string) {
   try {
-    const tasks = await projectDb.queryAll<{ ai_start_price: string | null; owner_start_price: string | null }>(
-      `SELECT cost_min AS ai_start_price, owner_start_price
+    const tasks = await projectDb.queryAll<{
+      ai_start_price: string | null;
+      owner_start_price: string | null;
+      material_cost_min: string | null;
+      owner_supplied_materials: boolean;
+    }>(
+      `SELECT cost_min AS ai_start_price, owner_start_price,
+              material_cost_min, owner_supplied_materials
          FROM scope_tasks WHERE project_id = $1 AND is_removed = false AND is_hidden = false`,
       [projectId]
     );
@@ -323,9 +343,13 @@ export async function getProjectBidSummary(projectId: string) {
     for (const t of tasks) {
       const ai = Number(t.ai_start_price || 0);
       const owner = t.owner_start_price !== null ? Number(t.owner_start_price) : null;
-      aiTotal += ai;
-      if (owner !== null) ownerTotal += owner;
-      effectiveTotal += owner !== null ? owner : ai;
+      // When the owner is supplying materials for a task, exclude the material
+      // portion from the calculated starting bid — the contractor only quotes
+      // labor for that task.
+      const materialPortion = t.owner_supplied_materials ? Number(t.material_cost_min || 0) : 0;
+      aiTotal += Math.max(0, ai - materialPortion);
+      if (owner !== null) ownerTotal += Math.max(0, owner - materialPortion);
+      effectiveTotal += Math.max(0, (owner !== null ? owner : ai) - materialPortion);
     }
     // Submitted bid range — only count bids that are still candidates.
     const range = await import('./domainDb').then(({ biddingDb }) => biddingDb.queryOne<{
@@ -367,6 +391,7 @@ export const projectService = {
   createProject, addMedia, startAiPipeline, getProject, getProjectsByHomeowner,
   getProjectMedia, getScopeTasks, getProjectStatus, approveProject, retryPipeline,
   getAvailableProjects, updateProject, deleteMedia, getBidPriceRule, setTaskOwnerPrice,
-  getScopeTask, updateScopeTask, toggleTaskVisibility, maskAddress, sanitizeProjectForContractor, isAcceptedBidder,
+  getScopeTask, updateScopeTask, toggleTaskVisibility, setMaterialsSupplier,
+  maskAddress, sanitizeProjectForContractor, isAcceptedBidder,
   getProjectBidSummary,
 };
